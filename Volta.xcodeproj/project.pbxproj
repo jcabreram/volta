@@ -22,6 +22,10 @@
 		9469E72F1DD3ECAC007EB4E6 /* SideMenuViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9469E72E1DD3ECAC007EB4E6 /* SideMenuViewCell.m */; };
 		9469E7321DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9469E7311DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m */; };
 		9469E7351DD4E903007EB4E6 /* TimesheetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9469E7341DD4E903007EB4E6 /* TimesheetsViewController.m */; };
+		94ADACD21DDBAA6300C01279 /* WeeksCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD11DDBAA6300C01279 /* WeeksCollectionViewController.m */; };
+		94ADACD51DDBAA9400C01279 /* DaysTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD41DDBAA9400C01279 /* DaysTableViewController.m */; };
+		94ADACD81DDBAADA00C01279 /* DayTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD71DDBAADA00C01279 /* DayTableViewCell.m */; };
+		94ADACDB1DDBC69800C01279 /* WeekCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACDA1DDBC69800C01279 /* WeekCollectionViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,8 +55,16 @@
 		9469E72E1DD3ECAC007EB4E6 /* SideMenuViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideMenuViewCell.m; sourceTree = "<group>"; };
 		9469E7301DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+LGSideMenuController.h"; sourceTree = "<group>"; };
 		9469E7311DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+LGSideMenuController.m"; sourceTree = "<group>"; };
-		9469E7331DD4E903007EB4E6 /* TimesheetsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimesheetsViewController.h; path = Volta/TimesheetsViewController.h; sourceTree = "<group>"; };
-		9469E7341DD4E903007EB4E6 /* TimesheetsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TimesheetsViewController.m; path = Volta/TimesheetsViewController.m; sourceTree = "<group>"; };
+		9469E7331DD4E903007EB4E6 /* TimesheetsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimesheetsViewController.h; sourceTree = "<group>"; };
+		9469E7341DD4E903007EB4E6 /* TimesheetsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimesheetsViewController.m; sourceTree = "<group>"; };
+		94ADACD01DDBAA6300C01279 /* WeeksCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeeksCollectionViewController.h; sourceTree = "<group>"; };
+		94ADACD11DDBAA6300C01279 /* WeeksCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeeksCollectionViewController.m; sourceTree = "<group>"; };
+		94ADACD31DDBAA9400C01279 /* DaysTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DaysTableViewController.h; sourceTree = "<group>"; };
+		94ADACD41DDBAA9400C01279 /* DaysTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DaysTableViewController.m; sourceTree = "<group>"; };
+		94ADACD61DDBAADA00C01279 /* DayTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayTableViewCell.h; sourceTree = "<group>"; };
+		94ADACD71DDBAADA00C01279 /* DayTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayTableViewCell.m; sourceTree = "<group>"; };
+		94ADACD91DDBC69800C01279 /* WeekCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeekCollectionViewCell.h; sourceTree = "<group>"; };
+		94ADACDA1DDBC69800C01279 /* WeekCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeekCollectionViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,8 +148,7 @@
 			children = (
 				9415B6A51DD28E8100C2020D /* LoginViewController.h */,
 				9415B6A61DD28E8100C2020D /* LoginViewController.m */,
-				9469E7331DD4E903007EB4E6 /* TimesheetsViewController.h */,
-				9469E7341DD4E903007EB4E6 /* TimesheetsViewController.m */,
+				94ADACCF1DDBAA3300C01279 /* Timesheets */,
 			);
 			name = "View Controllers";
 			path = ..;
@@ -156,6 +167,24 @@
 				9469E7271DD3EBEE007EB4E6 /* MainViewController.m */,
 			);
 			name = "Side Menu Controllers";
+			sourceTree = "<group>";
+		};
+		94ADACCF1DDBAA3300C01279 /* Timesheets */ = {
+			isa = PBXGroup;
+			children = (
+				9469E7331DD4E903007EB4E6 /* TimesheetsViewController.h */,
+				9469E7341DD4E903007EB4E6 /* TimesheetsViewController.m */,
+				94ADACD01DDBAA6300C01279 /* WeeksCollectionViewController.h */,
+				94ADACD11DDBAA6300C01279 /* WeeksCollectionViewController.m */,
+				94ADACD91DDBC69800C01279 /* WeekCollectionViewCell.h */,
+				94ADACDA1DDBC69800C01279 /* WeekCollectionViewCell.m */,
+				94ADACD31DDBAA9400C01279 /* DaysTableViewController.h */,
+				94ADACD41DDBAA9400C01279 /* DaysTableViewController.m */,
+				94ADACD61DDBAADA00C01279 /* DayTableViewCell.h */,
+				94ADACD71DDBAADA00C01279 /* DayTableViewCell.m */,
+			);
+			name = Timesheets;
+			path = Volta;
 			sourceTree = "<group>";
 		};
 		F50D891C59A3888D2428FFBA /* Frameworks */ = {
@@ -294,10 +323,14 @@
 				9469E7351DD4E903007EB4E6 /* TimesheetsViewController.m in Sources */,
 				9415B68D1DD2385C00C2020D /* AppDelegate.m in Sources */,
 				9469E72F1DD3ECAC007EB4E6 /* SideMenuViewCell.m in Sources */,
+				94ADACDB1DDBC69800C01279 /* WeekCollectionViewCell.m in Sources */,
+				94ADACD51DDBAA9400C01279 /* DaysTableViewController.m in Sources */,
 				9415B68A1DD2385C00C2020D /* main.m in Sources */,
+				94ADACD21DDBAA6300C01279 /* WeeksCollectionViewController.m in Sources */,
 				9415B6A71DD28E8100C2020D /* LoginViewController.m in Sources */,
 				9469E7321DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m in Sources */,
 				9469E7221DD3CFCD007EB4E6 /* AppState.m in Sources */,
+				94ADACD81DDBAADA00C01279 /* DayTableViewCell.m in Sources */,
 				9469E72C1DD3EC66007EB4E6 /* SideMenuViewController.m in Sources */,
 				9469E7281DD3EBEE007EB4E6 /* MainViewController.m in Sources */,
 			);
