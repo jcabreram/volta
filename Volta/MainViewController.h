@@ -14,4 +14,6 @@
 - (void)setupWithPresentationStyle:(LGSideMenuPresentationStyle)style
                               type:(NSUInteger)type;
 
+- (void)logout;
+
 @end

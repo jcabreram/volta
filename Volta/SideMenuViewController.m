@@ -12,6 +12,7 @@
 #import "AppState.h"
 #import "UIViewController+LGSideMenuController.h"
 #import "TimesheetsViewController.h"
+#import "MainViewController.h"
 
 @import Firebase;
 
@@ -36,7 +37,9 @@
                      @"Activities",
                      @"Holidays",
                      @"Expenses",
-                     @"Projects"];
+                     @"Projects",
+                     @"",
+                     @"Log Out"];
     
     // -----
     
@@ -54,8 +57,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SideMenuViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     cell.textLabel.text = _titlesArray[indexPath.row];
-    cell.separatorView.hidden = indexPath.row <= 1 || indexPath.row == _titlesArray.count - 1;
-    cell.userInteractionEnabled = indexPath.row != 1;
+    cell.separatorView.hidden = indexPath.row <= 1 || indexPath.row >= 7 || indexPath.row == _titlesArray.count - 1;
+    cell.userInteractionEnabled = indexPath.row != 1 || indexPath.row != 7;
     cell.tintColor = _tintColor;
     return cell;
 }
@@ -77,7 +80,16 @@
         }
         
         [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
-
+    } else if (indexPath.row == 8) {
+        FIRAuth *firebaseAuth = [FIRAuth auth];
+        NSError *signOutError;
+        BOOL status = [firebaseAuth signOut:&signOutError];
+        if (!status) {
+            NSLog(@"Error signing out: %@", signOutError);
+            return;
+        }
+        [AppState sharedInstance].signedIn = false;
+        [(MainViewController *)self.sideMenuController logout];
     } else {
         UIViewController *viewController = [UIViewController new];
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];

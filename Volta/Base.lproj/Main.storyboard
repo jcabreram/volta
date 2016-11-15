@@ -186,8 +186,12 @@
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="shouldShowRightView" value="NO"/>
                     </userDefinedRuntimeAttributes>
+                    <connections>
+                        <segue destination="G77-YJ-M7x" kind="unwind" identifier="MainScreenToSignIn" unwindAction="loggedOutUsingSegue:" id="uTB-Bd-aOg"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DYm-O4-4hI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="G77-YJ-M7x" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="870" y="37"/>
         </scene>

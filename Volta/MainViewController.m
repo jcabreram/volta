@@ -59,4 +59,9 @@
     _sideMenuViewController.tableView.frame = CGRectMake(0.f , 0.f, size.width, size.height);
 }
 
+- (void)logout
+{
+    [self performSegueWithIdentifier:SeguesMainScreenToSignIn sender:nil];
+}
+
 @end
