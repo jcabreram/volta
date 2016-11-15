@@ -8,6 +8,7 @@
 
 #import "MainViewController.h"
 #import "SideMenuViewController.h"
+#import "Constants.h"
 
 @interface MainViewController ()
 
@@ -23,10 +24,6 @@
     
     if (self) {
         [self setupWithPresentationStyle:LGSideMenuPresentationStyleSlideBelow type:0];
-        UINavigationController *navigationController = [self.storyboard instantiateViewControllerWithIdentifier:@"NavigationController"];
-        UIWindow *window = [UIApplication sharedApplication].delegate.window;
-        
-        window.rootViewController = navigationController;
     }
     
     return self;
@@ -35,7 +32,7 @@
 - (void)setupWithPresentationStyle:(LGSideMenuPresentationStyle)style
                               type:(NSUInteger)type
 {
-    _sideMenuViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"SideMenuViewController"];
+    _sideMenuViewController = [self.storyboard instantiateViewControllerWithIdentifier:kSideMenuViewController];
     
     [self setLeftViewEnabledWithWidth:250.f
                     presentationStyle:style

@@ -6,10 +6,12 @@
 //  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
 //
 
+#import "Constants.h"
 #import "SideMenuViewController.h"
 #import "SideMenuViewCell.h"
 #import "AppState.h"
 #import "UIViewController+LGSideMenuController.h"
+#import "TimesheetsViewController.h"
 
 @import Firebase;
 
@@ -64,18 +66,24 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
-        if (![[self sideMenuController] isLeftViewAlwaysVisible]) {
-            [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:^(void) {
-                [[self sideMenuController] showRightViewAnimated:YES completionHandler:nil];
-            }];
-        } else {
-            [[self sideMenuController] showRightViewAnimated:YES completionHandler:nil];
+        [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
+    } else if (indexPath.row == 2) { // Row 1 is empty
+        UINavigationController *presentedNavigationController = (UINavigationController *)[self sideMenuController].rootViewController;
+        
+        // If the presented controller is different from selection
+        if (![presentedNavigationController.childViewControllers[0] isKindOfClass:[TimesheetsViewController class]]) {
+            UINavigationController *timesheetsNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:kTimesheetsNavigationController];
+            [self sideMenuController].rootViewController = timesheetsNavigationController;
         }
+        
+        [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
+
     } else {
         UIViewController *viewController = [UIViewController new];
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
         viewController.view.backgroundColor = [UIColor whiteColor];
         viewController.title = _titlesArray[indexPath.row];
-        [(UINavigationController *)[self sideMenuController].rootViewController pushViewController:viewController animated:YES];
+        [self sideMenuController].rootViewController = navigationController;
         
         [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
     }
