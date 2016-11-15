@@ -134,5 +134,11 @@
     mainViewController.rootViewController = timesheetsNavigationController;
 }
 
+- (IBAction)loggedOutUsingSegue:(UIStoryboardSegue *)segue
+{
+    self.emailField.text = @"";
+    self.passwordField.text = @"";
+}
+
 
 @end
