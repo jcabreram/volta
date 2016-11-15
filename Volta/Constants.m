@@ -12,10 +12,12 @@
 
 NSString *const NotificationKeysSignedIn = @"onSignInCompleted";
 
+// From Storyboard
 NSString *const SeguesSignInToMainScreen = @"SignInToMainScreen";
 NSString *const SeguesMainScreenToSignIn = @"MainScreenToSignIn";
 
 NSString *const kTimesheetsNavigationController = @"TimesheetsNavigationController";
+NSString *const kSideMenuViewController = @"SideMenuViewController";
 
 
 @end
