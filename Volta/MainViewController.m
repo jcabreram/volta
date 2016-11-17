@@ -34,7 +34,7 @@
 {
     _sideMenuViewController = [self.storyboard instantiateViewControllerWithIdentifier:kSideMenuViewController];
     
-    [self setLeftViewEnabledWithWidth:250.f
+    [self setLeftViewEnabledWithWidth:200.f
                     presentationStyle:style
                  alwaysVisibleOptions:LGSideMenuAlwaysVisibleOnNone];
     

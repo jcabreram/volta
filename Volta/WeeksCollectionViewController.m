@@ -7,6 +7,7 @@
 //
 
 #import "WeeksCollectionViewController.h"
+#import "WeekCollectionViewCell.h"
 
 @interface WeeksCollectionViewController ()
 
@@ -19,11 +20,18 @@ static NSString * const reuseIdentifier = @"WeekCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
+    flow.itemSize = CGSizeMake(75, 80);
+    flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    flow.minimumInteritemSpacing = 0;
+    flow.minimumLineSpacing = 0;
+    self.collectionView.collectionViewLayout = flow;
+    
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Register cell classes
-    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
+    //[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
     
     // Do any additional setup after loading the view.
 }
@@ -55,9 +63,7 @@ static NSString * const reuseIdentifier = @"WeekCell";
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
-    
-    // Configure the cell
+    WeekCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     
     return cell;
 }
