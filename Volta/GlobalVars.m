@@ -22,39 +22,20 @@ static NSString *const kCompleteUser = @"persistCompleteUser";
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             _sharedInstance = [[GlobalVars alloc] init];
+            _userDefaults = [NSUserDefaults standardUserDefaults];
         });
     }
     
     return _sharedInstance;
 }
 
-- (instancetype)init {
-    self = [super init];
-    
-    if (self != nil) {
-        _userDefaults = [NSUserDefaults standardUserDefaults];
-    }
-    
-    return self;
-}
-
 - (NSString *)completeUsername {
-    id persistedValue = [_userDefaults objectForKey:kCompleteUser];
-    
-    if (persistedValue == nil)
-    {
-        // Store initial value
-        [GlobalVars sharedInstance].completeUsername = persistedValue;
-    }
-    
-    return [_userDefaults stringForKey:persistedValue];
+    return [_userDefaults stringForKey:kCompleteUser];
 }
 
 - (void)setCompleteUsername:(NSString *)completeUsername {
-    
     [_userDefaults setObject:completeUsername forKey:kCompleteUser];
     [_userDefaults synchronize];
-    
 }
 
 @end
