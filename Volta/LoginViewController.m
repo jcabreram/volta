@@ -16,11 +16,15 @@
 @import Firebase;
 
 @interface LoginViewController ()
+
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
+
 @end
 
 @implementation LoginViewController
+
+#pragma mark - UIViewController Delegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -46,6 +50,8 @@
         [self signedIn:user];
     }
 }
+
+#pragma mark - IB Actions
 
 - (IBAction)didTapSignIn:(id)sender {
     // Sign In with credentials.
@@ -86,20 +92,6 @@
                              }];
 }
 
-- (void)setDisplayName:(FIRUser *)user {
-    FIRUserProfileChangeRequest *changeRequest =
-    [user profileChangeRequest];
-    // Use first part of email as the default display name
-    changeRequest.displayName = [[user.email componentsSeparatedByString:@"@"] objectAtIndex:0];
-    [changeRequest commitChangesWithCompletion:^(NSError *_Nullable error) {
-        if (error) {
-            NSLog(@"%@", error.localizedDescription);
-            return;
-        }
-        [self signedIn:[FIRAuth auth].currentUser];
-    }];
-}
-
 - (IBAction)didRequestPasswordReset:(id)sender {
     UIAlertController *prompt =
     [UIAlertController alertControllerWithTitle:nil
@@ -130,6 +122,32 @@
     [self presentViewController:prompt animated:YES completion:nil];
 }
 
+- (IBAction)dismissKeyboard:(id)sender {
+    [self.view endEditing:YES];
+}
+
+- (IBAction)loggedOutUsingSegue:(UIStoryboardSegue *)segue
+{
+    self.emailField.text = @"";
+    self.passwordField.text = @"";
+}
+
+#pragma mark - Helper Methods
+
+- (void)setDisplayName:(FIRUser *)user {
+    FIRUserProfileChangeRequest *changeRequest =
+    [user profileChangeRequest];
+    // Use first part of email as the default display name
+    changeRequest.displayName = [[user.email componentsSeparatedByString:@"@"] objectAtIndex:0];
+    [changeRequest commitChangesWithCompletion:^(NSError *_Nullable error) {
+        if (error) {
+            NSLog(@"%@", error.localizedDescription);
+            return;
+        }
+        [self signedIn:[FIRAuth auth].currentUser];
+    }];
+}
+
 - (void)signedIn:(FIRUser *)user {
     
     [AppState sharedInstance].displayName = user.displayName.length > 0 ? user.displayName : user.email;
@@ -140,10 +158,6 @@
     [self performSegueWithIdentifier:SeguesSignInToMainScreen sender:nil];
 }
 
-- (IBAction)dismissKeyboard:(id)sender {
-    [self.view endEditing:YES];
-}
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     UINavigationController *timesheetsNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:kTimesheetsNavigationController];
@@ -151,14 +165,6 @@
     [mainViewController setupWithPresentationStyle:LGSideMenuPresentationStyleSlideBelow type:0];
     mainViewController.rootViewController = timesheetsNavigationController;
 }
-
-- (IBAction)loggedOutUsingSegue:(UIStoryboardSegue *)segue
-{
-    self.emailField.text = @"";
-    self.passwordField.text = @"";
-}
-
-#pragma mark - Helper Methods
 
 - (void)presentLoginErrorAlert:(NSString *)errorMessage {
     NSLog(@"Presenting Login Error Alert with message:\n%@", errorMessage);
