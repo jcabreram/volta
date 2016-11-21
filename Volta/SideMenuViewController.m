@@ -14,6 +14,18 @@
 #import "TimesheetsViewController.h"
 #import "MainViewController.h"
 
+typedef NS_ENUM (NSInteger, SideMenuEntry) {
+    SideMenuEntry_DisplayName,
+    SideMenuEntry_Empty01,
+    SideMenuEntry_Timesheets,
+    SideMenuEntry_Activities,
+    SideMenuEntry_Holidays,
+    SideMenuEntry_Expenses,
+    SideMenuEntry_Projects,
+    SideMenuEntry_Empty02,
+    SideMenuEntry_LogOut,
+};
+
 @import Firebase;
 
 @interface SideMenuViewController ()
@@ -68,9 +80,13 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0) {
+    NSInteger row = indexPath.row;
+    
+    if (row == SideMenuEntry_DisplayName) { // 0
         [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
-    } else if (indexPath.row == 2) { // Row 1 is empty
+    } else if (row == SideMenuEntry_Empty01) { // 1
+        // Empty
+    } else if (row == SideMenuEntry_Timesheets) { // 2
         UINavigationController *presentedNavigationController = (UINavigationController *)[self sideMenuController].rootViewController;
         
         // If the presented controller is different from selection
@@ -80,7 +96,17 @@
         }
         
         [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
-    } else if (indexPath.row == 8) {
+    } else if (row >= SideMenuEntry_Activities && row <= SideMenuEntry_Projects) { // 3 to 6
+        UIViewController *viewController = [UIViewController new];
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+        viewController.view.backgroundColor = [UIColor whiteColor];
+        viewController.title = _titlesArray[indexPath.row];
+        [self sideMenuController].rootViewController = navigationController;
+        
+        [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
+    } else if (indexPath.row == SideMenuEntry_Empty02) { // 7
+        // Empty
+    } else if (indexPath.row == SideMenuEntry_LogOut) { // 8
         FIRAuth *firebaseAuth = [FIRAuth auth];
         NSError *signOutError;
         BOOL status = [firebaseAuth signOut:&signOutError];
@@ -90,14 +116,6 @@
         }
         [AppState sharedInstance].signedIn = false;
         [(MainViewController *)self.sideMenuController logout];
-    } else {
-        UIViewController *viewController = [UIViewController new];
-        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
-        viewController.view.backgroundColor = [UIColor whiteColor];
-        viewController.title = _titlesArray[indexPath.row];
-        [self sideMenuController].rootViewController = navigationController;
-        
-        [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
     }
 }
 
