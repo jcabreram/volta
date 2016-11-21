@@ -90,7 +90,14 @@
     
     [alert addAction:defaultAction];
     
-    [self presentViewController:alert animated:YES completion:nil];
+    __weak LoginViewController *welf = self;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (welf != nil)
+            [welf presentViewController:alert animated:YES completion:nil];
+    });
+    
+    
 }
 
 - (void)setDisplayName:(FIRUser *)user {
