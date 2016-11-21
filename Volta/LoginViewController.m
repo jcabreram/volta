@@ -32,6 +32,8 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
     // Auto-login if already logged in
     FIRUser *user = [FIRAuth auth].currentUser;
     if (user) {
