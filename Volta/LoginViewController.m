@@ -10,6 +10,8 @@
 #import "AppState.h"
 #import "Constants.h"
 #import "MainViewController.h"
+#import "GlobalVars.h"
+
 
 @import Firebase;
 
@@ -29,6 +31,10 @@
     UIColor *lightBlue = [[UIColor alloc] initWithRed:140.0f/255.0f green:211.0f/255.0f blue:255.0f/255.0f alpha:1.0];
     gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor whiteColor] CGColor], (id)[lightBlue CGColor], nil];
     [self.view.layer insertSublayer:gradient atIndex:0];
+    
+    [self loadCurrentUserToTextField];
+    
+    [self.emailField becomeFirstResponder];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -62,6 +68,8 @@
                                  [innerSelf signedIn:user];
                              }
                          }];
+    
+    [GlobalVars sharedInstance].completeUsername = email;
 }
 
 - (IBAction)didTapSignUp:(id)sender {
@@ -76,30 +84,6 @@
                                  }
                                  [self setDisplayName:user];
                              }];
-}
-
-- (void)presentLoginErrorAlert:(NSString *)errorMessage {
-    NSLog(@"Presenting Login Error Alert with message:\n%@", errorMessage);
-    
-    UIAlertController *alert;
-    alert = [UIAlertController alertControllerWithTitle:@"Login Error"
-                                                message:errorMessage
-                                         preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *defaultAction;
-    defaultAction = [UIAlertAction actionWithTitle:@"OK"
-                                             style:UIAlertActionStyleDefault
-                                           handler:nil];
-    
-    [alert addAction:defaultAction];
-    
-    __weak LoginViewController *welf = self;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (welf != nil)
-            [welf presentViewController:alert animated:YES completion:nil];
-    });
-    
-    
 }
 
 - (void)setDisplayName:(FIRUser *)user {
@@ -174,5 +158,38 @@
     self.passwordField.text = @"";
 }
 
+#pragma mark - Helper Methods
+
+- (void)presentLoginErrorAlert:(NSString *)errorMessage {
+    NSLog(@"Presenting Login Error Alert with message:\n%@", errorMessage);
+    
+    UIAlertController *alert;
+    alert = [UIAlertController alertControllerWithTitle:@"Login Error"
+                                                message:errorMessage
+                                         preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *defaultAction;
+    defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                             style:UIAlertActionStyleDefault
+                                           handler:nil];
+    
+    [alert addAction:defaultAction];
+    
+    __weak LoginViewController *welf = self;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (welf != nil)
+            [welf presentViewController:alert animated:YES completion:nil];
+    });
+    
+    
+}
+
+- (void)loadCurrentUserToTextField {
+    NSString *savedUser = [GlobalVars sharedInstance].completeUsername;
+
+    if (savedUser != nil && [savedUser length] > 0) {
+        self.emailField.text = savedUser;
+    }
+}
 
 @end
