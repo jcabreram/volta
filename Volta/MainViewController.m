@@ -61,7 +61,7 @@
 
 - (void)logout
 {
-    [self performSegueWithIdentifier:SeguesMainScreenToSignIn sender:nil];
+    [self performSegueWithIdentifier:SeguesMainScreenToSignIn sender:self];
 }
 
 @end

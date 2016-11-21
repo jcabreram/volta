@@ -35,10 +35,6 @@
     UIColor *lightBlue = [[UIColor alloc] initWithRed:140.0f/255.0f green:211.0f/255.0f blue:255.0f/255.0f alpha:1.0];
     gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor whiteColor] CGColor], (id)[lightBlue CGColor], nil];
     [self.view.layer insertSublayer:gradient atIndex:0];
-    
-    [self loadCurrentUserToTextField];
-    
-    [self.emailField becomeFirstResponder];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -49,6 +45,12 @@
     if (user) {
         [self signedIn:user];
     }
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self loadCurrentUserToTextField];
 }
 
 #pragma mark - IB Actions
@@ -155,7 +157,7 @@
     [AppState sharedInstance].signedIn = YES;
     [[NSNotificationCenter defaultCenter] postNotificationName:NotificationKeysSignedIn
                                                         object:nil userInfo:nil];
-    [self performSegueWithIdentifier:SeguesSignInToMainScreen sender:nil];
+    [self performSegueWithIdentifier:SeguesSignInToMainScreen sender:self];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -195,6 +197,9 @@
 
     if (savedUser != nil && [savedUser length] > 0) {
         self.emailField.text = savedUser;
+        [self.passwordField becomeFirstResponder];
+    } else {
+        [self.emailField becomeFirstResponder];
     }
 }
 
