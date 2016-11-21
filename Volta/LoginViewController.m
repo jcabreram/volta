@@ -43,14 +43,22 @@
     // Sign In with credentials.
     NSString *email = _emailField.text;
     NSString *password = _passwordField.text;
+    
+    __weak LoginViewController *welf = self;
+    
     [[FIRAuth auth] signInWithEmail:email
                            password:password
                          completion:^(FIRUser * _Nullable user, NSError * _Nullable error) {
-                             if (error) {
-                                 NSLog(@"%@", error.localizedDescription);
-                                 return;
+                             if (welf != nil) {
+                                 __strong LoginViewController *innerSelf = welf;
+                                 
+                                 if (error != nil) {
+                                     [innerSelf presentLoginErrorAlert:error.localizedDescription];
+                                     return;
+                                 }
+                                 
+                                 [innerSelf signedIn:user];
                              }
-                             [self signedIn:user];
                          }];
 }
 
@@ -66,6 +74,23 @@
                                  }
                                  [self setDisplayName:user];
                              }];
+}
+
+- (void)presentLoginErrorAlert:(NSString *)errorMessage {
+    NSLog(@"Presenting Login Error Alert with message:\n%@", errorMessage);
+    
+    UIAlertController *alert;
+    alert = [UIAlertController alertControllerWithTitle:@"Login Error"
+                                                message:errorMessage
+                                         preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *defaultAction;
+    defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                             style:UIAlertActionStyleDefault
+                                           handler:nil];
+    
+    [alert addAction:defaultAction];
+    
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)setDisplayName:(FIRUser *)user {
