@@ -26,6 +26,7 @@
 		94ADACD51DDBAA9400C01279 /* DaysTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD41DDBAA9400C01279 /* DaysTableViewController.m */; };
 		94ADACD81DDBAADA00C01279 /* DayTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD71DDBAADA00C01279 /* DayTableViewCell.m */; };
 		94ADACDB1DDBC69800C01279 /* WeekCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACDA1DDBC69800C01279 /* WeekCollectionViewCell.m */; };
+		9551C90C1DE39F650066ED96 /* GlobalVars.m in Sources */ = {isa = PBXBuildFile; fileRef = 9551C90B1DE39F650066ED96 /* GlobalVars.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +67,8 @@
 		94ADACD71DDBAADA00C01279 /* DayTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayTableViewCell.m; sourceTree = "<group>"; };
 		94ADACD91DDBC69800C01279 /* WeekCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeekCollectionViewCell.h; sourceTree = "<group>"; };
 		94ADACDA1DDBC69800C01279 /* WeekCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeekCollectionViewCell.m; sourceTree = "<group>"; };
+		9551C90A1DE39F650066ED96 /* GlobalVars.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalVars.h; sourceTree = "<group>"; };
+		9551C90B1DE39F650066ED96 /* GlobalVars.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalVars.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,14 +113,13 @@
 		9415B6871DD2385C00C2020D /* Volta */ = {
 			isa = PBXGroup;
 			children = (
+				9551C9091DE39F300066ED96 /* General */,
 				942AEE8C1DDE11DA004C3FF8 /* Volta.entitlements */,
 				9415B68B1DD2385C00C2020D /* AppDelegate.h */,
 				9415B68C1DD2385C00C2020D /* AppDelegate.m */,
 				9433FF021DDA1F00000DD571 /* Firebase */,
 				9469E7291DD3EC3C007EB4E6 /* Side Menu Controllers */,
 				9433FF051DDA2031000DD571 /* View Controllers */,
-				9469E7231DD3D08D007EB4E6 /* Constants.h */,
-				9469E7241DD3D08D007EB4E6 /* Constants.m */,
 				9415B6911DD2385C00C2020D /* Main.storyboard */,
 				9415B6941DD2385C00C2020D /* Assets.xcassets */,
 				9415B6881DD2385C00C2020D /* Supporting Files */,
@@ -187,6 +189,17 @@
 			);
 			name = Timesheets;
 			path = Volta;
+			sourceTree = "<group>";
+		};
+		9551C9091DE39F300066ED96 /* General */ = {
+			isa = PBXGroup;
+			children = (
+				9469E7231DD3D08D007EB4E6 /* Constants.h */,
+				9469E7241DD3D08D007EB4E6 /* Constants.m */,
+				9551C90A1DE39F650066ED96 /* GlobalVars.h */,
+				9551C90B1DE39F650066ED96 /* GlobalVars.m */,
+			);
+			name = General;
 			sourceTree = "<group>";
 		};
 		F50D891C59A3888D2428FFBA /* Frameworks */ = {
@@ -339,6 +352,7 @@
 				94ADACD21DDBAA6300C01279 /* WeeksCollectionViewController.m in Sources */,
 				9415B6A71DD28E8100C2020D /* LoginViewController.m in Sources */,
 				9469E7321DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m in Sources */,
+				9551C90C1DE39F650066ED96 /* GlobalVars.m in Sources */,
 				9469E7221DD3CFCD007EB4E6 /* AppState.m in Sources */,
 				94ADACD81DDBAADA00C01279 /* DayTableViewCell.m in Sources */,
 				9469E72C1DD3EC66007EB4E6 /* SideMenuViewController.m in Sources */,
