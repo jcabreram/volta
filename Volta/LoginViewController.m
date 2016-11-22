@@ -24,7 +24,7 @@
 
 @implementation LoginViewController
 
-#pragma mark - UIViewController Delegate
+#pragma mark - UIViewController Overrides
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -83,38 +83,48 @@
 - (IBAction)didTapSignUp:(id)sender {
     NSString *email = _emailField.text;
     NSString *password = _passwordField.text;
+    
+    __weak LoginViewController *welf = self;
+    
     [[FIRAuth auth] createUserWithEmail:email
                                password:password
                              completion:^(FIRUser * _Nullable user, NSError * _Nullable error) {
-                                 if (error) {
-                                     NSLog(@"%@", error.localizedDescription);
-                                     return;
+                                 if (welf != nil) {
+                                     __strong LoginViewController *innerSelf = welf;
+                                     
+                                     if (error != nil) {
+                                         [innerSelf presentLoginErrorAlert:error.localizedDescription];
+                                         return;
+                                     }
+                                     
+                                     [innerSelf setDisplayName:user];
                                  }
-                                 [self setDisplayName:user];
                              }];
 }
 
 - (IBAction)didRequestPasswordReset:(id)sender {
-    UIAlertController *prompt =
-    [UIAlertController alertControllerWithTitle:nil
-                                        message:@"Email:"
-                                 preferredStyle:UIAlertControllerStyleAlert];
-    __weak UIAlertController *weakPrompt = prompt;
+    
+    UIAlertController *prompt;
+    prompt = [UIAlertController alertControllerWithTitle:nil
+                                                 message:@"Email:"
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+    NSString *_Nonnull userInput = (prompt.textFields[0].text == nil) ? @"" : prompt.textFields[0].text;
+    __weak LoginViewController *welf = self;
+    
     UIAlertAction *okAction = [UIAlertAction
                                actionWithTitle:@"OK"
                                style:UIAlertActionStyleDefault
                                handler:^(UIAlertAction * _Nonnull action) {
-                                   UIAlertController *strongPrompt = weakPrompt;
-                                   NSString *userInput = strongPrompt.textFields[0].text;
-                                   if (!userInput.length)
+                                   if (0 < userInput.length)
                                    {
                                        return;
                                    }
+                                   
                                    [[FIRAuth auth] sendPasswordResetWithEmail:userInput
                                                                    completion:^(NSError * _Nullable error) {
-                                                                       if (error) {
-                                                                           NSLog(@"%@", error.localizedDescription);
-                                                                           return;
+                                                                       if (error != nil && welf != nil) {
+                                                                           [welf presentLoginErrorAlert:error.localizedDescription];
                                                                        }
                                                                    }];
                                    

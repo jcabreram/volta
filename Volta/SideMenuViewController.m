@@ -67,16 +67,19 @@ typedef NS_ENUM (NSInteger, SideMenuEntry) {
 #pragma mark - UITableView Delegate
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSInteger row = indexPath.row;
     SideMenuViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-    cell.textLabel.text = _titlesArray[indexPath.row];
-    cell.separatorView.hidden = indexPath.row <= 1 || indexPath.row >= 7 || indexPath.row == _titlesArray.count - 1;
-    cell.userInteractionEnabled = indexPath.row != 1 || indexPath.row != 7;
+    
+    cell.textLabel.text = _titlesArray[row];
+    cell.separatorView.hidden = row <= SideMenuEntry_Empty01 || row >= SideMenuEntry_Empty02 || row == _titlesArray.count - 1;
+    cell.userInteractionEnabled = row != SideMenuEntry_Empty01 || row != SideMenuEntry_Empty02;
     cell.tintColor = _tintColor;
+    
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return indexPath.row == 1 ? 22.f : 44.f;
+    return indexPath.row == SideMenuEntry_Empty01 ? 22.f : 44.f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -100,13 +103,13 @@ typedef NS_ENUM (NSInteger, SideMenuEntry) {
         UIViewController *viewController = [UIViewController new];
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
         viewController.view.backgroundColor = [UIColor whiteColor];
-        viewController.title = _titlesArray[indexPath.row];
+        viewController.title = _titlesArray[row];
         [self sideMenuController].rootViewController = navigationController;
         
         [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
-    } else if (indexPath.row == SideMenuEntry_Empty02) { // 7
+    } else if (row == SideMenuEntry_Empty02) { // 7
         // Empty
-    } else if (indexPath.row == SideMenuEntry_LogOut) { // 8
+    } else if (row == SideMenuEntry_LogOut) { // 8
         FIRAuth *firebaseAuth = [FIRAuth auth];
         NSError *signOutError;
         BOOL status = [firebaseAuth signOut:&signOutError];
@@ -118,6 +121,5 @@ typedef NS_ENUM (NSInteger, SideMenuEntry) {
         [(MainViewController *)self.sideMenuController logout];
     }
 }
-
 
 @end
