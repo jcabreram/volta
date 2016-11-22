@@ -27,6 +27,10 @@
 		94ADACD81DDBAADA00C01279 /* DayTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD71DDBAADA00C01279 /* DayTableViewCell.m */; };
 		94ADACDB1DDBC69800C01279 /* WeekCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACDA1DDBC69800C01279 /* WeekCollectionViewCell.m */; };
 		9551C90C1DE39F650066ED96 /* GlobalVars.m in Sources */ = {isa = PBXBuildFile; fileRef = 9551C90B1DE39F650066ED96 /* GlobalVars.m */; };
+		94FC738E1DE4FA9F0064F4B0 /* ProjectsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94FC738D1DE4FA9F0064F4B0 /* ProjectsTableViewController.m */; };
+		94FC73911DE4FAED0064F4B0 /* ProjectTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94FC73901DE4FAED0064F4B0 /* ProjectTableViewCell.m */; };
+		94FC73941DE4FFDC0064F4B0 /* DayDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94FC73931DE4FFDC0064F4B0 /* DayDetailTableViewController.m */; };
+		94FC73971DE5010A0064F4B0 /* DayDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94FC73961DE5010A0064F4B0 /* DayDetailTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,6 +73,14 @@
 		94ADACDA1DDBC69800C01279 /* WeekCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeekCollectionViewCell.m; sourceTree = "<group>"; };
 		9551C90A1DE39F650066ED96 /* GlobalVars.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalVars.h; sourceTree = "<group>"; };
 		9551C90B1DE39F650066ED96 /* GlobalVars.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalVars.m; sourceTree = "<group>"; };
+		94FC738C1DE4FA9F0064F4B0 /* ProjectsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProjectsTableViewController.h; path = Volta/ProjectsTableViewController.h; sourceTree = "<group>"; };
+		94FC738D1DE4FA9F0064F4B0 /* ProjectsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProjectsTableViewController.m; path = Volta/ProjectsTableViewController.m; sourceTree = "<group>"; };
+		94FC738F1DE4FAED0064F4B0 /* ProjectTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProjectTableViewCell.h; path = Volta/ProjectTableViewCell.h; sourceTree = "<group>"; };
+		94FC73901DE4FAED0064F4B0 /* ProjectTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProjectTableViewCell.m; path = Volta/ProjectTableViewCell.m; sourceTree = "<group>"; };
+		94FC73921DE4FFDC0064F4B0 /* DayDetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayDetailTableViewController.h; sourceTree = "<group>"; };
+		94FC73931DE4FFDC0064F4B0 /* DayDetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayDetailTableViewController.m; sourceTree = "<group>"; };
+		94FC73951DE5010A0064F4B0 /* DayDetailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayDetailTableViewCell.h; sourceTree = "<group>"; };
+		94FC73961DE5010A0064F4B0 /* DayDetailTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayDetailTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +165,7 @@
 				9415B6A51DD28E8100C2020D /* LoginViewController.h */,
 				9415B6A61DD28E8100C2020D /* LoginViewController.m */,
 				94ADACCF1DDBAA3300C01279 /* Timesheets */,
+				94FC73881DE4F9C70064F4B0 /* Projects */,
 			);
 			name = "View Controllers";
 			path = ..;
@@ -186,6 +199,10 @@
 				94ADACD41DDBAA9400C01279 /* DaysTableViewController.m */,
 				94ADACD61DDBAADA00C01279 /* DayTableViewCell.h */,
 				94ADACD71DDBAADA00C01279 /* DayTableViewCell.m */,
+				94FC73921DE4FFDC0064F4B0 /* DayDetailTableViewController.h */,
+				94FC73931DE4FFDC0064F4B0 /* DayDetailTableViewController.m */,
+				94FC73951DE5010A0064F4B0 /* DayDetailTableViewCell.h */,
+				94FC73961DE5010A0064F4B0 /* DayDetailTableViewCell.m */,
 			);
 			name = Timesheets;
 			path = Volta;
@@ -200,6 +217,17 @@
 				9551C90B1DE39F650066ED96 /* GlobalVars.m */,
 			);
 			name = General;
+			sourceTree = "<group>";
+		};
+		94FC73881DE4F9C70064F4B0 /* Projects */ = {
+			isa = PBXGroup;
+			children = (
+				94FC738C1DE4FA9F0064F4B0 /* ProjectsTableViewController.h */,
+				94FC738D1DE4FA9F0064F4B0 /* ProjectsTableViewController.m */,
+				94FC738F1DE4FAED0064F4B0 /* ProjectTableViewCell.h */,
+				94FC73901DE4FAED0064F4B0 /* ProjectTableViewCell.m */,
+			);
+			name = Projects;
 			sourceTree = "<group>";
 		};
 		F50D891C59A3888D2428FFBA /* Frameworks */ = {
@@ -348,14 +376,18 @@
 				9469E72F1DD3ECAC007EB4E6 /* SideMenuViewCell.m in Sources */,
 				94ADACDB1DDBC69800C01279 /* WeekCollectionViewCell.m in Sources */,
 				94ADACD51DDBAA9400C01279 /* DaysTableViewController.m in Sources */,
+				94FC738E1DE4FA9F0064F4B0 /* ProjectsTableViewController.m in Sources */,
 				9415B68A1DD2385C00C2020D /* main.m in Sources */,
 				94ADACD21DDBAA6300C01279 /* WeeksCollectionViewController.m in Sources */,
 				9415B6A71DD28E8100C2020D /* LoginViewController.m in Sources */,
 				9469E7321DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m in Sources */,
 				9551C90C1DE39F650066ED96 /* GlobalVars.m in Sources */,
+				94FC73911DE4FAED0064F4B0 /* ProjectTableViewCell.m in Sources */,
 				9469E7221DD3CFCD007EB4E6 /* AppState.m in Sources */,
 				94ADACD81DDBAADA00C01279 /* DayTableViewCell.m in Sources */,
 				9469E72C1DD3EC66007EB4E6 /* SideMenuViewController.m in Sources */,
+				94FC73971DE5010A0064F4B0 /* DayDetailTableViewCell.m in Sources */,
+				94FC73941DE4FFDC0064F4B0 /* DayDetailTableViewController.m in Sources */,
 				9469E7281DD3EBEE007EB4E6 /* MainViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -16,8 +16,9 @@ NSString *const NotificationKeysSignedIn = @"onSignInCompleted";
 NSString *const SeguesSignInToMainScreen = @"SignInToMainScreen";
 NSString *const SeguesMainScreenToSignIn = @"MainScreenToSignIn";
 
-NSString *const kTimesheetsNavigationController = @"TimesheetsNavigationController";
 NSString *const kSideMenuViewController = @"SideMenuViewController";
+NSString *const kTimesheetsNavigationController = @"TimesheetsNavigationController";
+NSString *const kProjectsNavigationController = @"ProjectsNavigationController";
 
 
 @end
