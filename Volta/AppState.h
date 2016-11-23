@@ -6,7 +6,6 @@
 //  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 
 @interface AppState : NSObject
 

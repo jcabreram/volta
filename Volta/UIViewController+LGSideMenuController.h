@@ -27,7 +27,6 @@
 //  SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
 #import "LGSideMenuController.h"
 
 @interface UIViewController (LGSideMenuController)
