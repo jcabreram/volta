@@ -6,7 +6,6 @@
 //  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import "LGSideMenuController.h"
 
 @interface MainViewController : LGSideMenuController

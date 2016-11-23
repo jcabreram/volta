@@ -26,11 +26,12 @@
 		94ADACD51DDBAA9400C01279 /* DaysTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD41DDBAA9400C01279 /* DaysTableViewController.m */; };
 		94ADACD81DDBAADA00C01279 /* DayTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD71DDBAADA00C01279 /* DayTableViewCell.m */; };
 		94ADACDB1DDBC69800C01279 /* WeekCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACDA1DDBC69800C01279 /* WeekCollectionViewCell.m */; };
-		9551C90C1DE39F650066ED96 /* GlobalVars.m in Sources */ = {isa = PBXBuildFile; fileRef = 9551C90B1DE39F650066ED96 /* GlobalVars.m */; };
 		94FC738E1DE4FA9F0064F4B0 /* ProjectsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94FC738D1DE4FA9F0064F4B0 /* ProjectsTableViewController.m */; };
 		94FC73911DE4FAED0064F4B0 /* ProjectTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94FC73901DE4FAED0064F4B0 /* ProjectTableViewCell.m */; };
 		94FC73941DE4FFDC0064F4B0 /* DayDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94FC73931DE4FFDC0064F4B0 /* DayDetailTableViewController.m */; };
 		94FC73971DE5010A0064F4B0 /* DayDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94FC73961DE5010A0064F4B0 /* DayDetailTableViewCell.m */; };
+		95481C1B1DE4E2C000B7A9B9 /* DataAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 95481C1A1DE4E2C000B7A9B9 /* DataAccess.m */; };
+		9551C90C1DE39F650066ED96 /* GlobalVars.m in Sources */ = {isa = PBXBuildFile; fileRef = 9551C90B1DE39F650066ED96 /* GlobalVars.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,8 +72,6 @@
 		94ADACD71DDBAADA00C01279 /* DayTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayTableViewCell.m; sourceTree = "<group>"; };
 		94ADACD91DDBC69800C01279 /* WeekCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeekCollectionViewCell.h; sourceTree = "<group>"; };
 		94ADACDA1DDBC69800C01279 /* WeekCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeekCollectionViewCell.m; sourceTree = "<group>"; };
-		9551C90A1DE39F650066ED96 /* GlobalVars.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalVars.h; sourceTree = "<group>"; };
-		9551C90B1DE39F650066ED96 /* GlobalVars.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalVars.m; sourceTree = "<group>"; };
 		94FC738C1DE4FA9F0064F4B0 /* ProjectsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProjectsTableViewController.h; path = Volta/ProjectsTableViewController.h; sourceTree = "<group>"; };
 		94FC738D1DE4FA9F0064F4B0 /* ProjectsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProjectsTableViewController.m; path = Volta/ProjectsTableViewController.m; sourceTree = "<group>"; };
 		94FC738F1DE4FAED0064F4B0 /* ProjectTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProjectTableViewCell.h; path = Volta/ProjectTableViewCell.h; sourceTree = "<group>"; };
@@ -81,6 +80,11 @@
 		94FC73931DE4FFDC0064F4B0 /* DayDetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayDetailTableViewController.m; sourceTree = "<group>"; };
 		94FC73951DE5010A0064F4B0 /* DayDetailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayDetailTableViewCell.h; sourceTree = "<group>"; };
 		94FC73961DE5010A0064F4B0 /* DayDetailTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayDetailTableViewCell.m; sourceTree = "<group>"; };
+		95481C191DE4E2C000B7A9B9 /* DataAccess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataAccess.h; sourceTree = "<group>"; };
+		95481C1A1DE4E2C000B7A9B9 /* DataAccess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataAccess.m; sourceTree = "<group>"; };
+		9551C90A1DE39F650066ED96 /* GlobalVars.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalVars.h; sourceTree = "<group>"; };
+		9551C90B1DE39F650066ED96 /* GlobalVars.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalVars.m; sourceTree = "<group>"; };
+		95FDB8231DE5EC8300D1EF37 /* Volta-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Volta-Prefix.pch"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,7 +130,6 @@
 			isa = PBXGroup;
 			children = (
 				9551C9091DE39F300066ED96 /* General */,
-				942AEE8C1DDE11DA004C3FF8 /* Volta.entitlements */,
 				9415B68B1DD2385C00C2020D /* AppDelegate.h */,
 				9415B68C1DD2385C00C2020D /* AppDelegate.m */,
 				9433FF021DDA1F00000DD571 /* Firebase */,
@@ -142,9 +145,11 @@
 		9415B6881DD2385C00C2020D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				942AEE8C1DDE11DA004C3FF8 /* Volta.entitlements */,
 				9415B6991DD2385C00C2020D /* Info.plist */,
 				9415B6961DD2385C00C2020D /* LaunchScreen.storyboard */,
 				9415B6891DD2385C00C2020D /* main.m */,
+				95FDB8231DE5EC8300D1EF37 /* Volta-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -208,17 +213,6 @@
 			path = Volta;
 			sourceTree = "<group>";
 		};
-		9551C9091DE39F300066ED96 /* General */ = {
-			isa = PBXGroup;
-			children = (
-				9469E7231DD3D08D007EB4E6 /* Constants.h */,
-				9469E7241DD3D08D007EB4E6 /* Constants.m */,
-				9551C90A1DE39F650066ED96 /* GlobalVars.h */,
-				9551C90B1DE39F650066ED96 /* GlobalVars.m */,
-			);
-			name = General;
-			sourceTree = "<group>";
-		};
 		94FC73881DE4F9C70064F4B0 /* Projects */ = {
 			isa = PBXGroup;
 			children = (
@@ -228,6 +222,17 @@
 				94FC73901DE4FAED0064F4B0 /* ProjectTableViewCell.m */,
 			);
 			name = Projects;
+			sourceTree = "<group>";
+		};
+		9551C9091DE39F300066ED96 /* General */ = {
+			isa = PBXGroup;
+			children = (
+				9469E7231DD3D08D007EB4E6 /* Constants.h */,
+				9469E7241DD3D08D007EB4E6 /* Constants.m */,
+				9551C90A1DE39F650066ED96 /* GlobalVars.h */,
+				9551C90B1DE39F650066ED96 /* GlobalVars.m */,
+			);
+			name = General;
 			sourceTree = "<group>";
 		};
 		F50D891C59A3888D2428FFBA /* Frameworks */ = {
@@ -511,6 +516,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Volta/Volta.entitlements;
 				DEVELOPMENT_TEAM = 3CMXR35696;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Volta/Volta-Prefix.pch";
 				INFOPLIST_FILE = Volta/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -526,6 +533,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Volta/Volta.entitlements;
 				DEVELOPMENT_TEAM = 3CMXR35696;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Volta/Volta-Prefix.pch";
 				INFOPLIST_FILE = Volta/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

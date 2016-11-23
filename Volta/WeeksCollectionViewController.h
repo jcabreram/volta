@@ -6,7 +6,6 @@
 //  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 
 @interface WeeksCollectionViewController : UICollectionViewController
 
