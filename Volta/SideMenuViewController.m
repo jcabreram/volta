@@ -13,6 +13,7 @@
 #import "UIViewController+LGSideMenuController.h"
 #import "TimesheetsViewController.h"
 #import "MainViewController.h"
+#import "ProjectsTableViewController.h"
 
 typedef NS_ENUM (NSInteger, SideMenuEntry) {
     SideMenuEntry_DisplayName,
@@ -99,12 +100,22 @@ typedef NS_ENUM (NSInteger, SideMenuEntry) {
         }
         
         [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
-    } else if (row >= SideMenuEntry_Activities && row <= SideMenuEntry_Projects) { // 3 to 6
+    } else if (row >= SideMenuEntry_Activities && row <= SideMenuEntry_Expenses) { // 3 to 5
         UIViewController *viewController = [UIViewController new];
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
         viewController.view.backgroundColor = [UIColor whiteColor];
         viewController.title = _titlesArray[row];
         [self sideMenuController].rootViewController = navigationController;
+        
+        [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
+    } else if (row == SideMenuEntry_Projects) { // 6
+        UINavigationController *presentedNavigationController = (UINavigationController *)[self sideMenuController].rootViewController;
+        
+        // If the presented controller is different from selection
+        if (![presentedNavigationController.childViewControllers[0] isKindOfClass:[ProjectsTableViewController class]]) {
+            UINavigationController *projectsNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:kProjectsNavigationController];
+            [self sideMenuController].rootViewController = projectsNavigationController;
+        }
         
         [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
     } else if (row == SideMenuEntry_Empty02) { // 7

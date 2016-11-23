@@ -38,8 +38,8 @@
                     presentationStyle:style
                  alwaysVisibleOptions:LGSideMenuAlwaysVisibleOnNone];
     
-    self.leftViewStatusBarStyle = UIStatusBarStyleDefault;
-    self.leftViewStatusBarVisibleOptions = LGSideMenuStatusBarVisibleOnNone;
+    self.leftViewStatusBarStyle = UIStatusBarStyleLightContent;
+    self.leftViewStatusBarVisibleOptions = LGSideMenuStatusBarVisibleOnAll;
     
     
     self.leftViewBackgroundImage = [UIImage imageNamed:@"image"];

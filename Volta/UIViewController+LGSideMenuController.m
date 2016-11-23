@@ -38,7 +38,7 @@
     return nil;
 }
 
-- (IBAction)openLeftView:(id _Nullable)sender {
+- (IBAction)openLeftView:(id)sender {
     [[self sideMenuController] showLeftViewAnimated:true completionHandler:nil];
 }
 
