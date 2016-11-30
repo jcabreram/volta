@@ -6,8 +6,13 @@
 //  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+typedef NS_ENUM (NSInteger, ControllerMode) {
+    ControllerMode_Employee,
+    ControllerMode_Manager
+};
 
 @interface UserDetailTableViewController : UITableViewController
+
+@property (nonatomic, assign) ControllerMode mode;
 
 @end
