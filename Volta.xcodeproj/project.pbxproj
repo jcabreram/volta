@@ -24,6 +24,7 @@
 		9469E7351DD4E903007EB4E6 /* TimesheetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9469E7341DD4E903007EB4E6 /* TimesheetsViewController.m */; };
 		9477AD481DEE2DC7006FBF28 /* UsersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9477AD471DEE2DC7006FBF28 /* UsersTableViewController.m */; };
 		9477AD4B1DEE2DD6006FBF28 /* UserDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9477AD4A1DEE2DD6006FBF28 /* UserDetailTableViewController.m */; };
+		9477AD4F1DEF9534006FBF28 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 9477AD4E1DEF9534006FBF28 /* User.m */; };
 		94ADACD21DDBAA6300C01279 /* WeeksCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD11DDBAA6300C01279 /* WeeksCollectionViewController.m */; };
 		94ADACD51DDBAA9400C01279 /* DaysTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD41DDBAA9400C01279 /* DaysTableViewController.m */; };
 		94ADACD81DDBAADA00C01279 /* DayTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD71DDBAADA00C01279 /* DayTableViewCell.m */; };
@@ -69,6 +70,8 @@
 		9477AD471DEE2DC7006FBF28 /* UsersTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UsersTableViewController.m; path = Volta/UsersTableViewController.m; sourceTree = "<group>"; };
 		9477AD491DEE2DD6006FBF28 /* UserDetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDetailTableViewController.h; sourceTree = "<group>"; };
 		9477AD4A1DEE2DD6006FBF28 /* UserDetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDetailTableViewController.m; sourceTree = "<group>"; };
+		9477AD4D1DEF9534006FBF28 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		9477AD4E1DEF9534006FBF28 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		94ADACD01DDBAA6300C01279 /* WeeksCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeeksCollectionViewController.h; sourceTree = "<group>"; };
 		94ADACD11DDBAA6300C01279 /* WeeksCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeeksCollectionViewController.m; sourceTree = "<group>"; };
 		94ADACD31DDBAA9400C01279 /* DaysTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DaysTableViewController.h; sourceTree = "<group>"; };
@@ -138,6 +141,7 @@
 				9433FF021DDA1F00000DD571 /* Firebase */,
 				9469E7291DD3EC3C007EB4E6 /* Side Menu Controllers */,
 				9433FF051DDA2031000DD571 /* View Controllers */,
+				9477AD4C1DEF950E006FBF28 /* Models */,
 				9415B6911DD2385C00C2020D /* Main.storyboard */,
 				9415B6941DD2385C00C2020D /* Assets.xcassets */,
 				9415B6881DD2385C00C2020D /* Supporting Files */,
@@ -204,6 +208,15 @@
 				9477AD4A1DEE2DD6006FBF28 /* UserDetailTableViewController.m */,
 			);
 			name = Users;
+			sourceTree = "<group>";
+		};
+		9477AD4C1DEF950E006FBF28 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9477AD4D1DEF9534006FBF28 /* User.h */,
+				9477AD4E1DEF9534006FBF28 /* User.m */,
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 		94ADACCF1DDBAA3300C01279 /* Timesheets */ = {
@@ -396,6 +409,7 @@
 				9469E72F1DD3ECAC007EB4E6 /* SideMenuViewCell.m in Sources */,
 				94ADACDB1DDBC69800C01279 /* WeekCollectionViewCell.m in Sources */,
 				94ADACD51DDBAA9400C01279 /* DaysTableViewController.m in Sources */,
+				9477AD4F1DEF9534006FBF28 /* User.m in Sources */,
 				9477AD481DEE2DC7006FBF28 /* UsersTableViewController.m in Sources */,
 				94FC738E1DE4FA9F0064F4B0 /* ProjectsTableViewController.m in Sources */,
 				9415B68A1DD2385C00C2020D /* main.m in Sources */,

@@ -36,12 +36,18 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    //    if ([segue.identifier isEqualToString:SeguesAddManager]) {
-    //        UINavigationController *navigationController = segue.destinationViewController;
-    //        UserDetailTableViewController *userDetailController = navigationController.childViewControllers[0];
-    //
-    //
-    //    }
+    UINavigationController *navigationController = segue.destinationViewController;
+    UserDetailTableViewController *userDetailController = navigationController.childViewControllers[0];
+    
+    if ([segue.identifier isEqualToString:SeguesAddManager]) {
+        userDetailController.mode = ControllerMode_Manager;
+    } else if ([segue.identifier isEqualToString:SeguesAddEmployee]) {
+        userDetailController.mode = ControllerMode_Employee;
+    } else if ([segue.identifier isEqualToString:SeguesAddAdmin]) {
+        userDetailController.mode = ControllerMode_Admin;
+    } else if ([segue.identifier isEqualToString:SeguesShowUserDetail]) {
+        userDetailController.mode = ControllerMode_Edit;
+    }
 }
 
 #pragma mark - Database
@@ -67,7 +73,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.users count];
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UserCell" forIndexPath:indexPath];

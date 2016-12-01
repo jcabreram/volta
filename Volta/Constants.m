@@ -17,6 +17,7 @@ NSString *const SeguesSignInToMainScreen = @"SignInToMainScreen";
 NSString *const SeguesMainScreenToSignIn = @"MainScreenToSignIn";
 NSString *const SeguesAddManager = @"AddManager";
 NSString *const SeguesAddEmployee = @"AddEmployee";
+NSString *const SeguesAddAdmin = @"AddAdmin";
 NSString *const SeguesShowUserDetail = @"ShowUserDetail";
 
 NSString *const kSideMenuViewController = @"SideMenuViewController";

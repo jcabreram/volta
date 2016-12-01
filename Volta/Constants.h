@@ -15,6 +15,7 @@ extern NSString *const SeguesSignInToMainScreen;
 extern NSString *const SeguesMainScreenToSignIn;
 extern NSString *const SeguesAddManager;
 extern NSString *const SeguesAddEmployee;
+extern NSString *const SeguesAddAdmin;
 extern NSString *const SeguesShowUserDetail;
 
 extern NSString *const kSideMenuViewController;
