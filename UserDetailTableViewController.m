@@ -9,6 +9,9 @@
 #import "UserDetailTableViewController.h"
 #import "User.h"
 #import "NSString+VOLValidation.h"
+#import "UserDetailCell.h"
+#import "Constants.h"
+#import "UsersTableViewController.h"
 
 @import Firebase;
 
@@ -43,7 +46,7 @@ typedef NS_ENUM (NSInteger, InfoField) {
         case UserType_Admin:
             self.navigationItem.title = @"Add admin";
             break;
-    
+            
         case UserType_Manager:
             self.navigationItem.title = @"Add manager";
             break;
@@ -87,6 +90,7 @@ typedef NS_ENUM (NSInteger, InfoField) {
                                    @"created_at":[NSNumber numberWithDouble:[user.createdAt timeIntervalSince1970]],
                                    @"created_by":creatorID,
                                    @"type":user.userTypeString,
+                                   @"managers":user.managers,
                                    @"company":user.companyKey,
                                    @"timesheet":timesheetKey,
                                    @"projects":user.projects};
@@ -115,7 +119,7 @@ typedef NS_ENUM (NSInteger, InfoField) {
                                     if (error) {
                                         NSLog(@"%@", error.localizedDescription);
                                     } else {
-                                        [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+                                        [self dismissController];
                                     }
                                 }];
                 
@@ -140,7 +144,7 @@ typedef NS_ENUM (NSInteger, InfoField) {
                                     if (error) {
                                         NSLog(@"%@", error.localizedDescription);
                                     } else {
-                                        [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+                                        [self dismissController];
                                     }
                                 }];
                 
@@ -165,7 +169,7 @@ typedef NS_ENUM (NSInteger, InfoField) {
                                     if (error) {
                                         NSLog(@"%@", error.localizedDescription);
                                     } else {
-                                        [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+                                        [self dismissController];
                                     }
                                 }];
                 
@@ -191,20 +195,25 @@ typedef NS_ENUM (NSInteger, InfoField) {
     if (![user.email vol_isValidEmail]) {
         [self presentValidationErrorAlertWithTitle:@"Invalid Email"
                                            message:@"Please, verify the email format and try again."];
+        return NO;
     } else if (![user.password vol_isValidPassword]) {
         [self presentValidationErrorAlertWithTitle:@"Invalid Password"
                                            message:@"Please, enter a password with at least 6 characters, one numeric digit and a letter"];
+        return NO;
     } else if ([user.firstName vol_isStringEmpty] || [user.lastName vol_isStringEmpty]) {
         [self presentValidationErrorAlertWithTitle:@"No Name"
                                            message:@"A user has no name but this is not Game of Thrones. Enter one please."];
+        return NO;
     } else if (user.type == UserType_Employee && [user.managers count] == 0) {
         [self presentValidationErrorAlertWithTitle:@"Manager Missing"
                                            message:@"Please, select a manager for this employee."];
+        return NO;
     } else if (user.type != UserType_Admin && [user.companyKey vol_isStringEmpty]) {
         [self presentValidationErrorAlertWithTitle:@"Company Missing"
                                            message:@"Please, enter a company name for this user."];
+        return NO;
     }
-
+    
     return YES;
 }
 
@@ -229,10 +238,16 @@ typedef NS_ENUM (NSInteger, InfoField) {
         if (weakSelf != nil)
             [weakSelf presentViewController:alert animated:YES completion:nil];
     });
-    
-    
 }
 
+- (void)dismissController {
+    [[self presentingViewController] dismissViewControllerAnimated:YES completion:^{
+        UsersTableViewController *usersVC = (UsersTableViewController *)self.presentingViewController;
+        if ([usersVC respondsToSelector:@selector(resetController)]) {
+            [usersVC resetController];
+        }
+    }];
+}
 
 #pragma mark - Table view data source
 
@@ -268,52 +283,53 @@ typedef NS_ENUM (NSInteger, InfoField) {
     }
 }
 
-
-// TODO: Fill the fields with the user data
-
-/*
- - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
- UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
- 
- // Configure the cell...
- 
- return cell;
- }
- */
-
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- } else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    NSString *reuseIdentifier = [[NSString alloc] init];
+    
+    User *user = self.user;
+    
+    NSInteger section = indexPath.section;
+    NSInteger row = indexPath.row;
+    
+    if (section == 0) {
+        if (row == InfoField_FirstName) {
+            reuseIdentifier = kFirstNameCell;
+        } else if (row == InfoField_LastName) {
+            reuseIdentifier = kLastNameCell;
+        } else if (row == InfoField_Email) {
+            reuseIdentifier = kEmailCell;
+        } else if (row == InfoField_Password) {
+            reuseIdentifier = kPasswordCell;
+        } else if (row == InfoField_Company) {
+            reuseIdentifier = kCompanyCell;
+        } else if (row == InfoField_Manager) {
+            reuseIdentifier = kManagerCell;
+        }
+    }
+    
+    UserDetailCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
+    
+    if (section == 0) {
+        if (row == InfoField_FirstName) {
+            cell.firstNameTextField.text = user.firstName;
+        } else if (row == InfoField_LastName) {
+            cell.lastNameTextField.text = user.lastName;
+        } else if (row == InfoField_Email) {
+            cell.emailTextField.text = user.email;
+        } else if (row == InfoField_Company) {
+            cell.companyTextField.text = user.companyKey;
+        } else if (row == InfoField_Manager) {
+            NSArray *managers = [user.managers allKeys];
+            if ([managers count] > 0) {
+                NSString *manager = managers[0];
+                cell.managerTextField.text = manager;
+            }
+        }
+    }
+    
+    return cell;
+}
 
 #pragma mark - UITextField delegate
 

@@ -8,4 +8,6 @@
 
 @interface UsersTableViewController : UITableViewController
 
+- (void)resetController;
+
 @end

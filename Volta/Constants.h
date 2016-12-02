@@ -23,4 +23,11 @@ extern NSString *const kUsersNavigationController;
 extern NSString *const kTimesheetsNavigationController;
 extern NSString *const kProjectsNavigationController;
 
+extern NSString *const kFirstNameCell;
+extern NSString *const kLastNameCell;
+extern NSString *const kEmailCell;
+extern NSString *const kPasswordCell;
+extern NSString *const kCompanyCell;
+extern NSString *const kManagerCell;
+
 @end
