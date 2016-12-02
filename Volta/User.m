@@ -76,4 +76,15 @@
     }
 }
 
++ (UserType)userTypeFromString:(NSString *)str
+{
+    if ([str isEqualToString:@"admin"]) {
+        return UserType_Admin;
+    } else if ([str isEqualToString:@"manager"]) {
+        return UserType_Manager;
+    }
+    
+    return UserType_Employee;
+}
+
 @end

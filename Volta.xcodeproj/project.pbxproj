@@ -25,6 +25,7 @@
 		9477AD481DEE2DC7006FBF28 /* UsersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9477AD471DEE2DC7006FBF28 /* UsersTableViewController.m */; };
 		9477AD4B1DEE2DD6006FBF28 /* UserDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9477AD4A1DEE2DD6006FBF28 /* UserDetailTableViewController.m */; };
 		9477AD4F1DEF9534006FBF28 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 9477AD4E1DEF9534006FBF28 /* User.m */; };
+		9477AD561DF1DD0F006FBF28 /* NSString+VOLValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9477AD551DF1DD0F006FBF28 /* NSString+VOLValidation.m */; };
 		94ADACD21DDBAA6300C01279 /* WeeksCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD11DDBAA6300C01279 /* WeeksCollectionViewController.m */; };
 		94ADACD51DDBAA9400C01279 /* DaysTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD41DDBAA9400C01279 /* DaysTableViewController.m */; };
 		94ADACD81DDBAADA00C01279 /* DayTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD71DDBAADA00C01279 /* DayTableViewCell.m */; };
@@ -72,6 +73,8 @@
 		9477AD4A1DEE2DD6006FBF28 /* UserDetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDetailTableViewController.m; sourceTree = "<group>"; };
 		9477AD4D1DEF9534006FBF28 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		9477AD4E1DEF9534006FBF28 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		9477AD541DF1DD0F006FBF28 /* NSString+VOLValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+VOLValidation.h"; sourceTree = "<group>"; };
+		9477AD551DF1DD0F006FBF28 /* NSString+VOLValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+VOLValidation.m"; sourceTree = "<group>"; };
 		94ADACD01DDBAA6300C01279 /* WeeksCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeeksCollectionViewController.h; sourceTree = "<group>"; };
 		94ADACD11DDBAA6300C01279 /* WeeksCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeeksCollectionViewController.m; sourceTree = "<group>"; };
 		94ADACD31DDBAA9400C01279 /* DaysTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DaysTableViewController.h; sourceTree = "<group>"; };
@@ -157,6 +160,8 @@
 				9415B6961DD2385C00C2020D /* LaunchScreen.storyboard */,
 				9415B6891DD2385C00C2020D /* main.m */,
 				95FDB8231DE5EC8300D1EF37 /* Volta-Prefix.pch */,
+				9477AD541DF1DD0F006FBF28 /* NSString+VOLValidation.h */,
+				9477AD551DF1DD0F006FBF28 /* NSString+VOLValidation.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -416,6 +421,7 @@
 				94ADACD21DDBAA6300C01279 /* WeeksCollectionViewController.m in Sources */,
 				9415B6A71DD28E8100C2020D /* LoginViewController.m in Sources */,
 				9469E7321DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m in Sources */,
+				9477AD561DF1DD0F006FBF28 /* NSString+VOLValidation.m in Sources */,
 				9551C90C1DE39F650066ED96 /* GlobalVars.m in Sources */,
 				94FC73911DE4FAED0064F4B0 /* ProjectTableViewCell.m in Sources */,
 				9469E7221DD3CFCD007EB4E6 /* AppState.m in Sources */,

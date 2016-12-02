@@ -8,6 +8,8 @@
 
 #import "UserDetailTableViewController.h"
 #import "User.h"
+#import "NSString+VOLValidation.h"
+
 @import Firebase;
 
 typedef NS_ENUM (NSInteger, InfoField) {
@@ -31,27 +33,27 @@ typedef NS_ENUM (NSInteger, InfoField) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    switch (self.mode) {
-        case ControllerMode_Admin:
+    if (!self.user) {
+        self.user = [[User alloc] init];
+    }
+    
+    self.projects = [[NSMutableArray alloc] init];
+    
+    switch (self.user.type) {
+        case UserType_Admin:
             self.navigationItem.title = @"Add admin";
             break;
     
-        case ControllerMode_Manager:
+        case UserType_Manager:
             self.navigationItem.title = @"Add manager";
             break;
             
-        case ControllerMode_Employee:
+        case UserType_Employee:
             self.navigationItem.title = @"Add employee";
             break;
             
         default:
             break;
-    }
-    
-    self.projects = [[NSMutableArray alloc] init];
-    
-    if (!self.user) {
-        self.user = [[User alloc] init];
     }
     
     [self configureDatabase];
@@ -65,124 +67,183 @@ typedef NS_ENUM (NSInteger, InfoField) {
     [self.view endEditing:YES];
 }
 
-- (IBAction)tappedDoneButton:(id)sender {
-    
+- (IBAction)tappedDoneButton:(id)sender
+{
+    // TODO : If the user already exists, don't create new keys for it
     [self.view endEditing:YES];
     
-    User *user = self.user;
-    
-    NSString *creatorID = [FIRAuth auth].currentUser.uid;
-    
-    NSString *timesheetKey = [[self.databaseRef child:@"timesheets"] childByAutoId].key;
-    NSString *userKey = [[self.databaseRef child:@"users"] childByAutoId].key;
-    
-    NSDictionary *userDict = @{@"email":user.email,
-                               @"first_name":user.firstName,
-                               @"last_name":user.lastName,
-                               @"created_at":[NSNumber numberWithDouble:[user.createdAt timeIntervalSince1970]],
-                               @"created_by":creatorID,
-                               @"type":user.userTypeString,
-                               @"company":user.companyKey,
-                               @"timesheet":timesheetKey,
-                               @"projects":user.projects};
-    
-    // Initialize the child updates dictionary with the user node
-    NSMutableDictionary *childUpdates = [@{[@"/users/" stringByAppendingString:userKey]: userDict} mutableCopy];
-    
-    if (user.type == UserType_Employee) {
+    if ([self validInput]) {
         
-        // Add the employee to the employees members list
-        childUpdates[[NSString stringWithFormat:@"/employees/members/%@/", userKey]] = @YES;
+        User *user = self.user;
         
-        // Add the employee to its company's employees list
-        childUpdates[[NSString stringWithFormat:@"/companies/%@/employees/%@", user.companyKey, userKey]] = @YES;
+        NSString *creatorID = [FIRAuth auth].currentUser.uid;
         
-        // Get the current number of users of employees to increase it by 1
-        [[[self.databaseRef child:@"employees"] child:@"no_of_users"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-            
-            NSInteger noOfEmployees = [snapshot.value integerValue];
-            NSNumber *increasedNoOfEmployees = [NSNumber numberWithInteger:noOfEmployees+1];
-            childUpdates[@"/employees/no_of_users"] = increasedNoOfEmployees;
-            
-            // Atomically update all child values
-            [self.databaseRef updateChildValues:childUpdates
-                            withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
-                                if (error) {
-                                    NSLog(@"%@", error.localizedDescription);
-                                } else {
-                                    [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
-                                }
-                            }];
-            
-        } withCancelBlock:^(NSError * _Nonnull error) {
-            NSLog(@"%@", error.localizedDescription);
-        }];
-    } else if (user.type == UserType_Manager) {
+        NSString *timesheetKey = [[self.databaseRef child:@"timesheets"] childByAutoId].key;
+        NSString *userKey = [[self.databaseRef child:@"users"] childByAutoId].key;
         
-        // Add the manager to the managers members list
-        childUpdates[[NSString stringWithFormat:@"/managers/members/%@/", userKey]] = @YES;
-
-        // Get the current number of users of managers to increase it by 1
-        [[[self.databaseRef child:@"managers"] child:@"no_of_users"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-            
-            NSInteger noOfManagers = [snapshot.value integerValue];
-            NSNumber *increasedNoOfManagers = [NSNumber numberWithInteger:noOfManagers+1];
-            childUpdates[@"/managers/no_of_users"] = increasedNoOfManagers;
-            
-            // Atomically update all child values
-            [self.databaseRef updateChildValues:childUpdates
-                            withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
-                                if (error) {
-                                    NSLog(@"%@", error.localizedDescription);
-                                } else {
-                                    [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
-                                }
-                            }];
-            
-        } withCancelBlock:^(NSError * _Nonnull error) {
-            NSLog(@"%@", error.localizedDescription);
-        }];
-    } else if (user.type == UserType_Admin) {
+        NSDictionary *userDict = @{@"email":user.email,
+                                   @"first_name":user.firstName,
+                                   @"last_name":user.lastName,
+                                   @"created_at":[NSNumber numberWithDouble:[user.createdAt timeIntervalSince1970]],
+                                   @"created_by":creatorID,
+                                   @"type":user.userTypeString,
+                                   @"company":user.companyKey,
+                                   @"timesheet":timesheetKey,
+                                   @"projects":user.projects};
         
-        // Add the admin to the admins members list
-        childUpdates[[NSString stringWithFormat:@"/admins/members/%@/", userKey]] = @YES;
+        // Initialize the child updates dictionary with the user node
+        NSMutableDictionary *childUpdates = [@{[@"/users/" stringByAppendingString:userKey]: userDict} mutableCopy];
         
-        // Get the current number of users of admins to increase it by 1
-        [[[self.databaseRef child:@"admins"] child:@"no_of_users"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        if (user.type == UserType_Employee) {
             
-            NSInteger noOfAdmins = [snapshot.value integerValue];
-            NSNumber *increasedNoOfAdmins = [NSNumber numberWithInteger:noOfAdmins+1];
-            childUpdates[@"/admins/no_of_users"] = increasedNoOfAdmins;
+            // Add the employee to the employees members list
+            childUpdates[[NSString stringWithFormat:@"/employees/members/%@/", userKey]] = @YES;
             
-            // Atomically update all child values
-            [self.databaseRef updateChildValues:childUpdates
-                            withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
-                                if (error) {
-                                    NSLog(@"%@", error.localizedDescription);
-                                } else {
-                                    [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
-                                }
-                            }];
+            // Add the employee to its company's employees list
+            childUpdates[[NSString stringWithFormat:@"/companies/%@/employees/%@", user.companyKey, userKey]] = @YES;
             
-        } withCancelBlock:^(NSError * _Nonnull error) {
-            NSLog(@"%@", error.localizedDescription);
-        }];
+            // Get the current number of users of employees to increase it by 1
+            [[[self.databaseRef child:@"employees"] child:@"no_of_users"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+                
+                NSInteger noOfEmployees = [snapshot.value integerValue];
+                NSNumber *increasedNoOfEmployees = [NSNumber numberWithInteger:noOfEmployees+1];
+                childUpdates[@"/employees/no_of_users"] = increasedNoOfEmployees;
+                
+                // Atomically update all child values
+                [self.databaseRef updateChildValues:childUpdates
+                                withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
+                                    if (error) {
+                                        NSLog(@"%@", error.localizedDescription);
+                                    } else {
+                                        [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+                                    }
+                                }];
+                
+            } withCancelBlock:^(NSError * _Nonnull error) {
+                NSLog(@"%@", error.localizedDescription);
+            }];
+        } else if (user.type == UserType_Manager) {
+            
+            // Add the manager to the managers members list
+            childUpdates[[NSString stringWithFormat:@"/managers/members/%@/", userKey]] = @YES;
+            
+            // Get the current number of users of managers to increase it by 1
+            [[[self.databaseRef child:@"managers"] child:@"no_of_users"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+                
+                NSInteger noOfManagers = [snapshot.value integerValue];
+                NSNumber *increasedNoOfManagers = [NSNumber numberWithInteger:noOfManagers+1];
+                childUpdates[@"/managers/no_of_users"] = increasedNoOfManagers;
+                
+                // Atomically update all child values
+                [self.databaseRef updateChildValues:childUpdates
+                                withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
+                                    if (error) {
+                                        NSLog(@"%@", error.localizedDescription);
+                                    } else {
+                                        [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+                                    }
+                                }];
+                
+            } withCancelBlock:^(NSError * _Nonnull error) {
+                NSLog(@"%@", error.localizedDescription);
+            }];
+        } else if (user.type == UserType_Admin) {
+            
+            // Add the admin to the admins members list
+            childUpdates[[NSString stringWithFormat:@"/admins/members/%@/", userKey]] = @YES;
+            
+            // Get the current number of users of admins to increase it by 1
+            [[[self.databaseRef child:@"admins"] child:@"no_of_users"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+                
+                NSInteger noOfAdmins = [snapshot.value integerValue];
+                NSNumber *increasedNoOfAdmins = [NSNumber numberWithInteger:noOfAdmins+1];
+                childUpdates[@"/admins/no_of_users"] = increasedNoOfAdmins;
+                
+                // Atomically update all child values
+                [self.databaseRef updateChildValues:childUpdates
+                                withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
+                                    if (error) {
+                                        NSLog(@"%@", error.localizedDescription);
+                                    } else {
+                                        [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+                                    }
+                                }];
+                
+            } withCancelBlock:^(NSError * _Nonnull error) {
+                NSLog(@"%@", error.localizedDescription);
+            }];
+        }
     }
+    
 }
 
-- (IBAction)tappedCancelButton:(id)sender {
+- (IBAction)tappedCancelButton:(id)sender
+{
     [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Helper Methods
+
+- (BOOL)validInput
+{
+    User *user = self.user;
+    
+    if (![user.email vol_isValidEmail]) {
+        [self presentValidationErrorAlertWithTitle:@"Invalid Email"
+                                           message:@"Please, verify the email format and try again."];
+    } else if (![user.password vol_isValidPassword]) {
+        [self presentValidationErrorAlertWithTitle:@"Invalid Password"
+                                           message:@"Please, enter a password with at least 6 characters, one numeric digit and a letter"];
+    } else if ([user.firstName vol_isStringEmpty] || [user.lastName vol_isStringEmpty]) {
+        [self presentValidationErrorAlertWithTitle:@"No Name"
+                                           message:@"A user has no name but this is not Game of Thrones. Enter one please."];
+    } else if (user.type == UserType_Employee && [user.managers count] == 0) {
+        [self presentValidationErrorAlertWithTitle:@"Manager Missing"
+                                           message:@"Please, select a manager for this employee."];
+    } else if (user.type != UserType_Admin && [user.companyKey vol_isStringEmpty]) {
+        [self presentValidationErrorAlertWithTitle:@"Company Missing"
+                                           message:@"Please, enter a company name for this user."];
+    }
+
+    return YES;
+}
+
+- (void)presentValidationErrorAlertWithTitle:(NSString *)errorTitle
+                                     message:(NSString *)errorMessage {
+    NSLog(@"Presenting Login Error Alert with message:\n%@", errorMessage);
+    
+    UIAlertController *alert;
+    alert = [UIAlertController alertControllerWithTitle:errorTitle
+                                                message:errorMessage
+                                         preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *defaultAction;
+    defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                             style:UIAlertActionStyleDefault
+                                           handler:nil];
+    
+    [alert addAction:defaultAction];
+    
+    __weak UserDetailTableViewController *weakSelf = self;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (weakSelf != nil)
+            [weakSelf presentViewController:alert animated:YES completion:nil];
+    });
+    
+    
 }
 
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if (self.mode == ControllerMode_Manager) {
+    User *user = self.user;
+    
+    if (user.type == UserType_Manager) {
         return 1;
-    } else if (self.mode == ControllerMode_Employee) {
+    } else if (user.type == UserType_Employee) {
         return 2;
-    } else if (self.mode == ControllerMode_Admin) {
+    } else if (user.type == UserType_Admin) {
         return 1;
     }
     
@@ -190,12 +251,14 @@ typedef NS_ENUM (NSInteger, InfoField) {
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    User *user = self.user;
+    
     if (section ==  0) {
-        if (self.mode == ControllerMode_Manager) {
+        if (user.type == UserType_Manager) {
             return 5;
-        } else if (self.mode == ControllerMode_Employee) {
+        } else if (user.type == UserType_Employee) {
             return 6;
-        } else if (self.mode == ControllerMode_Admin) {
+        } else if (user.type == UserType_Admin) {
             return 4;
         } else {
             return 0;
@@ -204,6 +267,9 @@ typedef NS_ENUM (NSInteger, InfoField) {
         return [self.projects count];
     }
 }
+
+
+// TODO: Fill the fields with the user data
 
 /*
  - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

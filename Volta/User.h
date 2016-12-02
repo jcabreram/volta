@@ -43,4 +43,6 @@ typedef NS_ENUM (NSInteger, UserType) {
 
 - (NSString *)userTypeString;
 
++ (UserType)userTypeFromString:(NSString *)str;
+
 @end

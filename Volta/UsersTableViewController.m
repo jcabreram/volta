@@ -9,6 +9,7 @@
 #import "UsersTableViewController.h"
 #import "UserDetailTableViewController.h"
 #import "Constants.h"
+#import "User.h"
 
 @import Firebase;
 
@@ -17,6 +18,7 @@
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
 @property (nonatomic, assign) FIRDatabaseHandle referenceHandle;
 @property (nonatomic, strong) NSMutableArray<FIRDataSnapshot *> *users;
+@property (nonatomic, strong) User *selectedUser;
 
 @end
 
@@ -39,15 +41,21 @@
     UINavigationController *navigationController = segue.destinationViewController;
     UserDetailTableViewController *userDetailController = navigationController.childViewControllers[0];
     
-    if ([segue.identifier isEqualToString:SeguesAddManager]) {
-        userDetailController.mode = ControllerMode_Manager;
-    } else if ([segue.identifier isEqualToString:SeguesAddEmployee]) {
-        userDetailController.mode = ControllerMode_Employee;
-    } else if ([segue.identifier isEqualToString:SeguesAddAdmin]) {
-        userDetailController.mode = ControllerMode_Admin;
-    } else if ([segue.identifier isEqualToString:SeguesShowUserDetail]) {
-        userDetailController.mode = ControllerMode_Edit;
+    if (!self.selectedUser) {
+        self.selectedUser = [[User alloc] init];
     }
+    
+    if ([segue.identifier isEqualToString:SeguesAddManager]) {
+        self.selectedUser.type = UserType_Manager;
+    } else if ([segue.identifier isEqualToString:SeguesAddEmployee]) {
+        self.selectedUser.type = UserType_Employee;
+    } else if ([segue.identifier isEqualToString:SeguesAddAdmin]) {
+        self.selectedUser.type = UserType_Admin;
+    } else if ([segue.identifier isEqualToString:SeguesShowUserDetail]) {
+        userDetailController.user = self.selectedUser;
+    }
+    
+    userDetailController.user = self.selectedUser;
 }
 
 #pragma mark - Database
@@ -91,6 +99,23 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    FIRDataSnapshot *userSnapshot = _users[indexPath.row];
+    NSDictionary *user = userSnapshot.value;
+    
+    self.selectedUser = [[User alloc] initWithFirstName:user[@"first_name"]
+                                               lastName:user[@"last_name"]
+                                                  email:user[@"email"]
+                                               password:user[@"first_name"]
+                                              createdAt:[NSDate dateWithTimeIntervalSince1970:[user[@"date"] doubleValue]]
+                                                   type:[User userTypeFromString:user[@"type"]]
+                                              employees:user[@"employees"]
+                                               managers:user[@"managers"]
+                                             companyKey:user[@"company"]
+                                              timesheet:user[@"timesheet"]
+                                               projects:user[@"projects"]];
+}
 
 /*
  // Override to support conditional editing of the table view.
