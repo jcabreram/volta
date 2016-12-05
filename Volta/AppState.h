@@ -13,6 +13,7 @@
 
 @property (nonatomic) BOOL signedIn;
 @property (nonatomic, strong) NSString *displayName;
+@property (nonatomic, copy) NSString *userID;
 @property (nonatomic, strong) NSURL *photoURL;
 
 @end

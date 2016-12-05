@@ -50,6 +50,10 @@
     UINavigationController *navigationController = segue.destinationViewController;
     UserDetailTableViewController *userDetailController = navigationController.childViewControllers[0];
     
+    if (!self.selectedUser) {
+        self.selectedUser = [[User alloc] init];
+    }
+    
     if ([segue.identifier isEqualToString:SeguesAddManager]) {
         self.selectedUser.type = UserType_Manager;
     } else if ([segue.identifier isEqualToString:SeguesAddEmployee]) {
