@@ -16,6 +16,7 @@ typedef NS_ENUM (NSInteger, UserType) {
     UserType_Employee
 };
 
+@property (nonatomic, copy) NSString *key;
 @property (nonatomic, copy) NSString *firstName;
 @property (nonatomic, copy) NSString *lastName;
 @property (nonatomic, copy) NSString *email;
@@ -29,17 +30,18 @@ typedef NS_ENUM (NSInteger, UserType) {
 @property (nonatomic, copy) NSMutableDictionary<NSString *, NSNumber *> *projects;
 
 - (instancetype)init;
-- (instancetype)initWithFirstName:(NSString *)firstName
-                         lastName:(NSString *)lastName
-                            email:(NSString *)email
-                         password:(NSString *)password
-                        createdAt:(NSDate *)createdAt
-                             type:(UserType)type
-                        employees:(NSMutableDictionary<NSString *, NSNumber *> *)employees
-                         managers:(NSMutableDictionary<NSString *, NSNumber *> *)managers
-                       companyKey:(NSString *)companyKey
-                        timesheet:(NSString *)timesheet
-                         projects:(NSMutableDictionary<NSString *, NSNumber *> *)projects;
+- (instancetype)initWithKey:(NSString *)key
+                  firstName:(NSString *)firstName
+                   lastName:(NSString *)lastName
+                      email:(NSString *)email
+                   password:(NSString *)password
+                  createdAt:(NSDate *)createdAt
+                       type:(UserType)type
+                  employees:(NSMutableDictionary<NSString *, NSNumber *> *)employees
+                   managers:(NSMutableDictionary<NSString *, NSNumber *> *)managers
+                 companyKey:(NSString *)companyKey
+                  timesheet:(NSString *)timesheet
+                   projects:(NSMutableDictionary<NSString *, NSNumber *> *)projects;
 
 - (NSString *)userTypeString;
 

@@ -72,7 +72,6 @@ typedef NS_ENUM (NSInteger, InfoField) {
 
 - (IBAction)tappedDoneButton:(id)sender
 {
-    // TODO : If the user already exists, don't create new keys for it
     [self.view endEditing:YES];
     
     if ([self validInput]) {
@@ -81,8 +80,16 @@ typedef NS_ENUM (NSInteger, InfoField) {
         
         NSString *creatorID = [FIRAuth auth].currentUser.uid;
         
-        NSString *timesheetKey = [[self.databaseRef child:@"timesheets"] childByAutoId].key;
-        NSString *userKey = [[self.databaseRef child:@"users"] childByAutoId].key;
+        NSString *timesheetKey;
+        NSString *userKey;
+        
+        if ([user.key vol_isStringEmpty]) {
+            timesheetKey = [[self.databaseRef child:@"timesheets"] childByAutoId].key;
+            userKey = [[self.databaseRef child:@"users"] childByAutoId].key;
+        } else {
+            timesheetKey = user.timesheet;
+            userKey = user.key;
+        }
         
         NSDictionary *userDict = @{@"email":user.email,
                                    @"first_name":user.firstName,

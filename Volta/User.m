@@ -12,35 +12,38 @@
 
 - (instancetype)init
 {
-    return [self initWithFirstName:@""
-                          lastName:@""
-                             email:@""
-                          password:@""
-                         createdAt:[NSDate date]
-                              type:UserType_Employee
-                         employees:[NSMutableDictionary new]
-                          managers:[NSMutableDictionary new]
-                        companyKey:@""
-                         timesheet:@""
-                          projects:[NSMutableDictionary new]];
+    return [self initWithKey:@""
+                   firstName:@""
+                    lastName:@""
+                       email:@""
+                    password:@""
+                   createdAt:[NSDate date]
+                        type:UserType_Employee
+                   employees:[NSMutableDictionary new]
+                    managers:[NSMutableDictionary new]
+                  companyKey:@""
+                   timesheet:@""
+                    projects:[NSMutableDictionary new]];
     
 }
 
-- (instancetype)initWithFirstName:(NSString *)firstName
-                         lastName:(NSString *)lastName
-                            email:(NSString *)email
-                         password:(NSString *)password
-                        createdAt:(NSDate *)createdAt
-                             type:(UserType)type
-                        employees:(NSMutableDictionary<NSString *, NSNumber *> *)employees
-                         managers:(NSMutableDictionary<NSString *, NSNumber *> *)managers
-                       companyKey:(NSString *)companyKey
-                        timesheet:(NSString *)timesheet
-                         projects:(NSMutableDictionary<NSString *, NSNumber *> *)projects
+- (instancetype)initWithKey:(NSString *)key
+                  firstName:(NSString *)firstName
+                   lastName:(NSString *)lastName
+                      email:(NSString *)email
+                   password:(NSString *)password
+                  createdAt:(NSDate *)createdAt
+                       type:(UserType)type
+                  employees:(NSMutableDictionary<NSString *, NSNumber *> *)employees
+                   managers:(NSMutableDictionary<NSString *, NSNumber *> *)managers
+                 companyKey:(NSString *)companyKey
+                  timesheet:(NSString *)timesheet
+                   projects:(NSMutableDictionary<NSString *, NSNumber *> *)projects
 {
     self = [super init];
     
     if (self) {
+        _key = key;
         _firstName = firstName;
         _lastName = lastName;
         _email = email;

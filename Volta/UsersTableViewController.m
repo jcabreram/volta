@@ -60,18 +60,20 @@
         NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
         FIRDataSnapshot *userSnapshot = _users[indexPath.row];
         NSDictionary *user = userSnapshot.value;
+        NSString *userKey = userSnapshot.key;
         
-        self.selectedUser = [[User alloc] initWithFirstName:user[@"first_name"]
-                                                   lastName:user[@"last_name"]
-                                                      email:user[@"email"]
-                                                   password:user[@"first_name"]
-                                                  createdAt:[NSDate dateWithTimeIntervalSince1970:[user[@"date"] doubleValue]]
-                                                       type:[User userTypeFromString:user[@"type"]]
-                                                  employees:user[@"employees"]
-                                                   managers:user[@"managers"]
-                                                 companyKey:user[@"company"]
-                                                  timesheet:user[@"timesheet"]
-                                                   projects:user[@"projects"]];
+        self.selectedUser = [[User alloc] initWithKey:userKey
+                                            firstName:user[@"first_name"]
+                                             lastName:user[@"last_name"]
+                                                email:user[@"email"]
+                                             password:user[@"first_name"]
+                                            createdAt:[NSDate dateWithTimeIntervalSince1970:[user[@"date"] doubleValue]]
+                                                 type:[User userTypeFromString:user[@"type"]]
+                                            employees:user[@"employees"]
+                                             managers:user[@"managers"]
+                                           companyKey:user[@"company"]
+                                            timesheet:user[@"timesheet"]
+                                             projects:user[@"projects"]];
     }
     
     userDetailController.user = self.selectedUser;
