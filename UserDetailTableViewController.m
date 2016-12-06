@@ -306,6 +306,26 @@ typedef NS_ENUM (NSInteger, InfoField) {
     return 1;
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    NSString *sectionName;
+    
+    switch (section) {
+        case 0:
+            sectionName = @"Personal Info";
+            break;
+            
+        case 1:
+            sectionName = @"Projects";
+            break;
+            
+        default:
+            break;
+    }
+    
+    return sectionName;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     User *user = self.user;
     
