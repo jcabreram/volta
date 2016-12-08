@@ -67,6 +67,10 @@ typedef NS_ENUM (NSInteger, InfoField) {
         self.navigationItem.title = fullName;
     }
     
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
+    gestureRecognizer.cancelsTouchesInView = NO;
+    [self.tableView addGestureRecognizer:gestureRecognizer];
+    
     [self configureDatabase];
 }
 
@@ -74,7 +78,7 @@ typedef NS_ENUM (NSInteger, InfoField) {
     _databaseRef = [[FIRDatabase database] reference];
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+- (void)dismissKeyboard {
     [self.view endEditing:YES];
 }
 
