@@ -17,6 +17,8 @@ extern NSString *const SeguesAddManager;
 extern NSString *const SeguesAddEmployee;
 extern NSString *const SeguesAddAdmin;
 extern NSString *const SeguesShowUserDetail;
+extern NSString *const SeguesAddProject;
+extern NSString *const SeguesShowProjectDetail;
 
 extern NSString *const kSideMenuViewController;
 extern NSString *const kUsersNavigationController;
@@ -29,5 +31,10 @@ extern NSString *const kEmailCell;
 extern NSString *const kPasswordCell;
 extern NSString *const kCompanyCell;
 extern NSString *const kManagerCell;
+
+extern NSString *const kProjectNameCell;
+extern NSString *const kProjectDefaultDurationCell;
+extern NSString *const kProjectOrganizationCell;
+extern NSString *const kProjectCompanyCell;
 
 @end

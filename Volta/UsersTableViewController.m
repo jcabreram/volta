@@ -110,7 +110,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UserCell" forIndexPath:indexPath];
     
-    FIRDataSnapshot *userSnapshot = _users[indexPath.row];
+    FIRDataSnapshot *userSnapshot = self.users[indexPath.row];
     NSDictionary<NSString *, NSString *> *user = userSnapshot.value;
     
     NSString *firstName = user[@"first_name"];

@@ -13,5 +13,6 @@
 - (BOOL)vol_isValidEmail;
 - (BOOL)vol_isValidPassword;
 - (BOOL)vol_isStringEmpty;
+- (BOOL)vol_isNumber;
 
 @end

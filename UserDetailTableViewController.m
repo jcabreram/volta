@@ -37,27 +37,34 @@ typedef NS_ENUM (NSInteger, InfoField) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if (!self.user) {
-        self.user = [[User alloc] init];
+    User *user = self.user;
+    
+    if (!user) {
+        user = [[User alloc] init];
     }
     
     self.projects = [[NSMutableArray alloc] init];
     
-    switch (self.user.type) {
-        case UserType_Admin:
-            self.navigationItem.title = @"Add admin";
-            break;
-            
-        case UserType_Manager:
-            self.navigationItem.title = @"Add manager";
-            break;
-            
-        case UserType_Employee:
-            self.navigationItem.title = @"Add employee";
-            break;
-            
-        default:
-            break;
+    if ([user.key vol_isStringEmpty]) {
+        switch (user.type) {
+            case UserType_Admin:
+                self.navigationItem.title = @"Add admin";
+                break;
+                
+            case UserType_Manager:
+                self.navigationItem.title = @"Add manager";
+                break;
+                
+            case UserType_Employee:
+                self.navigationItem.title = @"Add employee";
+                break;
+                
+            default:
+                break;
+        }
+    } else {
+        NSString *fullName = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
+        self.navigationItem.title = fullName;
     }
     
     [self configureDatabase];
@@ -348,8 +355,6 @@ typedef NS_ENUM (NSInteger, InfoField) {
     
     NSString *reuseIdentifier = [[NSString alloc] init];
     
-    User *user = self.user;
-    
     NSInteger section = indexPath.section;
     NSInteger row = indexPath.row;
     
@@ -368,6 +373,8 @@ typedef NS_ENUM (NSInteger, InfoField) {
             reuseIdentifier = kManagerCell;
         }
     }
+    
+    User *user = self.user;
     
     UserDetailCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
     

@@ -19,6 +19,8 @@ NSString *const SeguesAddManager = @"AddManager";
 NSString *const SeguesAddEmployee = @"AddEmployee";
 NSString *const SeguesAddAdmin = @"AddAdmin";
 NSString *const SeguesShowUserDetail = @"ShowUserDetail";
+NSString *const SeguesAddProject = @"AddProject";
+NSString *const SeguesShowProjectDetail = @"ShowProjectDetail";
 
 NSString *const kSideMenuViewController = @"SideMenuViewController";
 NSString *const kUsersNavigationController = @"UsersNavigationController";
@@ -32,5 +34,11 @@ NSString *const kEmailCell = @"EmailCell";
 NSString *const kPasswordCell = @"PasswordCell";
 NSString *const kCompanyCell = @"CompanyCell";
 NSString *const kManagerCell = @"ManagerCell";
+
+// Project Detail Cells
+NSString *const kProjectNameCell = @"ProjectNameCell";
+NSString *const kProjectDefaultDurationCell = @"ProjectDefaultDurationCell";
+NSString *const kProjectOrganizationCell = @"ProjectOrganizationCell";
+NSString *const kProjectCompanyCell = @"ProjectCompanyCell";
 
 @end

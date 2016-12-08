@@ -9,4 +9,6 @@
 
 @interface ProjectsTableViewController : UITableViewController
 
+- (void)resetController;
+
 @end

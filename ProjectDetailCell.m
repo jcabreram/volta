@@ -1,14 +1,14 @@
 //
-//  ProjectTableViewCell.m
+//  ProjectDetailCell.m
 //  Volta
 //
-//  Created by Jonathan Cabrera on 11/22/16.
+//  Created by Jonathan Cabrera on 12/6/16.
 //  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
 //
 
-#import "ProjectTableViewCell.h"
+#import "ProjectDetailCell.h"
 
-@implementation ProjectTableViewCell
+@implementation ProjectDetailCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];

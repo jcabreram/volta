@@ -45,4 +45,12 @@
     return NO;
 }
 
+- (BOOL)vol_isNumber
+{
+    NSScanner *scanner = [NSScanner scannerWithString:self];
+    BOOL isNumeric = [scanner scanInteger:NULL] && [scanner isAtEnd];
+    
+    return isNumeric;
+}
+
 @end
