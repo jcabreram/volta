@@ -25,6 +25,8 @@ typedef NS_ENUM (NSInteger, Field) {
 @interface ProjectDetailTableViewController ()
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
+@property (nonatomic, assign) FIRDatabaseHandle companiesHandle;
+@property (nonatomic, strong) NSMutableArray *companies;
 
 @end
 
@@ -34,10 +36,11 @@ typedef NS_ENUM (NSInteger, Field) {
     [super viewDidLoad];
     
     Project *project = self.project;
-    
     if (!project) {
         project = [[Project alloc] init];
     }
+    
+    self.companies = [[NSMutableArray alloc] init];
     
     if ([project.key vol_isStringEmpty]) {
         self.navigationItem.title = @"Add project";
@@ -45,19 +48,22 @@ typedef NS_ENUM (NSInteger, Field) {
         self.navigationItem.title = project.name;
     }
     
-    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
-    gestureRecognizer.cancelsTouchesInView = NO;
-    [self.tableView addGestureRecognizer:gestureRecognizer];
-    
     [self configureDatabase];
 }
 
 - (void)configureDatabase {
-    _databaseRef = [[FIRDatabase database] reference];
+    self.databaseRef = [[FIRDatabase database] reference];
+    
+    self.companiesHandle = [[self.databaseRef child:@"companies"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        NSDictionary<NSString *, NSString *> *company = snapshot.value;
+        if ([company[@"name"] isKindOfClass:[NSString class]]) {
+            [self.companies addObject:company[@"name"]];
+        }
+    }];
 }
 
-- (void)dismissKeyboard {
-    [self.view endEditing:YES];
+- (void)dealloc {
+    [[self.databaseRef child:@"companies"] removeObserverWithHandle:self.companiesHandle];
 }
 
 - (IBAction)tappedDoneButton:(id)sender
@@ -65,11 +71,11 @@ typedef NS_ENUM (NSInteger, Field) {
     [self.view endEditing:YES];
     
     if ([self validInput]) {
-        [self updateUserInDatabase];
+        [self updateProjectInDatabase];
     }
 }
 
-- (void)updateUserInDatabase {
+- (void)updateProjectInDatabase {
     Project *project = self.project;
     
     NSString *projectKey;
@@ -180,7 +186,6 @@ typedef NS_ENUM (NSInteger, Field) {
     
     NSString *reuseIdentifier = [[NSString alloc] init];
     
-    NSInteger section = indexPath.section;
     NSInteger row = indexPath.row;
     
     if (row == Field_Name) {
@@ -206,7 +211,17 @@ typedef NS_ENUM (NSInteger, Field) {
     } else if (row == Field_Organization) {
         cell.organizationField.text = project.organization;
     } else if (row == Field_Company) {
-        cell.companyField.text = project.companyKey;
+        MLPAutoCompleteTextField *companyField = (MLPAutoCompleteTextField *)cell.companyField;
+        companyField.autoCompleteDataSource = self;
+        
+        // Parent correction
+        companyField.autoCompleteParentView = self.view;
+        
+        // Offset correction
+        CGPoint pt = [companyField convertPoint:CGPointMake(0, companyField.frame.origin.y) toView:self.view];
+        companyField.autoCompleteTableOriginOffset = CGSizeMake(0, pt.y);
+        
+        companyField.text = project.companyKey;
     }
     
     return cell;
@@ -254,6 +269,19 @@ typedef NS_ENUM (NSInteger, Field) {
     } else {
         return YES;
     }
+}
+
+#pragma mark - MLPAutoCompleteTextField delegate
+
+- (void)autoCompleteTextField:(MLPAutoCompleteTextField *)textField
+ possibleCompletionsForString:(NSString *)string
+            completionHandler:(void (^)(NSArray *))handler
+{
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+    dispatch_async(queue, ^{
+        NSArray *completions = [self.companies copy];
+        handler(completions);
+    });
 }
 
 @end

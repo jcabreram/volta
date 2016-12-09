@@ -7,8 +7,9 @@
 //
 
 @class Project;
+#import "MLPAutoCompleteTextField.h"
 
-@interface ProjectDetailTableViewController : UITableViewController <UITextFieldDelegate>
+@interface ProjectDetailTableViewController : UITableViewController <UITextFieldDelegate, MLPAutoCompleteTextFieldDataSource>
 
 @property (nonatomic, strong) Project *project;
 
