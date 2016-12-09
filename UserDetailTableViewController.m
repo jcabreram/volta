@@ -25,6 +25,11 @@ typedef NS_ENUM (NSInteger, InfoField) {
     InfoField_Manager
 };
 
+typedef NS_ENUM (NSInteger, SectionNumber) {
+    SectionNumber_One,
+    SectionNumber_Two
+};
+
 @interface UserDetailTableViewController ()
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
@@ -128,7 +133,7 @@ typedef NS_ENUM (NSInteger, InfoField) {
     NSDictionary *userDict = @{@"email":user.email,
                                @"first_name":user.firstName,
                                @"last_name":user.lastName,
-                               @"created_at":[NSNumber numberWithDouble:[user.createdAt timeIntervalSince1970]],
+                               @"created_at":@([user.createdAt timeIntervalSince1970]),
                                @"created_by":creatorID,
                                @"type":user.userTypeString,
                                @"managers":user.managers,
@@ -151,7 +156,7 @@ typedef NS_ENUM (NSInteger, InfoField) {
         [[[self.databaseRef child:@"employees"] child:@"no_of_users"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
             
             NSInteger noOfEmployees = [snapshot.value integerValue];
-            NSNumber *increasedNoOfEmployees = [NSNumber numberWithInteger:noOfEmployees+1];
+            NSNumber *increasedNoOfEmployees = @(noOfEmployees+1);
             childUpdates[@"/employees/no_of_users"] = increasedNoOfEmployees;
             
             // Atomically update all child values
@@ -180,7 +185,7 @@ typedef NS_ENUM (NSInteger, InfoField) {
         [[[self.databaseRef child:@"managers"] child:@"no_of_users"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
             
             NSInteger noOfManagers = [snapshot.value integerValue];
-            NSNumber *increasedNoOfManagers = [NSNumber numberWithInteger:noOfManagers+1];
+            NSNumber *increasedNoOfManagers = @(noOfManagers+1);
             childUpdates[@"/managers/no_of_users"] = increasedNoOfManagers;
             
             // Atomically update all child values
@@ -209,7 +214,7 @@ typedef NS_ENUM (NSInteger, InfoField) {
         [[[self.databaseRef child:@"admins"] child:@"no_of_users"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
             
             NSInteger noOfAdmins = [snapshot.value integerValue];
-            NSNumber *increasedNoOfAdmins = [NSNumber numberWithInteger:noOfAdmins+1];
+            NSNumber *increasedNoOfAdmins = @(noOfAdmins+1);
             childUpdates[@"/admins/no_of_users"] = increasedNoOfAdmins;
             
             // Atomically update all child values
@@ -340,7 +345,7 @@ typedef NS_ENUM (NSInteger, InfoField) {
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     User *user = self.user;
     
-    if (section ==  0) {
+    if (section ==  SectionNumber_One) {
         if (user.type == UserType_Manager) {
             return 5;
         } else if (user.type == UserType_Employee) {
@@ -357,12 +362,12 @@ typedef NS_ENUM (NSInteger, InfoField) {
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSString *reuseIdentifier = [[NSString alloc] init];
+    NSString *reuseIdentifier;
     
     NSInteger section = indexPath.section;
     NSInteger row = indexPath.row;
     
-    if (section == 0) {
+    if (section == SectionNumber_One) {
         if (row == InfoField_FirstName) {
             reuseIdentifier = kFirstNameCell;
         } else if (row == InfoField_LastName) {
@@ -375,6 +380,8 @@ typedef NS_ENUM (NSInteger, InfoField) {
             reuseIdentifier = kCompanyCell;
         } else if (row == InfoField_Manager) {
             reuseIdentifier = kManagerCell;
+        } else {
+            reuseIdentifier = @"";
         }
     }
     
@@ -382,7 +389,7 @@ typedef NS_ENUM (NSInteger, InfoField) {
     
     UserDetailCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
     
-    if (section == 0) {
+    if (section == SectionNumber_One) {
         if (row == InfoField_FirstName) {
             cell.firstNameTextField.text = user.firstName;
         } else if (row == InfoField_LastName) {
@@ -420,7 +427,7 @@ typedef NS_ENUM (NSInteger, InfoField) {
     NSInteger section = indexPath.section;
     NSInteger row = indexPath.row;
     
-    if (section == 0) {
+    if (section == SectionNumber_One) {
         if (row == InfoField_FirstName) {
             user.firstName = textField.text;
         } else if (row == InfoField_LastName) {
@@ -433,7 +440,7 @@ typedef NS_ENUM (NSInteger, InfoField) {
             user.companyKey = textField.text;
         } else if (row == InfoField_Manager) {
             [user.managers removeAllObjects];
-            user.managers[textField.text] = [NSNumber numberWithBool:YES];
+            user.managers[textField.text] = @(YES);
         }
     }
 }

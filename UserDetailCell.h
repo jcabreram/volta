@@ -6,8 +6,6 @@
 //  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
 @interface UserDetailCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UITextField *firstNameTextField;

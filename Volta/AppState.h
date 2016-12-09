@@ -12,8 +12,8 @@
 + (AppState *)sharedInstance;
 
 @property (nonatomic) BOOL signedIn;
-@property (nonatomic, strong) NSString *displayName;
+@property (nonatomic, copy) NSString *displayName;
 @property (nonatomic, copy) NSString *userID;
-@property (nonatomic, strong) NSURL *photoURL;
+@property (nonatomic, copy) NSURL *photoURL;
 
 @end

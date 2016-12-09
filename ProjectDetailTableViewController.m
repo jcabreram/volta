@@ -56,8 +56,9 @@ typedef NS_ENUM (NSInteger, Field) {
     
     self.companiesHandle = [[self.databaseRef child:@"companies"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         NSDictionary<NSString *, NSString *> *company = snapshot.value;
-        if ([company[@"name"] isKindOfClass:[NSString class]]) {
-            [self.companies addObject:company[@"name"]];
+        id expectedString = company[@"name"];
+        if ([expectedString isKindOfClass:[NSString class]]) {
+            [self.companies addObject:expectedString];
         }
     }];
 }
@@ -89,7 +90,7 @@ typedef NS_ENUM (NSInteger, Field) {
     NSDictionary *projectDict = @{@"name":project.name,
                                   @"organization":project.organization,
                                   @"company":project.companyKey,
-                                  @"default_duration":[NSNumber numberWithInteger:project.defaultDuration]};
+                                  @"default_duration":@(project.defaultDuration)};
     
     // Initialize the child updates dictionary with the user node
     NSMutableDictionary *childUpdates = [@{[@"/projects/" stringByAppendingString:projectKey]: projectDict} mutableCopy];
@@ -184,7 +185,7 @@ typedef NS_ENUM (NSInteger, Field) {
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSString *reuseIdentifier = [[NSString alloc] init];
+    NSString *reuseIdentifier;
     
     NSInteger row = indexPath.row;
     
@@ -196,6 +197,8 @@ typedef NS_ENUM (NSInteger, Field) {
         reuseIdentifier = kProjectOrganizationCell;
     } else if (row == Field_Company) {
         reuseIdentifier = kProjectCompanyCell;
+    } else {
+        reuseIdentifier = @"";
     }
     
     Project *project = self.project;
@@ -261,11 +264,17 @@ typedef NS_ENUM (NSInteger, Field) {
             return YES;
         }
         
-        if ([string intValue]) {
-            return YES;
+        if ([string rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet].invertedSet].location != NSNotFound) {
+            return NO;
         }
         
-        return NO;
+        NSString *proposedText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        
+        if (proposedText.length > 2) {
+            return NO;
+        }
+        
+        return YES;
     } else {
         return YES;
     }

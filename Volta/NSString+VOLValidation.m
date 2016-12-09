@@ -33,7 +33,7 @@
 
 - (BOOL)vol_isStringEmpty
 {
-    if ([self length] == 0) { //string is empty or nil
+    if (self == nil || [self length] == 0) { //string is empty or nil
         return YES;
     }
     
