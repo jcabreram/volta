@@ -54,9 +54,14 @@ typedef NS_ENUM (NSInteger, Field) {
 - (void)configureDatabase {
     self.databaseRef = [[FIRDatabase database] reference];
     
-    self.companiesHandle = [[self.databaseRef child:@"companies"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-        NSDictionary<NSString *, NSString *> *company = snapshot.value;
-        id expectedNameString = company[@"name"];
+    self.companiesHandle = [self handleForObservingKeyAndNameOfChild:@"companies"];
+}
+
+- (FIRDatabaseHandle)handleForObservingKeyAndNameOfChild:(NSString *)child
+{
+    return [[self.databaseRef child:child] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        NSDictionary<NSString *, NSString *> *childDict = snapshot.value;
+        id expectedNameString = childDict[@"name"];
         id expectedKeyString = snapshot.key;
         if ([expectedNameString isKindOfClass:[NSString class]] && [expectedKeyString isKindOfClass:[NSString class]]) {
             self.companies[expectedKeyString] = expectedNameString;

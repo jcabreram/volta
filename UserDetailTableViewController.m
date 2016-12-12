@@ -33,7 +33,14 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 @interface UserDetailTableViewController ()
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
-@property (nonatomic, strong) NSMutableArray<FIRDataSnapshot *> *projects;
+
+@property (nonatomic, assign) FIRDatabaseHandle projectsHandle;
+@property (nonatomic, assign) FIRDatabaseHandle companiesHandle;
+@property (nonatomic, assign) FIRDatabaseHandle managersHandle;
+
+@property (nonatomic, strong) NSMutableDictionary *projects;
+@property (nonatomic, strong) NSMutableDictionary *companies;
+@property (nonatomic, strong) NSMutableDictionary *managers;
 
 @end
 
@@ -48,7 +55,9 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         user = [[User alloc] init];
     }
     
-    self.projects = [[NSMutableArray alloc] init];
+    self.projects = [[NSMutableDictionary alloc] init];
+    self.companies = [[NSMutableDictionary alloc] init];
+    self.managers = [[NSMutableDictionary alloc] init];
     
     if ([user.key vol_isStringEmpty]) {
         switch (user.type) {
@@ -72,19 +81,44 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         self.navigationItem.title = fullName;
     }
     
-    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
-    gestureRecognizer.cancelsTouchesInView = NO;
-    [self.tableView addGestureRecognizer:gestureRecognizer];
-    
     [self configureDatabase];
 }
 
 - (void)configureDatabase {
     _databaseRef = [[FIRDatabase database] reference];
+    
+    self.projectsHandle = [self handleForObservingKeyAndNameOfChild:@"projects"
+                                                       atDictionary:self.projects];
+    self.companiesHandle = [self handleForObservingKeyAndNameOfChild:@"companies"
+                                                        atDictionary:self.companies];
+    
+    self.managersHandle = [[[self.databaseRef child:@"managers"] child:@"members"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        
+        [[[[self.databaseRef child:@"users"] queryOrderedByKey] queryEqualToValue:snapshot.key] observeSingleEventOfType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+            NSDictionary<NSString *, NSString *> *userDict = snapshot.value;
+            NSString *fullName = [NSString stringWithFormat:@"%@ %@", userDict[@"first_name"], userDict[@"last_name"]];
+            self.managers[snapshot.key] = fullName;
+        }];
+       
+    }];
 }
 
-- (void)dismissKeyboard {
-    [self.view endEditing:YES];
+- (FIRDatabaseHandle)handleForObservingKeyAndNameOfChild:(NSString *)child
+                                            atDictionary:(NSMutableDictionary *)outputDict {
+    return [[self.databaseRef child:child] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        NSDictionary<NSString *, NSString *> *childDict = snapshot.value;
+        id expectedNameString = childDict[@"name"];
+        id expectedKeyString = snapshot.key;
+        if ([expectedNameString isKindOfClass:[NSString class]] && [expectedKeyString isKindOfClass:[NSString class]]) {
+            outputDict[expectedKeyString] = expectedNameString;
+        }
+    }];
+}
+
+- (void)dealloc {
+    [[self.databaseRef child:@"projects"] removeObserverWithHandle:self.projectsHandle];
+    [[self.databaseRef child:@"companies"] removeObserverWithHandle:self.companiesHandle];
+    [[self.databaseRef child:@"managers"] removeObserverWithHandle:self.managersHandle];
 }
 
 - (IBAction)tappedDoneButton:(id)sender
@@ -393,12 +427,32 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         } else if (row == InfoField_Email) {
             cell.emailTextField.text = user.email;
         } else if (row == InfoField_Company) {
-            cell.companyTextField.text = user.companyKey;
+            MLPAutoCompleteTextField *companyField = (MLPAutoCompleteTextField *)cell.companyTextField;
+            companyField.autoCompleteDataSource = self;
+            
+            // Parent correction
+            companyField.autoCompleteParentView = self.view;
+            
+            // Offset correction
+            CGPoint pt = [companyField convertPoint:CGPointMake(0, companyField.frame.origin.y) toView:self.view];
+            companyField.autoCompleteTableOriginOffset = CGSizeMake(0, pt.y);
+            
+            companyField.text = self.companies[user.companyKey];
         } else if (row == InfoField_Manager) {
-            NSArray *managers = [user.managers allKeys];
+            MLPAutoCompleteTextField *managerField = (MLPAutoCompleteTextField *)cell.managerTextField;
+            managerField.autoCompleteDataSource = self;
+            
+            // Parent correction
+            managerField.autoCompleteParentView = self.view;
+            
+            // Offset correction
+            CGPoint pt = [managerField convertPoint:CGPointMake(0, managerField.frame.origin.y) toView:self.view];
+            managerField.autoCompleteTableOriginOffset = CGSizeMake(0, pt.y);
+            
+            NSArray *managers = [user.managers allValues];
             if ([managers count] > 0) {
                 NSString *manager = managers[0];
-                cell.managerTextField.text = manager;
+                managerField.text = manager;
             }
         }
     }
@@ -439,6 +493,28 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             user.managers[textField.text] = @(YES);
         }
     }
+}
+
+#pragma mark - MLPAutoCompleteTextField delegate
+
+- (void)autoCompleteTextField:(MLPAutoCompleteTextField *)textField
+ possibleCompletionsForString:(NSString *)string
+            completionHandler:(void (^)(NSArray *))handler
+{
+    if (textField.tag == InfoField_Company) {
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+        dispatch_async(queue, ^{
+            NSArray *completions = [self.companies allValues];
+            handler(completions);
+        });
+    } else if (textField.tag == InfoField_Manager) {
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+        dispatch_async(queue, ^{
+            NSArray *completions = [self.managers allValues];
+            handler(completions);
+        });
+    }
+    
 }
 
 @end
