@@ -8,8 +8,15 @@
 
 @class User;
 
+@protocol UserDetailTableViewControllerDelegate <NSObject>
+
+- (void)resetPresentingController;
+
+@end
+
 @interface UserDetailTableViewController : UITableViewController <UITextFieldDelegate>
 
 @property (nonatomic, strong) User *user;
+@property (nonatomic, weak) id<UserDetailTableViewControllerDelegate> delegate;
 
 @end

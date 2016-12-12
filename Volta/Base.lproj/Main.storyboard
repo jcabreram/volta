@@ -518,7 +518,7 @@
                         <barButtonItem title="+ project" id="2cb-e2-bqr">
                             <color key="tintColor" red="0.99963909390000005" green="1" blue="0.99975615740000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
-                                <segue destination="Rc8-fY-L4Y" kind="presentation" id="Eua-fE-LvS"/>
+                                <segue destination="Rc8-fY-L4Y" kind="presentation" identifier="AddProject" id="Eua-fE-LvS"/>
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
@@ -1134,7 +1134,7 @@
         <image name="ios7-plus-empty" width="22" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="TKG-tb-I5g"/>
+        <segue reference="Eua-fE-LvS"/>
         <segue reference="nxX-ie-e35"/>
     </inferredMetricsTieBreakers>
 </document>

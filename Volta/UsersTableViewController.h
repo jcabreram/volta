@@ -6,8 +6,10 @@
 //  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
 //
 
-@interface UsersTableViewController : UITableViewController
+#import "UserDetailTableViewController.h"
 
-- (void)resetController;
+@interface UsersTableViewController : UITableViewController <UserDetailTableViewControllerDelegate>
+
+- (void)resetPresentingController;
 
 @end

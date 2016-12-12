@@ -34,7 +34,7 @@
     [self configureDatabase];
 }
 
-- (void)resetController {
+- (void)resetPresentingController {
     self.selectedProject = [[Project alloc] init];
     
     NSIndexPath *indexPath = self.tableView.indexPathForSelectedRow;
@@ -48,13 +48,13 @@
     UINavigationController *navigationController = segue.destinationViewController;
     ProjectDetailTableViewController *projectDetailController = navigationController.childViewControllers[0];
     
+    projectDetailController.delegate = self;
+    
     if (!self.selectedProject) {
         self.selectedProject = [[Project alloc] init];
     }
     
-    if ([segue.identifier isEqualToString:SeguesAddProject]) {
-        
-    } else if ([segue.identifier isEqualToString:SeguesShowProjectDetail]) {
+    if ([segue.identifier isEqualToString:SeguesShowProjectDetail]) {
         NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
         FIRDataSnapshot *projectSnapshot = _projects[indexPath.row];
         NSDictionary *project = projectSnapshot.value;

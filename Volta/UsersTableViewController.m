@@ -36,7 +36,7 @@
     [self configureDatabase];
 }
 
-- (void)resetController {
+- (void)resetPresentingController {
     self.selectedUser = [[User alloc] init];
     
     NSIndexPath *indexPath = self.tableView.indexPathForSelectedRow;
@@ -49,6 +49,8 @@
 {
     UINavigationController *navigationController = segue.destinationViewController;
     UserDetailTableViewController *userDetailController = navigationController.childViewControllers[0];
+    
+    userDetailController.delegate = self;
     
     if (!self.selectedUser) {
         self.selectedUser = [[User alloc] init];

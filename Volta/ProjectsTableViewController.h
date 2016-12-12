@@ -6,9 +6,10 @@
 //  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
 //
 
+#import "ProjectDetailTableViewController.h"
 
-@interface ProjectsTableViewController : UITableViewController
+@interface ProjectsTableViewController : UITableViewController <ProjectDetailTableViewControllerDelegate>
 
-- (void)resetController;
+- (void)resetPresentingController;
 
 @end

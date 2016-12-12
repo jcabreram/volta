@@ -240,7 +240,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 
 - (IBAction)tappedCancelButton:(id)sender
 {
-    [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+    [self dismissController];
 }
 
 #pragma mark - Helper Methods
@@ -298,12 +298,8 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 }
 
 - (void)dismissController {
-    [[self presentingViewController] dismissViewControllerAnimated:YES completion:^{
-        UsersTableViewController *usersVC = (UsersTableViewController *)self.presentingViewController;
-        if ([usersVC respondsToSelector:@selector(resetController)]) {
-            [usersVC resetController];
-        }
-    }];
+    [self.delegate resetPresentingController];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Table view data source

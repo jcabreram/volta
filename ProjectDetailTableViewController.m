@@ -26,7 +26,7 @@ typedef NS_ENUM (NSInteger, Field) {
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
 @property (nonatomic, assign) FIRDatabaseHandle companiesHandle;
-@property (nonatomic, strong) NSMutableArray *companies;
+@property (nonatomic, strong) NSMutableDictionary *companies;
 
 @end
 
@@ -40,7 +40,7 @@ typedef NS_ENUM (NSInteger, Field) {
         project = [[Project alloc] init];
     }
     
-    self.companies = [[NSMutableArray alloc] init];
+    self.companies = [[NSMutableDictionary alloc] init];
     
     if ([project.key vol_isStringEmpty]) {
         self.navigationItem.title = @"Add project";
@@ -56,9 +56,10 @@ typedef NS_ENUM (NSInteger, Field) {
     
     self.companiesHandle = [[self.databaseRef child:@"companies"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         NSDictionary<NSString *, NSString *> *company = snapshot.value;
-        id expectedString = company[@"name"];
-        if ([expectedString isKindOfClass:[NSString class]]) {
-            [self.companies addObject:expectedString];
+        id expectedNameString = company[@"name"];
+        id expectedKeyString = snapshot.key;
+        if ([expectedNameString isKindOfClass:[NSString class]] && [expectedKeyString isKindOfClass:[NSString class]]) {
+            self.companies[expectedKeyString] = expectedNameString;
         }
     }];
 }
@@ -82,14 +83,22 @@ typedef NS_ENUM (NSInteger, Field) {
     NSString *projectKey;
     
     if ([project.key vol_isStringEmpty]) {
-        projectKey = [[self.databaseRef child:@"users"] childByAutoId].key;
+        projectKey = [[self.databaseRef child:@"projects"] childByAutoId].key;
     } else {
         projectKey = project.key;
     }
     
+    NSString *companyKey;
+    
+    if (self.companies[project.companyKey]) {
+        companyKey = project.companyKey;
+    } else {
+        companyKey = [[self.databaseRef child:@"companies"] childByAutoId].key;
+    }
+    
     NSDictionary *projectDict = @{@"name":project.name,
                                   @"organization":project.organization,
-                                  @"company":project.companyKey,
+                                  @"company":companyKey,
                                   @"default_duration":@(project.defaultDuration)};
     
     // Initialize the child updates dictionary with the user node
@@ -110,7 +119,7 @@ typedef NS_ENUM (NSInteger, Field) {
 
 - (IBAction)tappedCancelButton:(id)sender
 {
-    [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+    [self dismissController];
 }
 
 #pragma mark - Helper Methods
@@ -156,12 +165,8 @@ typedef NS_ENUM (NSInteger, Field) {
 }
 
 - (void)dismissController {
-    [[self presentingViewController] dismissViewControllerAnimated:YES completion:^{
-        ProjectsTableViewController *projectsVC = (ProjectsTableViewController *)self.presentingViewController;
-        if ([projectsVC respondsToSelector:@selector(resetController)]) {
-            [projectsVC resetController];
-        }
-    }];
+    [self.delegate resetPresentingController];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Table view data source
@@ -224,7 +229,7 @@ typedef NS_ENUM (NSInteger, Field) {
         CGPoint pt = [companyField convertPoint:CGPointMake(0, companyField.frame.origin.y) toView:self.view];
         companyField.autoCompleteTableOriginOffset = CGSizeMake(0, pt.y);
         
-        companyField.text = project.companyKey;
+        companyField.text = self.companies[project.companyKey];
     }
     
     return cell;
@@ -288,7 +293,7 @@ typedef NS_ENUM (NSInteger, Field) {
 {
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
     dispatch_async(queue, ^{
-        NSArray *completions = [self.companies copy];
+        NSArray *completions = [self.companies allValues];
         handler(completions);
     });
 }
