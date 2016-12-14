@@ -6,13 +6,16 @@
 //  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
 //
 
+@class MLPAutoCompleteTextField;
+
 @interface UserDetailCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UITextField *firstNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *lastNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
-@property (weak, nonatomic) IBOutlet UITextField *companyTextField;
-@property (weak, nonatomic) IBOutlet UITextField *managerTextField;
+@property (weak, nonatomic) IBOutlet MLPAutoCompleteTextField *companyTextField;
+@property (weak, nonatomic) IBOutlet MLPAutoCompleteTextField *managerTextField;
+@property (weak, nonatomic) IBOutlet MLPAutoCompleteTextField *projectTextField;
 
 @end

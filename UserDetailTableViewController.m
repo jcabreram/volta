@@ -16,13 +16,14 @@
 
 @import Firebase;
 
-typedef NS_ENUM (NSInteger, InfoField) {
-    InfoField_FirstName,
-    InfoField_LastName,
-    InfoField_Email,
-    InfoField_Password,
-    InfoField_Company,
-    InfoField_Manager
+typedef NS_ENUM (NSInteger, FieldTag) {
+    FieldTag_FirstName,
+    FieldTag_LastName,
+    FieldTag_Email,
+    FieldTag_Password,
+    FieldTag_Company,
+    FieldTag_Manager,
+    FieldTag_Project
 };
 
 typedef NS_ENUM (NSInteger, SectionNumber) {
@@ -34,13 +35,17 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
 
-@property (nonatomic, assign) FIRDatabaseHandle projectsHandle;
-@property (nonatomic, assign) FIRDatabaseHandle companiesHandle;
-@property (nonatomic, assign) FIRDatabaseHandle managersHandle;
+@property (nonatomic, assign) FIRDatabaseHandle availableProjectsHandle;
+@property (nonatomic, assign) FIRDatabaseHandle availableCompaniesHandle;
+@property (nonatomic, assign) FIRDatabaseHandle availableManagersHandle;
 
-@property (nonatomic, strong) NSMutableDictionary *projects;
-@property (nonatomic, strong) NSMutableDictionary *companies;
-@property (nonatomic, strong) NSMutableDictionary *managers;
+@property (nonatomic, strong) NSMutableDictionary *availableProjects;
+@property (nonatomic, strong) NSMutableDictionary *availableCompanies;
+@property (nonatomic, strong) NSMutableDictionary *availableManagers;
+
+@property (nonatomic, strong) NSArray *userProjectKeys;
+
+@property (nonatomic, assign) NSInteger numberOfProjectsShown;
 
 @end
 
@@ -55,9 +60,13 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         user = [[User alloc] init];
     }
     
-    self.projects = [[NSMutableDictionary alloc] init];
-    self.companies = [[NSMutableDictionary alloc] init];
-    self.managers = [[NSMutableDictionary alloc] init];
+    self.availableProjects = [[NSMutableDictionary alloc] init];
+    self.availableCompanies = [[NSMutableDictionary alloc] init];
+    self.availableManagers = [[NSMutableDictionary alloc] init];
+    
+    self.userProjectKeys = [user.projects allKeys];
+    
+    self.numberOfProjectsShown = [user.projects count] + 1;
     
     if ([user.key vol_isStringEmpty]) {
         switch (user.type) {
@@ -87,24 +96,25 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 - (void)configureDatabase {
     _databaseRef = [[FIRDatabase database] reference];
     
-    self.projectsHandle = [self handleForObservingKeyAndNameOfChild:@"projects"
-                                                       atDictionary:self.projects];
-    self.companiesHandle = [self handleForObservingKeyAndNameOfChild:@"companies"
-                                                        atDictionary:self.companies];
+    self.availableProjectsHandle = [self handleForObservingKeyAndNameOfChild:@"projects"
+                                                    usingDictionary:self.availableProjects];
+    self.availableCompaniesHandle = [self handleForObservingKeyAndNameOfChild:@"companies"
+                                                     usingDictionary:self.availableCompanies];
     
-    self.managersHandle = [[[self.databaseRef child:@"managers"] child:@"members"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+    self.availableManagersHandle = [[[self.databaseRef child:@"managers"] child:@"members"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         
         [[[[self.databaseRef child:@"users"] queryOrderedByKey] queryEqualToValue:snapshot.key] observeSingleEventOfType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
             NSDictionary<NSString *, NSString *> *userDict = snapshot.value;
             NSString *fullName = [NSString stringWithFormat:@"%@ %@", userDict[@"first_name"], userDict[@"last_name"]];
-            self.managers[snapshot.key] = fullName;
+            self.availableManagers[snapshot.key] = fullName;
+            [self.tableView reloadData];
         }];
        
     }];
 }
 
 - (FIRDatabaseHandle)handleForObservingKeyAndNameOfChild:(NSString *)child
-                                            atDictionary:(NSMutableDictionary *)outputDict {
+                                         usingDictionary:(NSMutableDictionary *)outputDict {
     return [[self.databaseRef child:child] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         NSDictionary<NSString *, NSString *> *childDict = snapshot.value;
         id expectedNameString = childDict[@"name"];
@@ -116,14 +126,17 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 }
 
 - (void)dealloc {
-    [[self.databaseRef child:@"projects"] removeObserverWithHandle:self.projectsHandle];
-    [[self.databaseRef child:@"companies"] removeObserverWithHandle:self.companiesHandle];
-    [[self.databaseRef child:@"managers"] removeObserverWithHandle:self.managersHandle];
+    [[self.databaseRef child:@"projects"] removeObserverWithHandle:self.availableProjectsHandle];
+    [[self.databaseRef child:@"companies"] removeObserverWithHandle:self.availableCompaniesHandle];
+    [[self.databaseRef child:@"managers"] removeObserverWithHandle:self.availableManagersHandle];
 }
 
 - (IBAction)tappedDoneButton:(id)sender
 {
     [self.view endEditing:YES];
+    
+    // Before creating the user, we update the User object's projects to their respective keys
+    [self updateProjects];
     
     if ([self validInput]) {
         
@@ -138,12 +151,47 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
                                                                                 message:error.localizedDescription];
                                              NSLog(@"%@", error.localizedDescription);
                                          } else {
-                                             [self updateUserInDatabase];
+                                             
+                                             [self updateDatabase];
                                          }
                                      }];
         } else {
-            [self updateUserInDatabase];
+            [self updateDatabase];
         }
+    }
+    
+}
+
+- (void)updateDatabase {
+    
+    User *user = self.user;
+    
+    // We create the company first if it's not already on the existing list of companies on the database, then we call updateUserInDatabase when that's ready to continue with the user creation process
+    
+    NSString *companyName = [self textEnteredInTextField:FieldTag_Company forSection:SectionNumber_One];
+    NSArray *companyKeys = [self.availableCompanies allKeysForObject:companyName];
+    
+    if ([companyKeys count] > 0) {
+        NSString *companyKey = [companyKeys firstObject];
+        user.companyKey = companyKey;
+        [self updateUserInDatabase];
+    } else {
+        user.companyKey = [[self.databaseRef child:@"companies"] childByAutoId].key;
+        
+        NSDictionary *companyStructure = @{@"name":companyName};
+        
+        NSMutableDictionary *childUpdates = [@{[@"/companies/" stringByAppendingString:user.companyKey]: companyStructure} mutableCopy];
+        
+        [self.databaseRef updateChildValues:childUpdates
+                        withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
+                            if (error) {
+                                [self presentValidationErrorAlertWithTitle:@"Error"
+                                                                   message:error.localizedDescription];
+                                NSLog(@"%@", error.localizedDescription);
+                            } else {
+                                [self updateUserInDatabase];
+                            }
+                        }];
     }
     
 }
@@ -186,7 +234,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         // Add the employee to its company's employees list
         childUpdates[[NSString stringWithFormat:@"/companies/%@/employees/%@", user.companyKey, userKey]] = @YES;
         
-        // Get the current number of users of employees to increase it by 1
+        // Get the current number of employees to increase it by 1
         [[[self.databaseRef child:@"employees"] child:@"no_of_users"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
             
             NSInteger noOfEmployees = [snapshot.value integerValue];
@@ -272,6 +320,23 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
     
 }
 
+- (void)updateProjects
+{
+    User *user = self.user;
+    
+    [user.projects removeAllObjects];
+    
+    for (NSInteger i = 0; i < [self.tableView numberOfRowsInSection:1]; ++i) {
+        NSString *projectName = [self textEnteredInTextField:i forSection:SectionNumber_Two];
+        NSArray *projectsKeys = [self.availableProjects allKeysForObject:projectName];
+        
+        if ([projectsKeys count] > 0) {
+            NSString *projectKey = [projectsKeys firstObject];
+            user.projects[projectKey] = @(YES);
+        }
+    }
+}
+
 - (IBAction)tappedCancelButton:(id)sender
 {
     [self dismissController];
@@ -283,29 +348,83 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 {
     User *user = self.user;
     
-    if (![user.email vol_isValidEmail]) {
+    NSString *firstName = [self textEnteredInTextField:FieldTag_FirstName forSection:SectionNumber_One];
+    NSString *lastName = [self textEnteredInTextField:FieldTag_LastName forSection:SectionNumber_One];
+    NSString *email = [self textEnteredInTextField:FieldTag_Email forSection:SectionNumber_One];
+    NSString *password = [self textEnteredInTextField:FieldTag_Password forSection:SectionNumber_One];
+    NSString *company = [self textEnteredInTextField:FieldTag_Company forSection:SectionNumber_One];
+    NSString *manager = [self textEnteredInTextField:FieldTag_Manager forSection:SectionNumber_One];
+    
+    NSArray *existingProjects = [self.availableProjects allValues];
+    for (NSInteger i = 0; i < self.numberOfProjectsShown; i++) {
+        NSString *projectName = [self textEnteredInTextField:i forSection:SectionNumber_Two];
+        if (![projectName vol_isStringEmpty] && ![existingProjects containsObject:projectName]) {
+            [self presentValidationErrorAlertWithTitle:@"Invalid Project"
+                                               message:@"Please, select an existing project or create a new one in Projects."];
+            return NO;
+        }
+    }
+    
+    NSArray *existingManagers = [self.availableManagers allValues];
+    if (![existingManagers containsObject:manager]) {
+        [self presentValidationErrorAlertWithTitle:@"Invalid Manager"
+                                           message:@"Please, select an existing manager or create a new one in Users."];
+        return NO;
+    }
+    
+    if (![email vol_isValidEmail]) {
         [self presentValidationErrorAlertWithTitle:@"Invalid Email"
                                            message:@"Please, verify the email format and try again."];
         return NO;
-    } else if (![user.password vol_isValidPassword]) {
+    } else if (![password vol_isValidPassword]) {
         [self presentValidationErrorAlertWithTitle:@"Invalid Password"
                                            message:@"Please, enter a password with at least 6 characters, one numeric digit and a letter"];
         return NO;
-    } else if ([user.firstName vol_isStringEmpty] || [user.lastName vol_isStringEmpty]) {
+    } else if ([firstName vol_isStringEmpty] || [lastName vol_isStringEmpty]) {
         [self presentValidationErrorAlertWithTitle:@"No Name"
                                            message:@"A user has no name but this is not Game of Thrones. Enter one please."];
         return NO;
-    } else if (user.type == UserType_Employee && [user.managers count] == 0) {
+    } else if (user.type == UserType_Employee && [manager vol_isStringEmpty]) {
         [self presentValidationErrorAlertWithTitle:@"Manager Missing"
                                            message:@"Please, select a manager for this employee."];
         return NO;
-    } else if (user.type != UserType_Admin && [user.companyKey vol_isStringEmpty]) {
+    } else if (user.type != UserType_Admin && [company vol_isStringEmpty]) {
         [self presentValidationErrorAlertWithTitle:@"Company Missing"
                                            message:@"Please, enter a company name for this user."];
         return NO;
     }
     
     return YES;
+}
+
+- (NSString *)textEnteredInTextField:(FieldTag)textField
+                          forSection:(SectionNumber)section
+{
+    UserDetailCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:textField inSection:section]];
+    
+    if (section == SectionNumber_One) {
+        
+        if (textField == FieldTag_FirstName) {
+            return cell.firstNameTextField.text;
+        } else if (textField == FieldTag_LastName) {
+            return cell.lastNameTextField.text;
+        } else if (textField == FieldTag_Email) {
+            return cell.emailTextField.text;
+        } else if (textField == FieldTag_Password) {
+            return cell.passwordTextField.text;
+        } else if (textField == FieldTag_Company) {
+            return cell.companyTextField.text;
+        } else if (textField == FieldTag_Manager) {
+            return cell.managerTextField.text;
+        }
+        
+    } else if (section == SectionNumber_Two) {
+        
+        return cell.projectTextField.text;
+    
+    }
+    
+    return @"";
 }
 
 - (void)presentValidationErrorAlertWithTitle:(NSString *)errorTitle
@@ -360,11 +479,9 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         case 0:
             sectionName = @"Personal Info";
             break;
-            
         case 1:
             sectionName = @"Projects";
             break;
-            
         default:
             break;
     }
@@ -386,7 +503,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             return 0;
         }
     } else {
-        return [self.projects count];
+        return self.numberOfProjectsShown;
     }
 }
 
@@ -398,21 +515,23 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
     NSInteger row = indexPath.row;
     
     if (section == SectionNumber_One) {
-        if (row == InfoField_FirstName) {
+        if (row == FieldTag_FirstName) {
             reuseIdentifier = kFirstNameCell;
-        } else if (row == InfoField_LastName) {
+        } else if (row == FieldTag_LastName) {
             reuseIdentifier = kLastNameCell;
-        } else if (row == InfoField_Email) {
+        } else if (row == FieldTag_Email) {
             reuseIdentifier = kEmailCell;
-        } else if (row == InfoField_Password) {
+        } else if (row == FieldTag_Password) {
             reuseIdentifier = kPasswordCell;
-        } else if (row == InfoField_Company) {
+        } else if (row == FieldTag_Company) {
             reuseIdentifier = kCompanyCell;
-        } else if (row == InfoField_Manager) {
+        } else if (row == FieldTag_Manager) {
             reuseIdentifier = kManagerCell;
         } else {
             reuseIdentifier = @"";
         }
+    } else if (section == SectionNumber_Two) {
+        reuseIdentifier = kProjectCell;
     }
     
     User *user = self.user;
@@ -420,14 +539,14 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
     UserDetailCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
     
     if (section == SectionNumber_One) {
-        if (row == InfoField_FirstName) {
+        if (row == FieldTag_FirstName) {
             cell.firstNameTextField.text = user.firstName;
-        } else if (row == InfoField_LastName) {
+        } else if (row == FieldTag_LastName) {
             cell.lastNameTextField.text = user.lastName;
-        } else if (row == InfoField_Email) {
+        } else if (row == FieldTag_Email) {
             cell.emailTextField.text = user.email;
-        } else if (row == InfoField_Company) {
-            MLPAutoCompleteTextField *companyField = (MLPAutoCompleteTextField *)cell.companyTextField;
+        } else if (row == FieldTag_Company) {
+            MLPAutoCompleteTextField *companyField = cell.companyTextField;
             companyField.autoCompleteDataSource = self;
             
             // Parent correction
@@ -437,9 +556,11 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             CGPoint pt = [companyField convertPoint:CGPointMake(0, companyField.frame.origin.y) toView:self.view];
             companyField.autoCompleteTableOriginOffset = CGSizeMake(0, pt.y);
             
-            companyField.text = self.companies[user.companyKey];
-        } else if (row == InfoField_Manager) {
-            MLPAutoCompleteTextField *managerField = (MLPAutoCompleteTextField *)cell.managerTextField;
+            if ([companyField.text vol_isStringEmpty]) {
+                companyField.text = self.availableCompanies[user.companyKey];
+            }
+        } else if (row == FieldTag_Manager) {
+            MLPAutoCompleteTextField *managerField = cell.managerTextField;
             managerField.autoCompleteDataSource = self;
             
             // Parent correction
@@ -449,10 +570,28 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             CGPoint pt = [managerField convertPoint:CGPointMake(0, managerField.frame.origin.y) toView:self.view];
             managerField.autoCompleteTableOriginOffset = CGSizeMake(0, pt.y);
             
-            NSArray *managers = [user.managers allValues];
-            if ([managers count] > 0) {
-                NSString *manager = managers[0];
-                managerField.text = manager;
+            NSArray *userManagersKeys = [user.managers allKeys];
+            if ([userManagersKeys count] > 0) {
+                NSString *userManagerKey = userManagersKeys[0];
+                if (self.availableManagers[userManagerKey]) {
+                    managerField.text = self.availableManagers[userManagerKey];
+                }
+            }
+        }
+    } else {
+        if (section == SectionNumber_Two) {
+            MLPAutoCompleteTextField *projectField = cell.projectTextField;
+            projectField.autoCompleteDataSource = self;
+            
+            // Parent correction
+            projectField.autoCompleteParentView = self.view;
+            
+            // Offset correction
+            CGPoint pt = [projectField convertPoint:CGPointMake(0, projectField.frame.origin.y) toView:self.view];
+            projectField.autoCompleteTableOriginOffset = CGSizeMake(0, pt.y);
+            
+            if ([self.userProjectKeys count] > row) {
+                projectField.text = self.availableProjects[self.userProjectKeys[row]];
             }
         }
     }
@@ -478,19 +617,34 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
     NSInteger row = indexPath.row;
     
     if (section == SectionNumber_One) {
-        if (row == InfoField_FirstName) {
+        if (row == FieldTag_FirstName) {
             user.firstName = textField.text;
-        } else if (row == InfoField_LastName) {
+        } else if (row == FieldTag_LastName) {
             user.lastName = textField.text;
-        } else if (row == InfoField_Email) {
+        } else if (row == FieldTag_Email) {
             user.email = textField.text;
-        } else if (row == InfoField_Password) {
+        } else if (row == FieldTag_Password) {
             user.password = textField.text;
-        } else if (row == InfoField_Company) {
-            user.companyKey = textField.text;
-        } else if (row == InfoField_Manager) {
+        } else if (row == FieldTag_Company) {
+            NSArray *companiesKeys = [self.availableManagers allKeysForObject:textField.text];
+            
+            if ([companiesKeys count] > 0) {
+                NSString *companyKey = [companiesKeys firstObject];
+                user.companyKey = companyKey;
+            }
+        } else if (row == FieldTag_Manager) {
             [user.managers removeAllObjects];
-            user.managers[textField.text] = @(YES);
+            NSArray *managersKeys = [self.availableManagers allKeysForObject:textField.text];
+            
+            if ([managersKeys count] > 0) {
+                NSString *managerKey = [managersKeys firstObject];
+                user.managers[managerKey] = @(YES);
+            }
+        }
+    } else if (section == SectionNumber_Two) {
+        if (self.numberOfProjectsShown < row + 2) {
+            self.numberOfProjectsShown = row + 2;
+            [self.tableView reloadData];
         }
     }
 }
@@ -501,16 +655,22 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
  possibleCompletionsForString:(NSString *)string
             completionHandler:(void (^)(NSArray *))handler
 {
-    if (textField.tag == InfoField_Company) {
+    if (textField.tag == FieldTag_Company) {
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
         dispatch_async(queue, ^{
-            NSArray *completions = [self.companies allValues];
+            NSArray *completions = [self.availableCompanies allValues];
             handler(completions);
         });
-    } else if (textField.tag == InfoField_Manager) {
+    } else if (textField.tag == FieldTag_Manager) {
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
         dispatch_async(queue, ^{
-            NSArray *completions = [self.managers allValues];
+            NSArray *completions = [self.availableManagers allValues];
+            handler(completions);
+        });
+    } else if (textField.tag == FieldTag_Project) {
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+        dispatch_async(queue, ^{
+            NSArray *completions = [self.availableProjects allValues];
             handler(completions);
         });
     }

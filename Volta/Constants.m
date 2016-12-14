@@ -34,6 +34,7 @@ NSString *const kEmailCell = @"EmailCell";
 NSString *const kPasswordCell = @"PasswordCell";
 NSString *const kCompanyCell = @"CompanyCell";
 NSString *const kManagerCell = @"ManagerCell";
+NSString *const kProjectCell = @"ProjectCell";
 
 // Project Detail Cells
 NSString *const kProjectNameCell = @"ProjectNameCell";

@@ -31,6 +31,7 @@ extern NSString *const kEmailCell;
 extern NSString *const kPasswordCell;
 extern NSString *const kCompanyCell;
 extern NSString *const kManagerCell;
+extern NSString *const kProjectCell;
 
 extern NSString *const kProjectNameCell;
 extern NSString *const kProjectDefaultDurationCell;
