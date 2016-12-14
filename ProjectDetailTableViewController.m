@@ -25,8 +25,9 @@ typedef NS_ENUM (NSInteger, Field) {
 @interface ProjectDetailTableViewController ()
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
-@property (nonatomic, assign) FIRDatabaseHandle companiesHandle;
-@property (nonatomic, strong) NSMutableDictionary *companies;
+
+@property (nonatomic, assign) FIRDatabaseHandle availableCompaniesHandle;
+@property (nonatomic, strong) NSMutableDictionary *availableCompanies;
 
 @end
 
@@ -40,7 +41,7 @@ typedef NS_ENUM (NSInteger, Field) {
         project = [[Project alloc] init];
     }
     
-    self.companies = [[NSMutableDictionary alloc] init];
+    self.availableCompanies = [[NSMutableDictionary alloc] init];
     
     if ([project.key vol_isStringEmpty]) {
         self.navigationItem.title = @"Add project";
@@ -54,7 +55,7 @@ typedef NS_ENUM (NSInteger, Field) {
 - (void)configureDatabase {
     self.databaseRef = [[FIRDatabase database] reference];
     
-    self.companiesHandle = [self handleForObservingKeyAndNameOfChild:@"companies"];
+    self.availableCompaniesHandle = [self handleForObservingKeyAndNameOfChild:@"companies"];
 }
 
 - (FIRDatabaseHandle)handleForObservingKeyAndNameOfChild:(NSString *)child
@@ -64,13 +65,14 @@ typedef NS_ENUM (NSInteger, Field) {
         id expectedNameString = childDict[@"name"];
         id expectedKeyString = snapshot.key;
         if ([expectedNameString isKindOfClass:[NSString class]] && [expectedKeyString isKindOfClass:[NSString class]]) {
-            self.companies[expectedKeyString] = expectedNameString;
+            self.availableCompanies[expectedKeyString] = expectedNameString;
+            [self.tableView reloadData];
         }
     }];
 }
 
 - (void)dealloc {
-    [[self.databaseRef child:@"companies"] removeObserverWithHandle:self.companiesHandle];
+    [[self.databaseRef child:@"companies"] removeObserverWithHandle:self.availableCompaniesHandle];
 }
 
 - (IBAction)tappedDoneButton:(id)sender
@@ -78,8 +80,42 @@ typedef NS_ENUM (NSInteger, Field) {
     [self.view endEditing:YES];
     
     if ([self validInput]) {
-        [self updateProjectInDatabase];
+        [self addCompanyToDatabase];
     }
+}
+
+- (void)addCompanyToDatabase {
+    
+    Project *project = self.project;
+    
+    // We create the company first if it's not already on the existing list of companies on the database, then we call updateProjectInDatabase when that's ready to continue with the user creation process
+    
+    NSString *companyName = [self textEnteredInTextField:Field_Company];
+    NSArray *companyKeys = [self.availableCompanies allKeysForObject:companyName];
+    
+    if ([companyKeys count] > 0) {
+        NSString *companyKey = [companyKeys firstObject];
+        project.companyKey = companyKey;
+        [self updateProjectInDatabase];
+    } else {
+        project.companyKey = [[self.databaseRef child:@"companies"] childByAutoId].key;
+        
+        NSDictionary *companyStructure = @{@"name":companyName};
+        
+        NSMutableDictionary *childUpdates = [@{[@"/companies/" stringByAppendingString:project.companyKey]: companyStructure} mutableCopy];
+        
+        [self.databaseRef updateChildValues:childUpdates
+                        withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
+                            if (error) {
+                                [self presentValidationErrorAlertWithTitle:@"Error"
+                                                                   message:error.localizedDescription];
+                                NSLog(@"%@", error.localizedDescription);
+                            } else {
+                                [self updateProjectInDatabase];
+                            }
+                        }];
+    }
+    
 }
 
 - (void)updateProjectInDatabase {
@@ -93,17 +129,9 @@ typedef NS_ENUM (NSInteger, Field) {
         projectKey = project.key;
     }
     
-    NSString *companyKey;
-    
-    if (self.companies[project.companyKey]) {
-        companyKey = project.companyKey;
-    } else {
-        companyKey = [[self.databaseRef child:@"companies"] childByAutoId].key;
-    }
-    
     NSDictionary *projectDict = @{@"name":project.name,
                                   @"organization":project.organization,
-                                  @"company":companyKey,
+                                  @"company":project.companyKey,
                                   @"total_duration":@(project.totalDuration)};
     
     // Initialize the child updates dictionary with the user node
@@ -144,6 +172,23 @@ typedef NS_ENUM (NSInteger, Field) {
     }
     
     return YES;
+}
+
+- (NSString *)textEnteredInTextField:(Field)textField
+{
+    ProjectDetailCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:textField inSection:0]];
+    
+    if (textField == Field_Name) {
+        return cell.nameField.text;
+    } else if (textField == Field_TotalDuration) {
+        return cell.totalDurationField.text;
+    } else if (textField == Field_Organization) {
+        return cell.organizationField.text;
+    } else if (textField == Field_Company) {
+        return cell.companyField.text;
+    }
+    
+    return @"";
 }
 
 - (void)presentValidationErrorAlertWithTitle:(NSString *)errorTitle
@@ -224,7 +269,7 @@ typedef NS_ENUM (NSInteger, Field) {
     } else if (row == Field_Organization) {
         cell.organizationField.text = project.organization;
     } else if (row == Field_Company) {
-        MLPAutoCompleteTextField *companyField = (MLPAutoCompleteTextField *)cell.companyField;
+        MLPAutoCompleteTextField *companyField = cell.companyField;
         companyField.autoCompleteDataSource = self;
         
         // Parent correction
@@ -234,7 +279,9 @@ typedef NS_ENUM (NSInteger, Field) {
         CGPoint pt = [companyField convertPoint:CGPointMake(0, companyField.frame.origin.y) toView:self.view];
         companyField.autoCompleteTableOriginOffset = CGSizeMake(0, pt.y);
         
-        companyField.text = self.companies[project.companyKey];
+        if ([companyField.text vol_isStringEmpty]) {
+            companyField.text = self.availableCompanies[project.companyKey];
+        }
     }
     
     return cell;
@@ -254,7 +301,7 @@ typedef NS_ENUM (NSInteger, Field) {
     
     NSIndexPath *indexPath = [self.tableView indexPathForCell:(UITableViewCell *)[[textField superview] superview]];
     NSInteger row = indexPath.row;
-
+    
     if (row == Field_Name) {
         project.name = textField.text;
     } else if (row == Field_TotalDuration) {
@@ -268,7 +315,7 @@ typedef NS_ENUM (NSInteger, Field) {
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    if (textField.tag == 2) {
+    if (textField.tag == Field_TotalDuration) {
         // Allow backspace
         if (!string.length) {
             return YES;
@@ -298,7 +345,7 @@ typedef NS_ENUM (NSInteger, Field) {
 {
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
     dispatch_async(queue, ^{
-        NSArray *completions = [self.companies allValues];
+        NSArray *completions = [self.availableCompanies allValues];
         handler(completions);
     });
 }
