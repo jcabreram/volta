@@ -17,7 +17,7 @@
 
 typedef NS_ENUM (NSInteger, Field) {
     Field_Name,
-    Field_DefaultDuration,
+    Field_TotalDuration,
     Field_Organization,
     Field_Company
 };
@@ -104,7 +104,7 @@ typedef NS_ENUM (NSInteger, Field) {
     NSDictionary *projectDict = @{@"name":project.name,
                                   @"organization":project.organization,
                                   @"company":companyKey,
-                                  @"default_duration":@(project.defaultDuration)};
+                                  @"total_duration":@(project.totalDuration)};
     
     // Initialize the child updates dictionary with the user node
     NSMutableDictionary *childUpdates = [@{[@"/projects/" stringByAppendingString:projectKey]: projectDict} mutableCopy];
@@ -201,8 +201,8 @@ typedef NS_ENUM (NSInteger, Field) {
     
     if (row == Field_Name) {
         reuseIdentifier = kProjectNameCell;
-    } else if (row == Field_DefaultDuration) {
-        reuseIdentifier = kProjectDefaultDurationCell;
+    } else if (row == Field_TotalDuration) {
+        reuseIdentifier = kProjectTotalDurationCell;
     } else if (row == Field_Organization) {
         reuseIdentifier = kProjectOrganizationCell;
     } else if (row == Field_Company) {
@@ -217,9 +217,9 @@ typedef NS_ENUM (NSInteger, Field) {
     
     if (row == Field_Name) {
         cell.nameField.text = project.name;
-    } else if (row == Field_DefaultDuration) {
-        if (project.defaultDuration > 0) {
-            cell.defaultDurationField.text = [@(project.defaultDuration) stringValue];
+    } else if (row == Field_TotalDuration) {
+        if (project.totalDuration > 0) {
+            cell.totalDurationField.text = [@(project.totalDuration) stringValue];
         }
     } else if (row == Field_Organization) {
         cell.organizationField.text = project.organization;
@@ -257,8 +257,8 @@ typedef NS_ENUM (NSInteger, Field) {
 
     if (row == Field_Name) {
         project.name = textField.text;
-    } else if (row == Field_DefaultDuration) {
-        project.defaultDuration = [textField.text integerValue];
+    } else if (row == Field_TotalDuration) {
+        project.totalDuration = [textField.text integerValue];
     } else if (row == Field_Organization) {
         project.organization = textField.text;
     } else if (row == Field_Company) {
@@ -280,7 +280,7 @@ typedef NS_ENUM (NSInteger, Field) {
         
         NSString *proposedText = [textField.text stringByReplacingCharactersInRange:range withString:string];
         
-        if (proposedText.length > 2) {
+        if (proposedText.length > 5) {
             return NO;
         }
         

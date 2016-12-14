@@ -14,13 +14,13 @@
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *organization;
 @property (nonatomic, copy) NSString *companyKey;
-@property (nonatomic, assign) NSInteger defaultDuration;
+@property (nonatomic, assign) NSInteger totalDuration;
 
 - (instancetype)init;
 - (instancetype)initWithKey:(NSString *)key
                        name:(NSString *)name
                organization:(NSString *)organization
                  companyKey:(NSString *)companyKey
-            defaultDuration:(NSInteger)defaultDuration;
+              totalDuration:(NSInteger)totalDuration;
 
 @end

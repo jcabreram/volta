@@ -64,7 +64,7 @@
                                                        name:project[@"name"]
                                                organization:project[@"organization"]
                                                  companyKey:project[@"company"]
-                                            defaultDuration:[project[@"default_duration"] integerValue]];
+                                              totalDuration:[project[@"total_duration"] integerValue]];
     }
     
     projectDetailController.project = self.selectedProject;

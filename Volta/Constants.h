@@ -34,7 +34,7 @@ extern NSString *const kManagerCell;
 extern NSString *const kProjectCell;
 
 extern NSString *const kProjectNameCell;
-extern NSString *const kProjectDefaultDurationCell;
+extern NSString *const kProjectTotalDurationCell;
 extern NSString *const kProjectOrganizationCell;
 extern NSString *const kProjectCompanyCell;
 

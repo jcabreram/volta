@@ -16,14 +16,14 @@
                         name:@""
                 organization:@""
                   companyKey:@""
-             defaultDuration:0];
+             totalDuration:0];
 }
 
 - (instancetype)initWithKey:(NSString *)key
                        name:(NSString *)name
                organization:(NSString *)organization
                  companyKey:(NSString *)companyKey
-            defaultDuration:(NSInteger)defaultDuration
+              totalDuration:(NSInteger)totalDuration
 {
     self = [super init];
     
@@ -32,7 +32,7 @@
         _name = name;
         _organization = organization;
         _companyKey = companyKey;
-        _defaultDuration = defaultDuration;
+        _totalDuration = totalDuration;
     }
     
     return self;

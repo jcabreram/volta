@@ -38,7 +38,7 @@ NSString *const kProjectCell = @"ProjectCell";
 
 // Project Detail Cells
 NSString *const kProjectNameCell = @"ProjectNameCell";
-NSString *const kProjectDefaultDurationCell = @"ProjectDefaultDurationCell";
+NSString *const kProjectTotalDurationCell = @"ProjectTotalDurationCell";
 NSString *const kProjectOrganizationCell = @"ProjectOrganizationCell";
 NSString *const kProjectCompanyCell = @"ProjectCompanyCell";
 
