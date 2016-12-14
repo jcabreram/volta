@@ -143,18 +143,32 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         User *user = self.user;
         
         if ([user.key vol_isStringEmpty]) {
-            [[FIRAuth auth] createUserWithEmail:user.email
-                                       password:user.password
-                                     completion:^(FIRUser * _Nullable user, NSError * _Nullable error) {
-                                         if (error) {
-                                             [self presentValidationErrorAlertWithTitle:@"Error"
-                                                                                message:error.localizedDescription];
-                                             NSLog(@"%@", error.localizedDescription);
-                                         } else {
-                                             
-                                             [self updateDatabase];
-                                         }
-                                     }];
+            
+            // Creating the user on another app instance so that the current user isn't logged out
+            // Source: http://stackoverflow.com/questions/37517208/firebase-kicks-out-current-user/37614090#37614090
+            
+            // Getting the API Key from the plist file
+            
+            NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info" ofType:@"plist"];
+            FIROptions *secondaryAppOptions = [[FIROptions alloc] initWithContentsOfFile:plistPath];
+            [FIRApp configureWithName:@"Secondary" options:secondaryAppOptions];
+            FIRApp *secondaryApp = [FIRApp appNamed:@"Secondary"];
+            FIRAuth *secondaryAppAuth = [FIRAuth authWithApp:secondaryApp];
+            
+            [secondaryAppAuth createUserWithEmail:user.email
+                                         password:user.password
+                                       completion:^(FIRUser * _Nullable user, NSError * _Nullable error) {
+                                           [secondaryAppAuth signOut:nil];
+                                           
+                                           if (error) {
+                                               [self presentValidationErrorAlertWithTitle:@"Error"
+                                                                                  message:error.localizedDescription];
+                                               NSLog(@"%@", error.localizedDescription);
+                                           } else {
+                                               
+                                               [self updateDatabase];
+                                           }
+                                       }];
         } else {
             [self updateDatabase];
         }
