@@ -64,8 +64,8 @@ typedef NS_ENUM (NSInteger, Field) {
         NSDictionary<NSString *, NSString *> *childDict = snapshot.value;
         id expectedNameString = childDict[@"name"];
         id expectedKeyString = snapshot.key;
-        if ([expectedNameString isKindOfClass:[NSString class]] && [expectedKeyString isKindOfClass:[NSString class]]) {
-            self.availableCompanies[expectedKeyString] = expectedNameString;
+        if (expectedNameString != nil && [expectedNameString isKindOfClass:[NSString class]] && [expectedKeyString isKindOfClass:[NSString class]]) {
+            self.availableCompanies[(NSString *)expectedKeyString] = expectedNameString;
             [self.tableView reloadData];
         }
     }];

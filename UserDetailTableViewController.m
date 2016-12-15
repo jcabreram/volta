@@ -119,8 +119,8 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         NSDictionary<NSString *, NSString *> *childDict = snapshot.value;
         id expectedNameString = childDict[@"name"];
         id expectedKeyString = snapshot.key;
-        if ([expectedNameString isKindOfClass:[NSString class]] && [expectedKeyString isKindOfClass:[NSString class]]) {
-            outputDict[expectedKeyString] = expectedNameString;
+        if (expectedNameString != nil && [expectedNameString isKindOfClass:[NSString class]] && [expectedKeyString isKindOfClass:[NSString class]]) {
+            outputDict[(NSString *)expectedKeyString] = expectedNameString;
         }
     }];
 }
@@ -146,8 +146,6 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             
             // Creating the user on another app instance so that the current user isn't logged out
             // Source: http://stackoverflow.com/questions/37517208/firebase-kicks-out-current-user/37614090#37614090
-            
-            // Getting the API Key from the plist file
             
             NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info" ofType:@"plist"];
             FIROptions *secondaryAppOptions = [[FIROptions alloc] initWithContentsOfFile:plistPath];
