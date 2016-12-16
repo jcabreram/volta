@@ -271,6 +271,7 @@ typedef NS_ENUM (NSInteger, Field) {
     } else if (row == Field_Company) {
         MLPAutoCompleteTextField *companyField = cell.companyField;
         companyField.autoCompleteDataSource = self;
+        companyField.autoCompleteTableAppearsAsKeyboardAccessory = YES;
         
         // Parent correction
         companyField.autoCompleteParentView = self.view;

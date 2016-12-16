@@ -560,6 +560,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         } else if (row == FieldTag_Company) {
             MLPAutoCompleteTextField *companyField = cell.companyTextField;
             companyField.autoCompleteDataSource = self;
+            companyField.autoCompleteTableAppearsAsKeyboardAccessory = YES;
             
             // Parent correction
             companyField.autoCompleteParentView = self.view;
@@ -574,6 +575,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         } else if (row == FieldTag_Manager) {
             MLPAutoCompleteTextField *managerField = cell.managerTextField;
             managerField.autoCompleteDataSource = self;
+            managerField.autoCompleteTableAppearsAsKeyboardAccessory = YES;
             
             // Parent correction
             managerField.autoCompleteParentView = self.view;
@@ -594,6 +596,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         if (section == SectionNumber_Two) {
             MLPAutoCompleteTextField *projectField = cell.projectTextField;
             projectField.autoCompleteDataSource = self;
+            projectField.autoCompleteTableAppearsAsKeyboardAccessory = YES;
             
             // Parent correction
             projectField.autoCompleteParentView = self.view;
