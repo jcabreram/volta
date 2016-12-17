@@ -8,8 +8,15 @@
 
 #import "WeeksCollectionViewController.h"
 #import "WeekCollectionViewCell.h"
+#import "Constants.h"
 
 @interface WeeksCollectionViewController ()
+
+@property (nonatomic, assign) NSInteger currentWeekOfYear;
+@property (nonatomic, assign) NSInteger currentYear;
+@property (nonatomic, assign) NSInteger lastWeekOfLastYear;
+@property (nonatomic, assign) BOOL collectionViewScrolled;
+
 
 @end
 
@@ -27,6 +34,26 @@ static NSString * const reuseIdentifier = @"WeekCell";
     flow.minimumLineSpacing = 0;
     self.collectionView.collectionViewLayout = flow;
     
+    // Boolean for scrolled collection view
+    self.collectionViewScrolled = NO;
+    
+    // Current week of the year
+    NSDate *today = [NSDate date];
+    NSCalendar *cal = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    cal.firstWeekday = 2; // Monday
+    
+    NSDateComponents *currentDateComponents = [cal components:(NSCalendarUnitWeekOfYear | NSCalendarUnitYear) fromDate:today];
+    self.currentWeekOfYear = [currentDateComponents weekOfYear];
+    self.currentYear = [currentDateComponents year];
+    
+    // Last week of last year
+    NSDateComponents *lastNewYearsEveComponents = [[NSDateComponents alloc] init];
+    [lastNewYearsEveComponents setDay:25];
+    [lastNewYearsEveComponents setMonth:12];
+    [lastNewYearsEveComponents setYear:self.currentYear - 1];
+    NSDate *lastNewYearsEve = [cal dateFromComponents:lastNewYearsEveComponents];
+    self.lastWeekOfLastYear = [cal component:NSCalendarUnitWeekOfYear fromDate:lastNewYearsEve];
+    
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -34,6 +61,14 @@ static NSString * const reuseIdentifier = @"WeekCell";
     //[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
     
     // Do any additional setup after loading the view.
+}
+
+- (void)viewDidLayoutSubviews
+{
+    if (!self.collectionViewScrolled) {
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:kNumberOfWeeksInPicker-1 inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+        self.collectionViewScrolled = YES;
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -59,11 +94,44 @@ static NSString * const reuseIdentifier = @"WeekCell";
 
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 56;
+    return kNumberOfWeeksInPicker;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     WeekCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+    
+    NSInteger indexFromRightToLeft = kNumberOfWeeksInPicker - indexPath.item - 1;
+    NSInteger weekOfYear = self.currentWeekOfYear - indexFromRightToLeft + 1; // Adding one to get a week ahead
+    NSInteger year = self.currentYear;
+    
+    if (weekOfYear < 1) {
+        weekOfYear = self.lastWeekOfLastYear + weekOfYear;
+        year = self.currentYear - 1;
+    }
+    
+    cell.weekOfYear = weekOfYear;
+    cell.year = year;
+    
+    NSCalendar *cal = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    
+    // Start of the week
+    NSDateComponents *comp = [[NSDateComponents alloc] init];
+    comp.weekday = 2; // Monday
+    comp.weekOfYear = weekOfYear;
+    comp.year = year;
+    NSDate *startOfWeek = [cal dateFromComponents:comp];
+    
+    // Add 6 days for end of the week
+    NSDate *endOfWeek = [cal dateByAddingUnit:NSCalendarUnitDay value:6 toDate:startOfWeek options:0];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"MMM dd"];
+    
+    NSString *startDateString = [dateFormatter stringFromDate:startOfWeek];
+    NSString *endDateString = [dateFormatter stringFromDate:endOfWeek];
+
+    NSString *dateRangeString = [NSString stringWithFormat:@"%@ - %@", startDateString, endDateString];
+    cell.dateRangeLabel.text = dateRangeString;
     
     return cell;
 }

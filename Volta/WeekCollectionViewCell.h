@@ -9,4 +9,9 @@
 
 @interface WeekCollectionViewCell : UICollectionViewCell
 
+@property (weak, nonatomic) IBOutlet UILabel *dateRangeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *statusLabel;
+@property (assign) NSInteger weekOfYear;
+@property (assign) NSInteger year;
+
 @end

@@ -12,16 +12,23 @@
 
 NSString *const NotificationKeysSignedIn = @"onSignInCompleted";
 
-// From Storyboard
+// Segues
 NSString *const SeguesSignInToMainScreen = @"SignInToMainScreen";
 NSString *const SeguesMainScreenToSignIn = @"MainScreenToSignIn";
+
 NSString *const SeguesAddManager = @"AddManager";
 NSString *const SeguesAddEmployee = @"AddEmployee";
 NSString *const SeguesAddAdmin = @"AddAdmin";
 NSString *const SeguesShowUserDetail = @"ShowUserDetail";
+
 NSString *const SeguesAddProject = @"AddProject";
 NSString *const SeguesShowProjectDetail = @"ShowProjectDetail";
 
+NSString *const SeguesPresentWeeks = @"PresentWeeks";
+NSString *const SeguesPresentDays = @"PresentDays";
+NSString *const SeguesShowDayDetail = @"ShowDayDetail";
+
+// View controllers
 NSString *const kSideMenuViewController = @"SideMenuViewController";
 NSString *const kUsersNavigationController = @"UsersNavigationController";
 NSString *const kTimesheetsNavigationController = @"TimesheetsNavigationController";
@@ -41,5 +48,8 @@ NSString *const kProjectNameCell = @"ProjectNameCell";
 NSString *const kProjectTotalDurationCell = @"ProjectTotalDurationCell";
 NSString *const kProjectOrganizationCell = @"ProjectOrganizationCell";
 NSString *const kProjectCompanyCell = @"ProjectCompanyCell";
+
+// Timesheets
+NSInteger const kNumberOfWeeksInPicker = 53; // Maximum number of weeks in a year
 
 @end
