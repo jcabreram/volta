@@ -13,8 +13,6 @@
 #import "Constants.h"
 #import "NSString+VOLValidation.h"
 
-@import Firebase;
-
 typedef NS_ENUM (NSInteger, Field) {
     Field_Name,
     Field_TotalDuration,

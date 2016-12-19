@@ -11,8 +11,6 @@
 #import "Constants.h"
 #import "User.h"
 
-@import Firebase;
-
 @interface UsersTableViewController ()
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;

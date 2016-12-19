@@ -6,8 +6,6 @@
 //  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
 //
 
-@import Firebase;
-
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;

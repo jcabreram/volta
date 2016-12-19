@@ -29,8 +29,6 @@ typedef NS_ENUM (NSInteger, SideMenuEntry) {
     SideMenuEntry_LogOut,
 };
 
-@import Firebase;
-
 @interface SideMenuViewController ()
 
 @property (strong, nonatomic) NSArray *titlesArray;

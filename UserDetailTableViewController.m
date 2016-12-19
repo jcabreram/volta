@@ -14,8 +14,6 @@
 #import "UsersTableViewController.h"
 #import "AppState.h"
 
-@import Firebase;
-
 typedef NS_ENUM (NSInteger, FieldTag) {
     FieldTag_FirstName,
     FieldTag_LastName,

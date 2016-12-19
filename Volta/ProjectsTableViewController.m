@@ -11,8 +11,6 @@
 #import "Constants.h"
 #import "Project.h"
 
-@import Firebase;
-
 @interface ProjectsTableViewController ()
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;

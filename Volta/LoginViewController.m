@@ -12,9 +12,6 @@
 #import "MainViewController.h"
 #import "GlobalVars.h"
 
-
-@import Firebase;
-
 @interface LoginViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
