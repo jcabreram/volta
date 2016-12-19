@@ -15,6 +15,7 @@
 		9415B6981DD2385C00C2020D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9415B6961DD2385C00C2020D /* LaunchScreen.storyboard */; };
 		9415B6A01DD23B5A00C2020D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9415B69F1DD23B5A00C2020D /* GoogleService-Info.plist */; };
 		9415B6A71DD28E8100C2020D /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9415B6A61DD28E8100C2020D /* LoginViewController.m */; };
+		945EB0BC1E087F240035F3C6 /* TimesheetWeek.m in Sources */ = {isa = PBXBuildFile; fileRef = 945EB0BB1E087F240035F3C6 /* TimesheetWeek.m */; };
 		9468165C1DF8871A0027174A /* Project.m in Sources */ = {isa = PBXBuildFile; fileRef = 9468165B1DF8871A0027174A /* Project.m */; };
 		946816721DFA28D10027174A /* MLPAutoCompleteTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 9468166C1DFA28D10027174A /* MLPAutoCompleteTextField.m */; };
 		946816731DFA28D10027174A /* NSString+Levenshtein.m in Sources */ = {isa = PBXBuildFile; fileRef = 946816711DFA28D10027174A /* NSString+Levenshtein.m */; };
@@ -58,6 +59,8 @@
 		9415B6A51DD28E8100C2020D /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = Volta/LoginViewController.h; sourceTree = "<group>"; };
 		9415B6A61DD28E8100C2020D /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = Volta/LoginViewController.m; sourceTree = "<group>"; };
 		942AEE8C1DDE11DA004C3FF8 /* Volta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Volta.entitlements; sourceTree = "<group>"; };
+		945EB0BA1E087F240035F3C6 /* TimesheetWeek.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimesheetWeek.h; sourceTree = "<group>"; };
+		945EB0BB1E087F240035F3C6 /* TimesheetWeek.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimesheetWeek.m; sourceTree = "<group>"; };
 		9468165A1DF8871A0027174A /* Project.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Project.h; sourceTree = "<group>"; };
 		9468165B1DF8871A0027174A /* Project.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Project.m; sourceTree = "<group>"; };
 		9468166B1DFA28D10027174A /* MLPAutoCompleteTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLPAutoCompleteTextField.h; sourceTree = "<group>"; };
@@ -265,6 +268,8 @@
 				9477AD4E1DEF9534006FBF28 /* User.m */,
 				9468165A1DF8871A0027174A /* Project.h */,
 				9468165B1DF8871A0027174A /* Project.m */,
+				945EB0BA1E087F240035F3C6 /* TimesheetWeek.h */,
+				945EB0BB1E087F240035F3C6 /* TimesheetWeek.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -471,6 +476,7 @@
 				9477AD5F1DF75F44006FBF28 /* ProjectDetailTableViewController.m in Sources */,
 				9469E7321DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m in Sources */,
 				9477AD591DF2083D006FBF28 /* UserDetailCell.m in Sources */,
+				945EB0BC1E087F240035F3C6 /* TimesheetWeek.m in Sources */,
 				9477AD561DF1DD0F006FBF28 /* NSString+VOLValidation.m in Sources */,
 				946816731DFA28D10027174A /* NSString+Levenshtein.m in Sources */,
 				9551C90C1DE39F650066ED96 /* GlobalVars.m in Sources */,
