@@ -8,7 +8,7 @@
 
 #import "WeeksCollectionViewController.h"
 
-@interface DaysTableViewController : UITableViewController <WeeksCollectionViewControllerDelegate>
+@interface DaysTableViewController : UITableViewController <WeeksCollectionViewControllerDelegate, UITextFieldDelegate>
 
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, assign) NSInteger weekNumber;
