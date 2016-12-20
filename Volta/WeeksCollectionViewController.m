@@ -9,14 +9,16 @@
 #import "WeeksCollectionViewController.h"
 #import "WeekCollectionViewCell.h"
 #import "Constants.h"
+#import "DaysTableViewController.h"
 
 @interface WeeksCollectionViewController ()
 
 @property (nonatomic, assign) NSInteger currentWeekOfYear;
 @property (nonatomic, assign) NSInteger currentYear;
 @property (nonatomic, assign) NSInteger lastWeekOfLastYear;
-@property (nonatomic, assign) BOOL collectionViewScrolled;
 
+@property (nonatomic, assign) BOOL collectionViewScrolled;
+@property (nonatomic, assign) NSInteger selectedItem;
 
 @end
 
@@ -66,7 +68,9 @@ static NSString * const reuseIdentifier = @"WeekCell";
 - (void)viewDidLayoutSubviews
 {
     if (!self.collectionViewScrolled) {
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:kNumberOfWeeksInPicker-1 inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+        NSIndexPath *indexPathForToday = [NSIndexPath indexPathForItem:kNumberOfWeeksInPicker-2 inSection:0];
+        [self.collectionView selectItemAtIndexPath:indexPathForToday animated:NO scrollPosition:UICollectionViewScrollPositionCenteredHorizontally];
+        [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPathForToday];
         self.collectionViewScrolled = YES;
     }
 }
@@ -76,15 +80,7 @@ static NSString * const reuseIdentifier = @"WeekCell";
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 #pragma mark <UICollectionViewDataSource>
 
@@ -99,6 +95,14 @@ static NSString * const reuseIdentifier = @"WeekCell";
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     WeekCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+    
+    if (indexPath.item == self.selectedItem) {
+        cell.layer.borderWidth = 1.0f;
+        cell.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    } else {
+        cell.layer.borderWidth = 0.0f;
+        cell.layer.borderColor = [UIColor clearColor].CGColor;
+    }
     
     NSInteger indexFromRightToLeft = kNumberOfWeeksInPicker - indexPath.item - 1;
     NSInteger weekOfYear = self.currentWeekOfYear - indexFromRightToLeft + 1; // Adding one to get a week ahead
@@ -121,6 +125,8 @@ static NSString * const reuseIdentifier = @"WeekCell";
     comp.year = year;
     NSDate *startOfWeek = [cal dateFromComponents:comp];
     
+    cell.startDate = startOfWeek;
+    
     // Add 6 days for end of the week
     NSDate *endOfWeek = [cal dateByAddingUnit:NSCalendarUnitDay value:6 toDate:startOfWeek options:0];
     
@@ -137,6 +143,16 @@ static NSString * const reuseIdentifier = @"WeekCell";
 }
 
 #pragma mark <UICollectionViewDelegate>
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    self.selectedItem = indexPath.item;
+    [self.collectionView reloadData];
+    
+    WeekCollectionViewCell *cell = [self collectionView:self.collectionView cellForItemAtIndexPath:indexPath];
+
+    [self.delegate updateWeekViewWithStartDate:cell.startDate forWeekNumber:cell.weekOfYear];
+}
 
 /*
 // Uncomment this method to specify if the specified item should be highlighted during tracking

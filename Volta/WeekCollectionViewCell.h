@@ -11,7 +11,9 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *dateRangeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
-@property (assign) NSInteger weekOfYear;
-@property (assign) NSInteger year;
+
+@property (nonatomic, assign) NSInteger weekOfYear;
+@property (nonatomic, strong) NSDate *startDate;
+@property (nonatomic, assign) NSInteger year;
 
 @end

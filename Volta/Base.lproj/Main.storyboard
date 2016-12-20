@@ -233,7 +233,7 @@
                                         <rect key="frame" x="344.5" y="0.0" width="30.5" height="61"/>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" red="0.035162411630153656" green="0.41455650329589844" blue="0.7745775580406189" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="0.035294117647058823" green="0.41568627450980389" blue="0.77647058823529413" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="D5O-4Z-JPP" secondAttribute="trailing" id="636-ap-kki"/>
                                     <constraint firstItem="D5O-4Z-JPP" firstAttribute="width" secondItem="AVo-MG-eCt" secondAttribute="width" id="99j-IG-FNG"/>
@@ -404,7 +404,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="•" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SKF-AV-Sv6">
-                                            <rect key="frame" x="156.5" y="13" width="16" height="39"/>
+                                            <rect key="frame" x="156" y="13" width="16" height="39"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -416,13 +416,13 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mon 24" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2b2-LJ-9dI">
-                                            <rect key="frame" x="16" y="16" width="93" height="34"/>
+                                            <rect key="frame" x="16" y="15" width="93" height="34"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="11.5" placeholder="???" textAlignment="right" adjustsFontSizeToFit="NO" minimumFontSize="28" translatesAutoresizingMaskIntoConstraints="NO" id="AG1-KY-eNL">
-                                            <rect key="frame" x="180.5" y="16" width="93.5" height="34"/>
+                                            <rect key="frame" x="180" y="16" width="94" height="34"/>
                                             <nil key="textColor"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="28"/>
                                             <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numbersAndPunctuation"/>
@@ -441,6 +441,8 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="dayLabel" destination="2b2-LJ-9dI" id="qhm-3t-zaB"/>
+                                    <outlet property="hoursTextField" destination="AG1-KY-eNL" id="NbI-R1-CKs"/>
                                     <segue destination="UO6-HI-qvZ" kind="show" identifier="ShowDayDetail" trigger="accessoryAction" id="dyC-Ak-ZaZ"/>
                                 </connections>
                             </tableViewCell>
@@ -460,11 +462,11 @@
             <objects>
                 <navigationController storyboardIdentifier="TimesheetsNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="UuL-87-7mK" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="jFU-xk-Bw8">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" translucent="NO" id="jFU-xk-Bw8">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.99963909390000005" green="1" blue="0.99975615740000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <color key="barTintColor" red="0.16205963492393494" green="0.51360058784484863" blue="0.89054262638092041" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="barTintColor" red="0.16078431372549018" green="0.51372549019607838" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>

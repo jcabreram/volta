@@ -9,4 +9,7 @@
 
 @interface DayTableViewCell : UITableViewCell
 
+@property (weak, nonatomic) IBOutlet UILabel *dayLabel;
+@property (weak, nonatomic) IBOutlet UITextField *hoursTextField;
+
 @end

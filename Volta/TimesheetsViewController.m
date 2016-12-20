@@ -13,6 +13,9 @@
 
 @interface TimesheetsViewController ()
 
+@property (nonatomic, strong) WeeksCollectionViewController *weeksVC;
+@property (nonatomic, strong) DaysTableViewController *daysVC;
+
 @end
 
 @implementation TimesheetsViewController
@@ -32,11 +35,12 @@
     NSString *segueName = segue.identifier;
     
     if ([segueName isEqualToString:SeguesPresentWeeks]) {
-        //WeeksCollectionViewController *weeksVC = (WeeksCollectionViewController *)segue.destinationViewController;
+        self.weeksVC = (WeeksCollectionViewController *)segue.destinationViewController;
     } else if ([segueName isEqualToString:SeguesPresentDays]) {
-        //DaysTableViewController *daysVC = (DaysTableViewController *)segue.destinationViewController;
+        self.daysVC = (DaysTableViewController *)segue.destinationViewController;
     }
     
+    self.weeksVC.delegate = self.daysVC;
 }
 
 @end
