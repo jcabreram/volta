@@ -133,8 +133,10 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 {
     [self.view endEditing:YES];
     
-    // Before creating the user, we update the User object's projects to their respective keys
-    [self updateProjects];
+    // Before creating the user, we update the User object's projects to its respective keys
+    if (self.user.type == UserType_Employee) {
+        [self updateProjects];
+    }
     
     if ([self validInput]) {
         
@@ -162,64 +164,67 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
                                                NSLog(@"%@", error.localizedDescription);
                                            } else {
                                                
-                                               [self updateDatabase];
+                                               [self updateDatabaseWithUserUID:user.uid];
                                            }
                                        }];
         } else {
-            [self updateDatabase];
+            [self updateDatabaseWithUserUID:user.key];
         }
     }
     
 }
 
-- (void)updateDatabase {
+- (void)updateDatabaseWithUserUID:(NSString *)userUID {
     
     User *user = self.user;
     
     // We create the company first if it's not already on the existing list of companies on the database, then we call updateUserInDatabase when that's ready to continue with the user creation process
     
-    NSString *companyName = [self textEnteredInTextField:FieldTag_Company forSection:SectionNumber_One];
-    NSArray *companyKeys = [self.availableCompanies allKeysForObject:companyName];
-    
-    if ([companyKeys count] > 0) {
-        NSString *companyKey = [companyKeys firstObject];
-        user.companyKey = companyKey;
-        [self updateUserInDatabase];
+    if (user.type == UserType_Employee || user.type == UserType_Manager) {
+        NSString *companyName = [self textEnteredInTextField:FieldTag_Company forSection:SectionNumber_One];
+        NSArray *companyKeys = [self.availableCompanies allKeysForObject:companyName];
+        
+        if ([companyKeys count] > 0) {
+            NSString *companyKey = [companyKeys firstObject];
+            user.companyKey = companyKey;
+            [self updateUserInDatabaseWithUserUID:userUID];
+        } else {
+            user.companyKey = [[self.databaseRef child:@"companies"] childByAutoId].key;
+            
+            NSDictionary *companyStructure = @{@"name":companyName};
+            
+            NSMutableDictionary *childUpdates = [@{[@"/companies/" stringByAppendingString:user.companyKey]: companyStructure} mutableCopy];
+            
+            [self.databaseRef updateChildValues:childUpdates
+                            withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
+                                if (error) {
+                                    [self presentValidationErrorAlertWithTitle:@"Error"
+                                                                       message:error.localizedDescription];
+                                    NSLog(@"%@", error.localizedDescription);
+                                } else {
+                                    [self updateUserInDatabaseWithUserUID:userUID];
+                                }
+                            }];
+        }
     } else {
-        user.companyKey = [[self.databaseRef child:@"companies"] childByAutoId].key;
-        
-        NSDictionary *companyStructure = @{@"name":companyName};
-        
-        NSMutableDictionary *childUpdates = [@{[@"/companies/" stringByAppendingString:user.companyKey]: companyStructure} mutableCopy];
-        
-        [self.databaseRef updateChildValues:childUpdates
-                        withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
-                            if (error) {
-                                [self presentValidationErrorAlertWithTitle:@"Error"
-                                                                   message:error.localizedDescription];
-                                NSLog(@"%@", error.localizedDescription);
-                            } else {
-                                [self updateUserInDatabase];
-                            }
-                        }];
+        [self updateUserInDatabaseWithUserUID:userUID];
     }
+    
+    
     
 }
 
-- (void)updateUserInDatabase {
+- (void)updateUserInDatabaseWithUserUID:(NSString *)userUID {
     User *user = self.user;
     
     NSString *creatorID = [AppState sharedInstance].userID;
     
     NSString *timesheetKey;
-    NSString *userKey;
     
-    if ([user.key vol_isStringEmpty]) {
+    if ([user.timesheet vol_isStringEmpty]) {
         timesheetKey = [[self.databaseRef child:@"timesheets"] childByAutoId].key;
-        userKey = [[self.databaseRef child:@"users"] childByAutoId].key;
     } else {
         timesheetKey = user.timesheet;
-        userKey = user.key;
     }
     
     NSDictionary *userDict = @{@"email":user.email,
@@ -234,15 +239,15 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
                                @"projects":user.projects};
     
     // Initialize the child updates dictionary with the user node
-    NSMutableDictionary *childUpdates = [@{[@"/users/" stringByAppendingString:userKey]: userDict} mutableCopy];
+    NSMutableDictionary *childUpdates = [@{[@"/users/" stringByAppendingString:userUID]: userDict} mutableCopy];
     
     if (user.type == UserType_Employee) {
         
         // Add the employee to the employees members list
-        childUpdates[[NSString stringWithFormat:@"/employees/members/%@/", userKey]] = @YES;
+        childUpdates[[NSString stringWithFormat:@"/employees/members/%@/", userUID]] = @YES;
         
         // Add the employee to its company's employees list
-        childUpdates[[NSString stringWithFormat:@"/companies/%@/employees/%@", user.companyKey, userKey]] = @YES;
+        childUpdates[[NSString stringWithFormat:@"/companies/%@/employees/%@", user.companyKey, userUID]] = @YES;
         
         // Get the current number of employees to increase it by 1
         [[[self.databaseRef child:@"employees"] child:@"no_of_users"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
@@ -271,7 +276,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
     } else if (user.type == UserType_Manager) {
         
         // Add the manager to the managers members list
-        childUpdates[[NSString stringWithFormat:@"/managers/members/%@/", userKey]] = @YES;
+        childUpdates[[NSString stringWithFormat:@"/managers/members/%@/", userUID]] = @YES;
         
         // Get the current number of users of managers to increase it by 1
         [[[self.databaseRef child:@"managers"] child:@"no_of_users"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
@@ -300,7 +305,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
     } else if (user.type == UserType_Admin) {
         
         // Add the admin to the admins members list
-        childUpdates[[NSString stringWithFormat:@"/admins/members/%@/", userKey]] = @YES;
+        childUpdates[[NSString stringWithFormat:@"/admins/members/%@/", userUID]] = @YES;
         
         // Get the current number of users of admins to increase it by 1
         [[[self.databaseRef child:@"admins"] child:@"no_of_users"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
@@ -365,21 +370,23 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
     NSString *company = [self textEnteredInTextField:FieldTag_Company forSection:SectionNumber_One];
     NSString *manager = [self textEnteredInTextField:FieldTag_Manager forSection:SectionNumber_One];
     
-    NSArray *existingProjects = [self.availableProjects allValues];
-    for (NSInteger i = 0; i < self.numberOfProjectsShown; i++) {
-        NSString *projectName = [self textEnteredInTextField:i forSection:SectionNumber_Two];
-        if (![projectName vol_isStringEmpty] && ![existingProjects containsObject:projectName]) {
-            [self presentValidationErrorAlertWithTitle:@"Invalid Project"
-                                               message:@"Please, select an existing project or create a new one in Projects."];
+    if (self.user.type == UserType_Employee) {
+        NSArray *existingProjects = [self.availableProjects allValues];
+        for (NSInteger i = 0; i < self.numberOfProjectsShown; i++) {
+            NSString *projectName = [self textEnteredInTextField:i forSection:SectionNumber_Two];
+            if (![projectName vol_isStringEmpty] && ![existingProjects containsObject:projectName]) {
+                [self presentValidationErrorAlertWithTitle:@"Invalid Project"
+                                                   message:@"Please, select an existing project or create a new one in Projects."];
+                return NO;
+            }
+        }
+        
+        NSArray *existingManagers = [self.availableManagers allValues];
+        if (![existingManagers containsObject:manager]) {
+            [self presentValidationErrorAlertWithTitle:@"Invalid Manager"
+                                               message:@"Please, select an existing manager or create a new one in Users."];
             return NO;
         }
-    }
-    
-    NSArray *existingManagers = [self.availableManagers allValues];
-    if (![existingManagers containsObject:manager]) {
-        [self presentValidationErrorAlertWithTitle:@"Invalid Manager"
-                                           message:@"Please, select an existing manager or create a new one in Users."];
-        return NO;
     }
     
     if (![email vol_isValidEmail]) {
