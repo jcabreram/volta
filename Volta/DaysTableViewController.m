@@ -98,25 +98,26 @@ typedef NS_ENUM (NSInteger, Field) {
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
     DayTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DayCell" forIndexPath:indexPath];
     
-    NSInteger row = indexPath.row;
-    
-    cell.hoursTextField.tag = row;
-    
-    NSDate *date = [[NSCalendar currentCalendar] dateByAddingUnit:NSCalendarUnitDay
-                                                            value:row
-                                                           toDate:self.startDate
-                                                          options:0];
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"MMM dd"];
-    
-    NSString *dateString = [dateFormatter stringFromDate:date];
-    
-    cell.dayLabel.text = dateString;
-    
-    // Configure the cell...
+    if (self.startDate) {
+        NSInteger row = indexPath.row;
+        
+        cell.hoursTextField.tag = row;
+        
+        NSDate *date = [[NSCalendar currentCalendar] dateByAddingUnit:NSCalendarUnitDay
+                                                                value:row
+                                                               toDate:self.startDate
+                                                              options:0];
+        
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"MMM dd"];
+        
+        NSString *dateString = [dateFormatter stringFromDate:date];
+        
+        cell.dayLabel.text = dateString;
+    }
     
     return cell;
 }
