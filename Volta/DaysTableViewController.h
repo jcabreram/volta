@@ -12,5 +12,6 @@
 
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, assign) NSInteger weekNumber;
+@property (nonatomic, assign) NSInteger year;
 
 @end

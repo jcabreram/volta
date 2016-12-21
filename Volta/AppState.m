@@ -19,4 +19,15 @@
     return sharedMyInstance;
 }
 
+- (void)setTypeWithString:(NSString *)typeString
+{
+    if ([typeString isEqualToString:@"employee"]) {
+        self.type = UserType_Employee;
+    } else if ([typeString isEqualToString:@"manager"]) {
+        self.type = UserType_Manager;
+    } else if ([typeString isEqualToString:@"admin"]) {
+        self.type = UserType_Admin;
+    }
+}
+
 @end

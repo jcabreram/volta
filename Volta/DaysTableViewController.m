@@ -22,6 +22,8 @@ typedef NS_ENUM (NSInteger, Field) {
 
 @interface DaysTableViewController ()
 
+@property (nonatomic, strong) FIRDatabaseReference *databaseRef;
+
 @property (nonatomic, strong) NSMutableArray *hoursByDay;
 
 @end
@@ -30,12 +32,59 @@ typedef NS_ENUM (NSInteger, Field) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self configureDatabase];
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)configureDatabase {
+    self.databaseRef = [[FIRDatabase database] reference];
+}
+
+- (void)dealloc
 {
-    [super viewDidAppear:animated];
     
+}
+
+#pragma mark - Helper methods
+
+- (NSString *)stringWithNameOfDay:(Field)dayField
+{
+    NSString *weekDay;
+    
+    switch (dayField) {
+        case Field_Monday:
+            weekDay = @"monday";
+            break;
+            
+        case Field_Tuesday:
+            weekDay = @"tuesday";
+            break;
+            
+        case Field_Wednesday:
+            weekDay = @"wednesday";
+            break;
+            
+        case Field_Thursday:
+            weekDay = @"thursday";
+            break;
+            
+        case Field_Friday:
+            weekDay = @"friday";
+            break;
+            
+        case Field_Saturday:
+            weekDay = @"saturday";
+            break;
+            
+        case Field_Sunday:
+            weekDay = @"sunday";
+            break;
+            
+        default:
+            break;
+    }
+    
+    return weekDay;
 }
 
 #pragma mark - Table view data source
@@ -95,6 +144,20 @@ typedef NS_ENUM (NSInteger, Field) {
 {
     [textField resignFirstResponder];
     return YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+//    UITableViewCell *containerCell = (UITableViewCell *)[[textField superview] superview];
+//    
+//    if ([containerCell isKindOfClass:[UITableViewCell class]]) {
+//        NSIndexPath *indexPath = [self.tableView indexPathForCell:containerCell];
+//        NSInteger row = indexPath.row;
+//        
+//        NSString *nameOfDay = [self stringWithNameOfDay:row];
+//        
+//        [[[[[self.databaseRef child:@"timesheets"] child:[@(self.weekNumber) stringValue]] child:nameOfDay] child:@"time"] setValue:@([textField.text doubleValue])];
+//    }
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string

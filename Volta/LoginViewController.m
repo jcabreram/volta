@@ -159,13 +159,23 @@
 
 - (void)signedIn:(FIRUser *)user {
     
-    [AppState sharedInstance].displayName = user.displayName.length > 0 ? user.displayName : user.email;
-    [AppState sharedInstance].userID = user.uid;
-    [AppState sharedInstance].photoURL = user.photoURL;
-    [AppState sharedInstance].signedIn = YES;
-    [[NSNotificationCenter defaultCenter] postNotificationName:NotificationKeysSignedIn
-                                                        object:nil userInfo:nil];
-    [self performSegueWithIdentifier:SeguesSignInToMainScreen sender:self];
+    FIRDatabaseReference *ref = [[FIRDatabase database] reference];
+    
+    AppState *state = [AppState sharedInstance];
+    
+    state.userID = user.uid;
+    
+    [[[ref child:@"users"] child:user.uid] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        NSLog(@"");
+        state.displayName = snapshot.value[@"first_name"];
+        [state setTypeWithString:snapshot.value[@"type"]];
+        state.timesheetKey = snapshot.value[@"timesheet"];
+        
+        state.signedIn = YES;
+        [[NSNotificationCenter defaultCenter] postNotificationName:NotificationKeysSignedIn
+                                                            object:nil userInfo:nil];
+        [self performSegueWithIdentifier:SeguesSignInToMainScreen sender:self];
+    }];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

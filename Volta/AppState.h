@@ -6,14 +6,18 @@
 //  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
 //
 
+#import "User.h"
 
 @interface AppState : NSObject
-
-+ (AppState *)sharedInstance;
 
 @property (nonatomic) BOOL signedIn;
 @property (nonatomic, copy) NSString *displayName;
 @property (nonatomic, copy) NSString *userID;
-@property (nonatomic, copy) NSURL *photoURL;
+@property (nonatomic, assign) UserType type;
+@property (nonatomic, copy) NSString *timesheetKey;
+
++ (AppState *)sharedInstance;
+
+- (void)setTypeWithString:(NSString *)typeString;
 
 @end
