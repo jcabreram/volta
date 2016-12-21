@@ -167,14 +167,20 @@
     
     [[[ref child:@"users"] child:user.uid] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         NSLog(@"");
-        state.displayName = snapshot.value[@"first_name"];
-        [state setTypeWithString:snapshot.value[@"type"]];
-        state.timesheetKey = snapshot.value[@"timesheet"];
+        if (snapshot.exists) {
+            state.displayName = snapshot.value[@"first_name"];
+            [state setTypeWithString:snapshot.value[@"type"]];
+            state.timesheetKey = snapshot.value[@"timesheet"];
+            
+            state.signedIn = YES;
+            [[NSNotificationCenter defaultCenter] postNotificationName:NotificationKeysSignedIn
+                                                                object:nil userInfo:nil];
+            [self performSegueWithIdentifier:SeguesSignInToMainScreen sender:self];
+        } else {
+            [self presentLoginErrorAlert:@"The specified user doesn't have an account in our systems."];
+            state.signedIn = NO;
+        }
         
-        state.signedIn = YES;
-        [[NSNotificationCenter defaultCenter] postNotificationName:NotificationKeysSignedIn
-                                                            object:nil userInfo:nil];
-        [self performSegueWithIdentifier:SeguesSignInToMainScreen sender:self];
     }];
 }
 

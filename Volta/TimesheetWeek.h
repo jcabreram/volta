@@ -27,8 +27,6 @@ typedef NS_ENUM(NSInteger, WeekDay) {
 
 @property (nonatomic, assign) NSInteger weekNumber;
 @property (nonatomic, assign) Status status;
-@property (nonatomic, strong) NSDate *startDate;
-@property (nonatomic, strong) NSDate *lastUpdated;
 @property (nonatomic, strong) NSMutableArray<NSNumber *> *hoursPerDay;
 
 @property (nonatomic, copy) NSMutableDictionary<NSString *, NSNumber *> *mon;
@@ -38,5 +36,26 @@ typedef NS_ENUM(NSInteger, WeekDay) {
 @property (nonatomic, copy) NSMutableDictionary<NSString *, NSNumber *> *fri;
 @property (nonatomic, copy) NSMutableDictionary<NSString *, NSNumber *> *sat;
 @property (nonatomic, copy) NSMutableDictionary<NSString *, NSNumber *> *sun;
+
+- (instancetype)init;
+
+- (instancetype)initWithWeekNumber:(NSInteger)weekNumber
+                            status:(Status)status;
+
+
+- (instancetype)initWithWeekNumber:(NSInteger)weekNumber
+                            status:(Status)status
+                       hoursPerDay:(NSMutableArray *)hoursPerDay
+             withProjectsForMonday:(NSMutableDictionary<NSString *, NSNumber *> *)monday
+                           tuesday:(NSMutableDictionary<NSString *, NSNumber *> *)tuesday
+                         wednesday:(NSMutableDictionary<NSString *, NSNumber *> *)wednesday
+                          thursday:(NSMutableDictionary<NSString *, NSNumber *> *)thursday
+                            friday:(NSMutableDictionary<NSString *, NSNumber *> *)friday
+                          saturday:(NSMutableDictionary<NSString *, NSNumber *> *)saturday
+                            sunday:(NSMutableDictionary<NSString *, NSNumber *> *)sunday;
+
+- (void)addWorkForWeekDay:(WeekDay)day
+           withProjectKey:(NSString *)projectKey
+            numberOfHours:(NSNumber *)numberOfHours;
 
 @end

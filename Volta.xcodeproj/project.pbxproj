@@ -37,6 +37,7 @@
 		94ADACD51DDBAA9400C01279 /* DaysTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD41DDBAA9400C01279 /* DaysTableViewController.m */; };
 		94ADACD81DDBAADA00C01279 /* DayTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD71DDBAADA00C01279 /* DayTableViewCell.m */; };
 		94ADACDB1DDBC69800C01279 /* WeekCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACDA1DDBC69800C01279 /* WeekCollectionViewCell.m */; };
+		94EE72601E0B251F00DA2689 /* UIColor+VOLcolors.m in Sources */ = {isa = PBXBuildFile; fileRef = 94EE725F1E0B251F00DA2689 /* UIColor+VOLcolors.m */; };
 		94FC738E1DE4FA9F0064F4B0 /* ProjectsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94FC738D1DE4FA9F0064F4B0 /* ProjectsTableViewController.m */; };
 		94FC73941DE4FFDC0064F4B0 /* DayDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94FC73931DE4FFDC0064F4B0 /* DayDetailTableViewController.m */; };
 		94FC73971DE5010A0064F4B0 /* DayDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94FC73961DE5010A0064F4B0 /* DayDetailTableViewCell.m */; };
@@ -106,6 +107,8 @@
 		94ADACD71DDBAADA00C01279 /* DayTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayTableViewCell.m; sourceTree = "<group>"; };
 		94ADACD91DDBC69800C01279 /* WeekCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeekCollectionViewCell.h; sourceTree = "<group>"; };
 		94ADACDA1DDBC69800C01279 /* WeekCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeekCollectionViewCell.m; sourceTree = "<group>"; };
+		94EE725E1E0B251F00DA2689 /* UIColor+VOLcolors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+VOLcolors.h"; sourceTree = "<group>"; };
+		94EE725F1E0B251F00DA2689 /* UIColor+VOLcolors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+VOLcolors.m"; sourceTree = "<group>"; };
 		94FC738C1DE4FA9F0064F4B0 /* ProjectsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProjectsTableViewController.h; path = Volta/ProjectsTableViewController.h; sourceTree = "<group>"; };
 		94FC738D1DE4FA9F0064F4B0 /* ProjectsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProjectsTableViewController.m; path = Volta/ProjectsTableViewController.m; sourceTree = "<group>"; };
 		94FC73921DE4FFDC0064F4B0 /* DayDetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayDetailTableViewController.h; sourceTree = "<group>"; };
@@ -184,6 +187,8 @@
 				95FDB8231DE5EC8300D1EF37 /* Volta-Prefix.pch */,
 				9477AD541DF1DD0F006FBF28 /* NSString+VOLValidation.h */,
 				9477AD551DF1DD0F006FBF28 /* NSString+VOLValidation.m */,
+				94EE725E1E0B251F00DA2689 /* UIColor+VOLcolors.h */,
+				94EE725F1E0B251F00DA2689 /* UIColor+VOLcolors.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -481,6 +486,7 @@
 				946816731DFA28D10027174A /* NSString+Levenshtein.m in Sources */,
 				9551C90C1DE39F650066ED96 /* GlobalVars.m in Sources */,
 				946816721DFA28D10027174A /* MLPAutoCompleteTextField.m in Sources */,
+				94EE72601E0B251F00DA2689 /* UIColor+VOLcolors.m in Sources */,
 				9469E7221DD3CFCD007EB4E6 /* AppState.m in Sources */,
 				94ADACD81DDBAADA00C01279 /* DayTableViewCell.m in Sources */,
 				9477AD4B1DEE2DD6006FBF28 /* UserDetailTableViewController.m in Sources */,

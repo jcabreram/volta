@@ -15,9 +15,7 @@
     return [self initWithWeekNumber:1
                              status:Status_NotSubmitted
                         hoursPerDay:[@[@0, @0, @0, @0, @0, @0, @0] mutableCopy]
-                          startDate:[NSDate date]
-                        lastUpdated:[NSDate date]
-          withDictionariesForMonday:[[NSMutableDictionary alloc] init]
+              withProjectsForMonday:[[NSMutableDictionary alloc] init]
                             tuesday:[[NSMutableDictionary alloc] init]
                           wednesday:[[NSMutableDictionary alloc] init]
                            thursday:[[NSMutableDictionary alloc] init]
@@ -28,10 +26,24 @@
 
 - (instancetype)initWithWeekNumber:(NSInteger)weekNumber
                             status:(Status)status
+{
+    return [self initWithWeekNumber:weekNumber
+                             status:status
+                        hoursPerDay:[@[@0, @0, @0, @0, @0, @0, @0] mutableCopy]
+              withProjectsForMonday:[[NSMutableDictionary alloc] init]
+                            tuesday:[[NSMutableDictionary alloc] init]
+                          wednesday:[[NSMutableDictionary alloc] init]
+                           thursday:[[NSMutableDictionary alloc] init]
+                             friday:[[NSMutableDictionary alloc] init]
+                           saturday:[[NSMutableDictionary alloc] init]
+                             sunday:[[NSMutableDictionary alloc] init]];
+}
+
+
+- (instancetype)initWithWeekNumber:(NSInteger)weekNumber
+                            status:(Status)status
                        hoursPerDay:(NSMutableArray *)hoursPerDay
-                         startDate:(NSDate *)startDate
-                       lastUpdated:(NSDate *)lastUpdated
-         withDictionariesForMonday:(NSMutableDictionary<NSString *, NSNumber *> *)monday
+             withProjectsForMonday:(NSMutableDictionary<NSString *, NSNumber *> *)monday
                            tuesday:(NSMutableDictionary<NSString *, NSNumber *> *)tuesday
                          wednesday:(NSMutableDictionary<NSString *, NSNumber *> *)wednesday
                           thursday:(NSMutableDictionary<NSString *, NSNumber *> *)thursday
@@ -45,8 +57,6 @@
         _weekNumber = weekNumber;
         _status = status;
         _hoursPerDay = hoursPerDay;
-        _startDate = startDate;
-        _lastUpdated = lastUpdated;
         _mon = monday;
         _tue = tuesday;
         _wed = wednesday;

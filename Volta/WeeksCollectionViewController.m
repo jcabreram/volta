@@ -10,21 +10,34 @@
 #import "WeekCollectionViewCell.h"
 #import "Constants.h"
 #import "DaysTableViewController.h"
+#import "AppState.h"
+#import "TimesheetWeek.h"
+#import "UIColor+VOLcolors.h"
 
 @interface WeeksCollectionViewController ()
 
+// Calendar properties
 @property (nonatomic, assign) NSInteger currentWeekOfYear;
 @property (nonatomic, assign) NSInteger currentYear;
 @property (nonatomic, assign) NSInteger lastWeekOfLastYear;
 
+// Collection View properties
 @property (nonatomic, assign) BOOL collectionViewScrolled;
 @property (nonatomic, assign) NSInteger selectedItem;
+
+// Firebase properties
+@property (nonatomic, strong) FIRDatabaseReference *databaseRef;
+@property (nonatomic, assign) FIRDatabaseHandle newWeekHandle;
+@property (nonatomic, assign) FIRDatabaseHandle modifiedWeekHandle;
+@property (nonatomic, strong) NSMutableDictionary *timesheet;
 
 @end
 
 @implementation WeeksCollectionViewController
 
 static NSString * const reuseIdentifier = @"WeekCell";
+
+#pragma mark - UIViewController lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -56,13 +69,8 @@ static NSString * const reuseIdentifier = @"WeekCell";
     NSDate *lastNewYearsEve = [cal dateFromComponents:lastNewYearsEveComponents];
     self.lastWeekOfLastYear = [cal component:NSCalendarUnitWeekOfYear fromDate:lastNewYearsEve];
     
-    // Uncomment the following line to preserve selection between presentations
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Register cell classes
-    //[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
-    
-    // Do any additional setup after loading the view.
+    self.timesheet = [[NSMutableDictionary alloc] init];
+    [self configureDatabase];
 }
 
 - (void)viewDidLayoutSubviews
@@ -75,11 +83,41 @@ static NSString * const reuseIdentifier = @"WeekCell";
     }
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+#pragma mark - Database
+
+- (void)configureDatabase {
+    self.databaseRef = [[FIRDatabase database] reference];
+    
+    NSString *timesheetKey = [AppState sharedInstance].timesheetKey;
+    
+    // Listen for new weeks added
+    self.newWeekHandle = [[[_databaseRef child:@"timesheets"] child:timesheetKey] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        
+        if ([snapshot.value isKindOfClass:[NSDictionary class]]) {
+            self.timesheet[snapshot.key] = snapshot.value;
+        
+            [self.collectionView reloadData];
+        }
+    }];
+    
+    // Listen for modified weeks
+    self.modifiedWeekHandle = [[[_databaseRef child:@"timesheets"] child:timesheetKey] observeEventType:FIRDataEventTypeChildChanged withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        
+        if ([snapshot.value isKindOfClass:[NSDictionary class]]) {
+            self.timesheet[snapshot.key] = snapshot.value;
+            
+            [self.collectionView reloadData];
+        }
+    }];
 }
 
+- (void)dealloc {
+    NSString *timesheetKey = [AppState sharedInstance].timesheetKey;
+    
+    [[[self.databaseRef child:@"timesheets"] child:timesheetKey] removeObserverWithHandle:self.newWeekHandle];
+    
+    [[[self.databaseRef child:@"timesheets"] child:timesheetKey] removeObserverWithHandle:self.modifiedWeekHandle];
+}
 
 
 #pragma mark <UICollectionViewDataSource>
@@ -138,6 +176,39 @@ static NSString * const reuseIdentifier = @"WeekCell";
 
     NSString *dateRangeString = [NSString stringWithFormat:@"%@ - %@", startDateString, endDateString];
     cell.dateRangeLabel.text = dateRangeString;
+    
+    // Retrieve status from database and create TimesheetWeek object
+    NSString *yearString = [@(year) stringValue];
+    NSString *weekOfYearString = [@(weekOfYear) stringValue];
+    
+    // Change background color depending on status
+    if (self.timesheet[yearString][weekOfYearString] && [self.timesheet[yearString][weekOfYearString] isKindOfClass:[NSNumber class]]) {
+        Status weekStatus = [self.timesheet[yearString][weekOfYearString] integerValue];
+        
+        switch (weekStatus) {
+            case Status_NotSubmitted:
+                cell.backgroundColor = [UIColor notSubmittedStatusColor];
+                cell.statusLabel.text = @"not submitted";
+                break;
+            case Status_Submitted:
+                cell.backgroundColor = [UIColor submittedStatusColor];
+                cell.statusLabel.text = @"to be approved";
+                break;
+            case Status_Approved:
+                cell.backgroundColor = [UIColor approvedStatusColor];
+                cell.statusLabel.text = @"approved";
+                break;
+            case Status_NotApproved:
+                cell.backgroundColor = [UIColor notApprovedStatusColor];
+                cell.statusLabel.text = @"not approved";
+                break;
+            default:
+                break;
+        }
+    } else {
+        cell.backgroundColor = [UIColor notSubmittedStatusColor];
+        cell.statusLabel.text = @"not submitted";
+    }
     
     return cell;
 }
