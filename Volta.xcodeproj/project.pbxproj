@@ -15,6 +15,7 @@
 		9415B6981DD2385C00C2020D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9415B6961DD2385C00C2020D /* LaunchScreen.storyboard */; };
 		9415B6A01DD23B5A00C2020D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9415B69F1DD23B5A00C2020D /* GoogleService-Info.plist */; };
 		9415B6A71DD28E8100C2020D /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9415B6A61DD28E8100C2020D /* LoginViewController.m */; };
+		945353D01E0C505D0023C40A /* NSDate+VOLDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 945353CF1E0C505D0023C40A /* NSDate+VOLDate.m */; };
 		945EB0BC1E087F240035F3C6 /* TimesheetWeek.m in Sources */ = {isa = PBXBuildFile; fileRef = 945EB0BB1E087F240035F3C6 /* TimesheetWeek.m */; };
 		9468165C1DF8871A0027174A /* Project.m in Sources */ = {isa = PBXBuildFile; fileRef = 9468165B1DF8871A0027174A /* Project.m */; };
 		946816721DFA28D10027174A /* MLPAutoCompleteTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 9468166C1DFA28D10027174A /* MLPAutoCompleteTextField.m */; };
@@ -60,6 +61,8 @@
 		9415B6A51DD28E8100C2020D /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = Volta/LoginViewController.h; sourceTree = "<group>"; };
 		9415B6A61DD28E8100C2020D /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = Volta/LoginViewController.m; sourceTree = "<group>"; };
 		942AEE8C1DDE11DA004C3FF8 /* Volta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Volta.entitlements; sourceTree = "<group>"; };
+		945353CE1E0C505D0023C40A /* NSDate+VOLDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+VOLDate.h"; sourceTree = "<group>"; };
+		945353CF1E0C505D0023C40A /* NSDate+VOLDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+VOLDate.m"; sourceTree = "<group>"; };
 		945EB0BA1E087F240035F3C6 /* TimesheetWeek.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimesheetWeek.h; sourceTree = "<group>"; };
 		945EB0BB1E087F240035F3C6 /* TimesheetWeek.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimesheetWeek.m; sourceTree = "<group>"; };
 		9468165A1DF8871A0027174A /* Project.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Project.h; sourceTree = "<group>"; };
@@ -189,6 +192,8 @@
 				9477AD551DF1DD0F006FBF28 /* NSString+VOLValidation.m */,
 				94EE725E1E0B251F00DA2689 /* UIColor+VOLcolors.h */,
 				94EE725F1E0B251F00DA2689 /* UIColor+VOLcolors.m */,
+				945353CE1E0C505D0023C40A /* NSDate+VOLDate.h */,
+				945353CF1E0C505D0023C40A /* NSDate+VOLDate.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -486,6 +491,7 @@
 				946816731DFA28D10027174A /* NSString+Levenshtein.m in Sources */,
 				9551C90C1DE39F650066ED96 /* GlobalVars.m in Sources */,
 				946816721DFA28D10027174A /* MLPAutoCompleteTextField.m in Sources */,
+				945353D01E0C505D0023C40A /* NSDate+VOLDate.m in Sources */,
 				94EE72601E0B251F00DA2689 /* UIColor+VOLcolors.m in Sources */,
 				9469E7221DD3CFCD007EB4E6 /* AppState.m in Sources */,
 				94ADACD81DDBAADA00C01279 /* DayTableViewCell.m in Sources */,

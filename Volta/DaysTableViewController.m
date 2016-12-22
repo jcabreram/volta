@@ -9,6 +9,8 @@
 #import "DaysTableViewController.h"
 #import "Constants.h"
 #import "DayTableViewCell.h"
+#import "TimesheetWeek.h"
+#import "AppState.h"
 
 typedef NS_ENUM (NSInteger, Field) {
     Field_Monday,
@@ -23,8 +25,6 @@ typedef NS_ENUM (NSInteger, Field) {
 @interface DaysTableViewController ()
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
-
-@property (nonatomic, strong) NSMutableArray *hoursByDay;
 
 @end
 
@@ -117,6 +117,13 @@ typedef NS_ENUM (NSInteger, Field) {
         NSString *dateString = [dateFormatter stringFromDate:date];
         
         cell.dayLabel.text = dateString;
+        
+        NSNumber *hours = self.week.hoursPerDay[row];
+        if ([hours isKindOfClass:[NSNumber class]]) {
+            cell.hoursTextField.text = [hours stringValue];
+        } else {
+            cell.hoursTextField.text = @"";
+        }
     }
     
     return cell;
@@ -131,12 +138,69 @@ typedef NS_ENUM (NSInteger, Field) {
 
 #pragma mark - Weeks collection view delegate
 
-- (void)updateWeekViewWithStartDate:(NSDate *)startDate forWeekNumber:(NSInteger)weekNumber
+- (void)updateWeekViewWithStartDate:(NSDate *)startDate forWeek:(TimesheetWeek *)week
 {
     self.startDate = startDate;
-    self.weekNumber = weekNumber;
+    self.week = week;
     
-    [self.tableView reloadData];
+    NSString *timesheetKey = [AppState sharedInstance].timesheetKey;
+    NSString *yearString = [@(week.year) stringValue];
+    NSString *weekString = [@(week.weekNumber) stringValue];
+    
+    [[[[[self.databaseRef child:@"timesheet_details"] child:timesheetKey] child:yearString] child:weekString] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        NSDictionary *timesheetDetails = snapshot.value;
+        
+        if ([timesheetDetails isKindOfClass:[NSDictionary class]]) {
+
+            if ([timesheetDetails valueForKeyPath:@"monday.time"]) {
+                week.hoursPerDay[0] = [timesheetDetails valueForKeyPath:@"monday.time"];
+            }
+            if ([timesheetDetails valueForKeyPath:@"tuesday.time"]) {
+                week.hoursPerDay[1] = [timesheetDetails valueForKeyPath:@"tuesday.time"];
+            }
+            if ([timesheetDetails valueForKeyPath:@"wednesday.time"]) {
+                week.hoursPerDay[2] = [timesheetDetails valueForKeyPath:@"wednesday.time"];
+            }
+            if ([timesheetDetails valueForKeyPath:@"thursday.time"]) {
+                week.hoursPerDay[3] = [timesheetDetails valueForKeyPath:@"thursday.time"];
+            }
+            if ([timesheetDetails valueForKeyPath:@"friday.time"]) {
+                week.hoursPerDay[4] = [timesheetDetails valueForKeyPath:@"friday.time"];
+            }
+            if ([timesheetDetails valueForKeyPath:@"saturday.time"]) {
+                week.hoursPerDay[5] = [timesheetDetails valueForKeyPath:@"saturday.time"];
+            }
+            if ([timesheetDetails valueForKeyPath:@"sunday.time"]) {
+                week.hoursPerDay[6] = [timesheetDetails valueForKeyPath:@"sunday.time"];
+            }
+    
+            if ([timesheetDetails valueForKeyPath:@"monday.projects"]) {
+                week.mon = [[timesheetDetails valueForKeyPath:@"monday.projects"] mutableCopy];
+            }
+            if ([timesheetDetails valueForKeyPath:@"tuesday.projects"]) {
+                week.tue = [[timesheetDetails valueForKeyPath:@"tuesday.projects"] mutableCopy];
+            }
+            if ([timesheetDetails valueForKeyPath:@"wednesday.projects"]) {
+                week.wed = [[timesheetDetails valueForKeyPath:@"wednesday.projects"] mutableCopy];
+            }
+            if ([timesheetDetails valueForKeyPath:@"thursday.projects"]) {
+                week.thu = [[timesheetDetails valueForKeyPath:@"thursday.projects"] mutableCopy];
+            }
+            if ([timesheetDetails valueForKeyPath:@"friday.projects"]) {
+                week.fri = [[timesheetDetails valueForKeyPath:@"friday.projects"] mutableCopy];
+            }
+            if ([timesheetDetails valueForKeyPath:@"saturday.projects"]) {
+                week.sat = [[timesheetDetails valueForKeyPath:@"saturday.projects"] mutableCopy];
+            }
+            if ([timesheetDetails valueForKeyPath:@"sunday.projects"]) {
+                week.sun = [[timesheetDetails valueForKeyPath:@"sunday.projects"] mutableCopy];
+            }
+        }
+        
+        [self.tableView reloadData];
+    }];
+    
+    
 }
 
 #pragma mark - UITextField delegate

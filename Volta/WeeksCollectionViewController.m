@@ -13,6 +13,7 @@
 #import "AppState.h"
 #import "TimesheetWeek.h"
 #import "UIColor+VOLcolors.h"
+#import "NSDate+VOLDate.h"
 
 @interface WeeksCollectionViewController ()
 
@@ -181,9 +182,11 @@ static NSString * const reuseIdentifier = @"WeekCell";
     NSString *yearString = [@(year) stringValue];
     NSString *weekOfYearString = [@(weekOfYear) stringValue];
     
+    Status weekStatus = Status_NotSubmitted;
+    
     // Change background color depending on status
     if (self.timesheet[yearString][weekOfYearString] && [self.timesheet[yearString][weekOfYearString] isKindOfClass:[NSNumber class]]) {
-        Status weekStatus = [self.timesheet[yearString][weekOfYearString] integerValue];
+        weekStatus = [self.timesheet[yearString][weekOfYearString] integerValue];
         
         switch (weekStatus) {
             case Status_NotSubmitted:
@@ -192,7 +195,7 @@ static NSString * const reuseIdentifier = @"WeekCell";
                 break;
             case Status_Submitted:
                 cell.backgroundColor = [UIColor submittedStatusColor];
-                cell.statusLabel.text = @"to be approved";
+                cell.statusLabel.text = @"submitted";
                 break;
             case Status_Approved:
                 cell.backgroundColor = [UIColor approvedStatusColor];
@@ -210,6 +213,17 @@ static NSString * const reuseIdentifier = @"WeekCell";
         cell.statusLabel.text = @"not submitted";
     }
     
+    if ([[NSDate date] isBetweenDate:startOfWeek andDate:endOfWeek]) {
+        cell.statusLabel.text = @"this week";
+    }
+    
+    if ([startOfWeek isAfterDate:[NSDate date]]) {
+        cell.statusLabel.text = @"next week";
+    }
+    
+    TimesheetWeek *week = [[TimesheetWeek alloc] initWithWeekNumber:weekOfYear year:year status:weekStatus];
+    cell.week = week;
+    
     return cell;
 }
 
@@ -222,7 +236,7 @@ static NSString * const reuseIdentifier = @"WeekCell";
     
     WeekCollectionViewCell *cell = [self collectionView:self.collectionView cellForItemAtIndexPath:indexPath];
 
-    [self.delegate updateWeekViewWithStartDate:cell.startDate forWeekNumber:cell.weekOfYear];
+    [self.delegate updateWeekViewWithStartDate:cell.startDate forWeek:cell.week];
 }
 
 /*

@@ -8,10 +8,12 @@
 
 #import "WeeksCollectionViewController.h"
 
+@class TimesheetWeek;
+
 @interface DaysTableViewController : UITableViewController <WeeksCollectionViewControllerDelegate, UITextFieldDelegate>
 
 @property (nonatomic, strong) NSDate *startDate;
-@property (nonatomic, assign) NSInteger weekNumber;
+@property (nonatomic, strong) TimesheetWeek *week;
 @property (nonatomic, assign) NSInteger year;
 
 @end

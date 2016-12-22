@@ -13,23 +13,18 @@
 - (instancetype)init
 {
     return [self initWithWeekNumber:1
-                             status:Status_NotSubmitted
-                        hoursPerDay:[@[@0, @0, @0, @0, @0, @0, @0] mutableCopy]
-              withProjectsForMonday:[[NSMutableDictionary alloc] init]
-                            tuesday:[[NSMutableDictionary alloc] init]
-                          wednesday:[[NSMutableDictionary alloc] init]
-                           thursday:[[NSMutableDictionary alloc] init]
-                             friday:[[NSMutableDictionary alloc] init]
-                           saturday:[[NSMutableDictionary alloc] init]
-                             sunday:[[NSMutableDictionary alloc] init]];
+                               year:2017
+                             status:Status_NotSubmitted];
 }
 
 - (instancetype)initWithWeekNumber:(NSInteger)weekNumber
+                              year:(NSInteger)year
                             status:(Status)status
 {
     return [self initWithWeekNumber:weekNumber
+                               year:year
                              status:status
-                        hoursPerDay:[@[@0, @0, @0, @0, @0, @0, @0] mutableCopy]
+                        hoursPerDay:[@[[NSNull null], [NSNull null], [NSNull null], [NSNull null], [NSNull null], [NSNull null], [NSNull null]] mutableCopy]
               withProjectsForMonday:[[NSMutableDictionary alloc] init]
                             tuesday:[[NSMutableDictionary alloc] init]
                           wednesday:[[NSMutableDictionary alloc] init]
@@ -41,6 +36,7 @@
 
 
 - (instancetype)initWithWeekNumber:(NSInteger)weekNumber
+                              year:(NSInteger)year
                             status:(Status)status
                        hoursPerDay:(NSMutableArray *)hoursPerDay
              withProjectsForMonday:(NSMutableDictionary<NSString *, NSNumber *> *)monday
@@ -55,6 +51,7 @@
     
     if (self) {
         _weekNumber = weekNumber;
+        _year = year;
         _status = status;
         _hoursPerDay = hoursPerDay;
         _mon = monday;

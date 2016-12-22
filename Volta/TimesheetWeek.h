@@ -26,6 +26,7 @@ typedef NS_ENUM(NSInteger, WeekDay) {
 @interface TimesheetWeek : NSObject
 
 @property (nonatomic, assign) NSInteger weekNumber;
+@property (nonatomic, assign) NSInteger year;
 @property (nonatomic, assign) Status status;
 @property (nonatomic, strong) NSMutableArray<NSNumber *> *hoursPerDay;
 
@@ -40,10 +41,12 @@ typedef NS_ENUM(NSInteger, WeekDay) {
 - (instancetype)init;
 
 - (instancetype)initWithWeekNumber:(NSInteger)weekNumber
+                              year:(NSInteger)year
                             status:(Status)status;
 
 
 - (instancetype)initWithWeekNumber:(NSInteger)weekNumber
+                              year:(NSInteger)year
                             status:(Status)status
                        hoursPerDay:(NSMutableArray *)hoursPerDay
              withProjectsForMonday:(NSMutableDictionary<NSString *, NSNumber *> *)monday
