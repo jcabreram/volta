@@ -220,10 +220,16 @@ static NSString * const reuseIdentifier = @"WeekCell";
     
     if ([[NSDate date] isBetweenDate:startOfWeek andDate:endOfWeek]) {
         cell.statusLabel.text = @"this week";
+        if (weekStatus == Status_NotSubmitted) {
+            cell.backgroundColor = [UIColor whiteColor];
+        }
     }
     
     if ([startOfWeek isAfterDate:[NSDate date]]) {
         cell.statusLabel.text = @"next week";
+        if (weekStatus == Status_NotSubmitted) {
+            cell.backgroundColor = [UIColor whiteColor];
+        }
     }
     
     TimesheetWeek *week = [[TimesheetWeek alloc] initWithWeekNumber:weekOfYear year:year status:weekStatus];
