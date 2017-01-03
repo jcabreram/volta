@@ -138,6 +138,8 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         [self updateProjects];
     }
     
+    NSString *secondaryAppString = [[[NSProcessInfo processInfo] globallyUniqueString] stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    
     if ([self validInput]) {
         
         User *user = self.user;
@@ -149,8 +151,8 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             
             NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info" ofType:@"plist"];
             FIROptions *secondaryAppOptions = [[FIROptions alloc] initWithContentsOfFile:plistPath];
-            [FIRApp configureWithName:@"Secondary" options:secondaryAppOptions];
-            FIRApp *secondaryApp = [FIRApp appNamed:@"Secondary"];
+            [FIRApp configureWithName:secondaryAppString options:secondaryAppOptions];
+            FIRApp *secondaryApp = [FIRApp appNamed:secondaryAppString];
             FIRAuth *secondaryAppAuth = [FIRAuth authWithApp:secondaryApp];
             
             [secondaryAppAuth createUserWithEmail:user.email
