@@ -77,28 +77,6 @@
     [GlobalVars sharedInstance].completeUsername = email;
 }
 
-- (IBAction)didTapSignUp:(id)sender {
-    NSString *email = _emailField.text;
-    NSString *password = _passwordField.text;
-    
-    __weak LoginViewController *welf = self;
-    
-    [[FIRAuth auth] createUserWithEmail:email
-                               password:password
-                             completion:^(FIRUser * _Nullable user, NSError * _Nullable error) {
-                                 if (welf != nil) {
-                                     __strong LoginViewController *innerSelf = welf;
-                                     
-                                     if (error != nil) {
-                                         [innerSelf presentLoginErrorAlert:error.localizedDescription];
-                                         return;
-                                     }
-                                     
-                                     [innerSelf setDisplayName:user];
-                                 }
-                             }];
-}
-
 - (IBAction)didRequestPasswordReset:(id)sender {
     
     UIAlertController *prompt;

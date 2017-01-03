@@ -105,15 +105,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="429-3M-NlC">
-                                <rect key="frame" x="134.5" y="393.5" width="107" height="30"/>
-                                <state key="normal" title="Create Account">
-                                    <color key="titleColor" red="0.80083328485488892" green="0.200630784034729" blue="0.20016935467720032" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="didTapSignUp:" destination="BYZ-38-t0r" eventType="touchUpInside" id="OYA-zt-gFD"/>
-                                </connections>
-                            </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cl6-Ei-HqT">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="101.5"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -135,11 +126,9 @@
                             <constraint firstItem="zsy-Iy-LbC" firstAttribute="trailing" secondItem="Aji-3Z-mhv" secondAttribute="trailing" id="DSu-ol-sXu"/>
                             <constraint firstItem="Eie-ot-nPh" firstAttribute="trailing" secondItem="Aji-3Z-mhv" secondAttribute="trailing" id="DzJ-vg-V19"/>
                             <constraint firstItem="zsy-Iy-LbC" firstAttribute="top" secondItem="GYz-Bw-Hf9" secondAttribute="bottom" id="Hus-s7-U3i"/>
-                            <constraint firstItem="429-3M-NlC" firstAttribute="centerX" secondItem="6u8-sD-B47" secondAttribute="centerX" id="JS7-Jp-7Ve"/>
                             <constraint firstItem="Eie-ot-nPh" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="JW7-gY-8iX"/>
                             <constraint firstItem="Eie-ot-nPh" firstAttribute="top" secondItem="Aji-3Z-mhv" secondAttribute="bottom" constant="19" id="JcN-M8-fc3"/>
                             <constraint firstAttribute="trailing" secondItem="GYz-Bw-Hf9" secondAttribute="trailing" id="JcX-ts-rcZ"/>
-                            <constraint firstItem="429-3M-NlC" firstAttribute="top" secondItem="6u8-sD-B47" secondAttribute="bottom" constant="8" symbolic="YES" id="LR6-u3-8RV"/>
                             <constraint firstItem="Eie-ot-nPh" firstAttribute="leading" secondItem="Aji-3Z-mhv" secondAttribute="leading" id="LT7-0c-AYe"/>
                             <constraint firstItem="Eie-ot-nPh" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="PfQ-QL-oB0"/>
                             <constraint firstItem="ea3-1c-iyi" firstAttribute="top" secondItem="cl6-Ei-HqT" secondAttribute="bottom" id="R6v-3w-SOu"/>
