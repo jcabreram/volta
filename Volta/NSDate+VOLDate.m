@@ -13,15 +13,7 @@
 - (BOOL)isBetweenDate:(NSDate *)beginDate
               andDate:(NSDate *)endDate
 {
-    if ([self compare:beginDate] == NSOrderedAscending) {
-        return NO;
-    }
-    
-    if ([self compare:endDate] == NSOrderedDescending) {
-        return NO;
-    }
-    
-    return YES;
+    return (([self compare:beginDate] != NSOrderedAscending) && ([self compare:endDate] != NSOrderedDescending));
 }
 
 - (BOOL)isAfterDate:(NSDate *)date

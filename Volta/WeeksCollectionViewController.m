@@ -58,17 +58,22 @@ static NSString * const reuseIdentifier = @"WeekCell";
     NSCalendar *cal = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
     cal.firstWeekday = 2; // Monday
     
-    NSDateComponents *currentDateComponents = [cal components:(NSCalendarUnitWeekOfYear | NSCalendarUnitYear) fromDate:today];
+    NSDateComponents *currentDateComponents = [cal components:(NSCalendarUnitWeekOfYear | NSCalendarUnitYearForWeekOfYear) fromDate:today];
     self.currentWeekOfYear = [currentDateComponents weekOfYear];
-    self.currentYear = [currentDateComponents year];
+    self.currentYear = [currentDateComponents yearForWeekOfYear];
     
     // Last week of last year
-    NSDateComponents *lastNewYearsEveComponents = [[NSDateComponents alloc] init];
-    [lastNewYearsEveComponents setDay:25];
-    [lastNewYearsEveComponents setMonth:12];
-    [lastNewYearsEveComponents setYear:self.currentYear - 1];
-    NSDate *lastNewYearsEve = [cal dateFromComponents:lastNewYearsEveComponents];
-    self.lastWeekOfLastYear = [cal component:NSCalendarUnitWeekOfYear fromDate:lastNewYearsEve];
+    NSInteger lastDay = 31;
+    do {
+        NSDateComponents *lastNewYearsEveComponents = [[NSDateComponents alloc] init];
+        [lastNewYearsEveComponents setDay:lastDay];
+        [lastNewYearsEveComponents setMonth:12];
+        [lastNewYearsEveComponents setYearForWeekOfYear:self.currentYear - 1];
+        NSDate *lastNewYearsEve = [cal dateFromComponents:lastNewYearsEveComponents];
+        self.lastWeekOfLastYear = [cal component:NSCalendarUnitWeekOfYear fromDate:lastNewYearsEve];
+        
+        lastDay--;
+    } while (self.lastWeekOfLastYear == 1);
     
     self.timesheet = [[NSMutableDictionary alloc] init];
     [self configureDatabase];
@@ -144,11 +149,11 @@ static NSString * const reuseIdentifier = @"WeekCell";
     }
     
     NSInteger indexFromRightToLeft = kNumberOfWeeksInPicker - indexPath.item - 1;
-    NSInteger weekOfYear = self.currentWeekOfYear - indexFromRightToLeft + 1; // Adding one to get a week ahead
+    NSInteger weekOfYear = self.currentWeekOfYear - indexFromRightToLeft;
     NSInteger year = self.currentYear;
     
     if (weekOfYear < 1) {
-        weekOfYear = self.lastWeekOfLastYear + weekOfYear;
+        weekOfYear = self.lastWeekOfLastYear + weekOfYear + 1;
         year = self.currentYear - 1;
     }
     
@@ -161,7 +166,7 @@ static NSString * const reuseIdentifier = @"WeekCell";
     NSDateComponents *comp = [[NSDateComponents alloc] init];
     comp.weekday = 2; // Monday
     comp.weekOfYear = weekOfYear;
-    comp.year = year;
+    comp.yearForWeekOfYear = year;
     NSDate *startOfWeek = [cal dateFromComponents:comp];
     
     cell.startDate = startOfWeek;

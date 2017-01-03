@@ -213,16 +213,16 @@ typedef NS_ENUM (NSInteger, Field) {
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-//    UITableViewCell *containerCell = (UITableViewCell *)[[textField superview] superview];
-//    
-//    if ([containerCell isKindOfClass:[UITableViewCell class]]) {
-//        NSIndexPath *indexPath = [self.tableView indexPathForCell:containerCell];
-//        NSInteger row = indexPath.row;
-//        
-//        NSString *nameOfDay = [self stringWithNameOfDay:row];
-//        
-//        [[[[[self.databaseRef child:@"timesheets"] child:[@(self.weekNumber) stringValue]] child:nameOfDay] child:@"time"] setValue:@([textField.text doubleValue])];
-//    }
+    UITableViewCell *containerCell = (UITableViewCell *)[[textField superview] superview];
+    
+    if ([containerCell isKindOfClass:[UITableViewCell class]]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:containerCell];
+        NSInteger row = indexPath.row;
+        
+        NSString *nameOfDay = [self stringWithNameOfDay:row];
+        
+        [[[[[[[self.databaseRef child:@"timesheet_details"] child:[AppState sharedInstance].timesheetKey] child:[@(self.week.year) stringValue]] child:[@(self.week.weekNumber) stringValue]] child:nameOfDay] child:@"time"] setValue:@([textField.text doubleValue])];
+    }
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
