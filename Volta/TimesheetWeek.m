@@ -110,4 +110,16 @@
     self.hoursPerDay[day] = @([self.hoursPerDay[day] doubleValue] + [numberOfHours doubleValue]);
 }
 
+- (NSNumber *)allocatedHours
+{
+    double allocatedHours = 0.0;
+    for (NSNumber *dayHours in self.hoursPerDay) {
+        if ([dayHours isKindOfClass:[NSNumber class]]) {
+            allocatedHours += [dayHours doubleValue];
+        }
+    }
+    
+    return @(allocatedHours);
+}
+
 @end

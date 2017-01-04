@@ -40,11 +40,6 @@ typedef NS_ENUM (NSInteger, Field) {
     self.databaseRef = [[FIRDatabase database] reference];
 }
 
-- (void)dealloc
-{
-    
-}
-
 #pragma mark - Helper methods
 
 - (NSString *)stringWithNameOfDay:(Field)dayField
@@ -86,6 +81,8 @@ typedef NS_ENUM (NSInteger, Field) {
     
     return weekDay;
 }
+
+
 
 #pragma mark - Table view data source
 
@@ -198,9 +195,9 @@ typedef NS_ENUM (NSInteger, Field) {
         }
         
         [self.tableView reloadData];
+        
+        [self.delegate updateAllocatedHoursWithNumber:self.week.allocatedHours];
     }];
-    
-    
 }
 
 #pragma mark - UITextField delegate
@@ -220,10 +217,15 @@ typedef NS_ENUM (NSInteger, Field) {
         NSInteger row = indexPath.row;
         
         NSString *nameOfDay = [self stringWithNameOfDay:row];
+        NSNumber *hoursOfDay = @([textField.text doubleValue]);
         
-        [[[[[[[self.databaseRef child:@"timesheet_details"] child:[AppState sharedInstance].timesheetKey] child:[@(self.week.year) stringValue]] child:[@(self.week.weekNumber) stringValue]] child:nameOfDay] child:@"time"] setValue:@([textField.text doubleValue])];
+        [[[[[[[self.databaseRef child:@"timesheet_details"] child:[AppState sharedInstance].timesheetKey] child:[@(self.week.year) stringValue]] child:[@(self.week.weekNumber) stringValue]] child:nameOfDay] child:@"time"] setValue:hoursOfDay];
         
-        self.week.hoursPerDay[row] = @([textField.text doubleValue]);
+        self.week.hoursPerDay[row] = hoursOfDay;
+        
+        // Update allocated hours label in timesheets VC
+        
+        [self.delegate updateAllocatedHoursWithNumber:self.week.allocatedHours];
     }
 }
 

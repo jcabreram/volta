@@ -281,6 +281,9 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="action" id="sUM-FV-2i8"/>
                     </navigationItem>
+                    <connections>
+                        <outlet property="allocatedHoursLabel" destination="jzV-MN-lLX" id="Zo8-E6-DDY"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MHc-UZ-oPu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -61,4 +61,6 @@ typedef NS_ENUM(NSInteger, WeekDay) {
            withProjectKey:(NSString *)projectKey
             numberOfHours:(NSNumber *)numberOfHours;
 
+- (NSNumber *)allocatedHours;
+
 @end

@@ -16,6 +16,8 @@
 @property (nonatomic, strong) WeeksCollectionViewController *weeksVC;
 @property (nonatomic, strong) DaysTableViewController *daysVC;
 
+@property (weak, nonatomic) IBOutlet UILabel *allocatedHoursLabel;
+
 @end
 
 @implementation TimesheetsViewController
@@ -41,6 +43,14 @@
     }
     
     self.weeksVC.delegate = self.daysVC;
+    self.daysVC.delegate = self;
+}
+
+#pragma mark - Days table view delegate
+
+- (void)updateAllocatedHoursWithNumber:(NSNumber *)allocatedHours
+{
+    self.allocatedHoursLabel.text = [allocatedHours stringValue];
 }
 
 @end

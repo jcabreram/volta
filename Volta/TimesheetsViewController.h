@@ -6,7 +6,8 @@
 //  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
 //
 
+#import "DaysTableViewController.h"
 
-@interface TimesheetsViewController : UIViewController
+@interface TimesheetsViewController : UIViewController <DaysTableViewControllerDelegate>
 
 @end
