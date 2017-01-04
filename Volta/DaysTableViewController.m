@@ -222,6 +222,8 @@ typedef NS_ENUM (NSInteger, Field) {
         NSString *nameOfDay = [self stringWithNameOfDay:row];
         
         [[[[[[[self.databaseRef child:@"timesheet_details"] child:[AppState sharedInstance].timesheetKey] child:[@(self.week.year) stringValue]] child:[@(self.week.weekNumber) stringValue]] child:nameOfDay] child:@"time"] setValue:@([textField.text doubleValue])];
+        
+        self.week.hoursPerDay[row] = @([textField.text doubleValue]);
     }
 }
 
