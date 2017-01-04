@@ -79,27 +79,26 @@
 
 - (IBAction)didRequestPasswordReset:(id)sender {
     
-    UIAlertController *prompt;
-    prompt = [UIAlertController alertControllerWithTitle:nil
-                                                 message:@"Email:"
-                                          preferredStyle:UIAlertControllerStyleAlert];
-    
-    NSString *_Nonnull userInput = (prompt.textFields[0].text == nil) ? @"" : prompt.textFields[0].text;
-    __weak LoginViewController *welf = self;
-    
+    UIAlertController *prompt =
+    [UIAlertController alertControllerWithTitle:nil
+                                        message:@"Enter your email:"
+                                 preferredStyle:UIAlertControllerStyleAlert];
+    __weak UIAlertController *weakPrompt = prompt;
     UIAlertAction *okAction = [UIAlertAction
                                actionWithTitle:@"OK"
                                style:UIAlertActionStyleDefault
                                handler:^(UIAlertAction * _Nonnull action) {
-                                   if (0 < userInput.length)
+                                   UIAlertController *strongPrompt = weakPrompt;
+                                   NSString *userInput = strongPrompt.textFields[0].text;
+                                   if (!userInput.length)
                                    {
                                        return;
                                    }
-                                   
                                    [[FIRAuth auth] sendPasswordResetWithEmail:userInput
                                                                    completion:^(NSError * _Nullable error) {
-                                                                       if (error != nil && welf != nil) {
-                                                                           [welf presentLoginErrorAlert:error.localizedDescription];
+                                                                       if (error) {
+                                                                           NSLog(@"%@", error.localizedDescription);
+                                                                           return;
                                                                        }
                                                                    }];
                                    
