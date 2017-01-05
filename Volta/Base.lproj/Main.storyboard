@@ -529,7 +529,6 @@
                                 <action selector="openLeftView:" destination="K86-Qb-GZ6" id="o3Z-kZ-erH"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="dHY-5D-8Fh"/>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics" barStyle="black" translucent="NO"/>
                 </tableViewController>
@@ -537,11 +536,11 @@
             </objects>
             <point key="canvasLocation" x="2764" y="775.86206896551732"/>
         </scene>
-        <!--Activities for Mon Oct 24-->
+        <!--Auto Complete Data Source-->
         <scene sceneID="9ov-ed-r6S">
             <objects>
                 <tableViewController id="UO6-HI-qvZ" customClass="DayDetailTableViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="DXZ-lT-Fnh">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="DXZ-lT-Fnh">
                         <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -553,26 +552,17 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ios7-plus-empty" translatesAutoresizingMaskIntoConstraints="NO" id="rYr-nY-bqm">
-                                            <rect key="frame" x="8" y="10" width="22" height="22"/>
-                                        </imageView>
-                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="iOS Application" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="P2n-HT-Ifw">
-                                            <rect key="frame" x="38" y="5" width="215" height="32"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="32" id="2NX-hp-9Xk"/>
-                                            </constraints>
-                                            <nil key="textColor"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <textInputTraits key="textInputTraits"/>
-                                        </textField>
-                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="4.5" placeholder="???" textAlignment="right" adjustsFontSizeToFit="NO" minimumFontSize="28" translatesAutoresizingMaskIntoConstraints="NO" id="3cv-gw-uMR">
-                                            <rect key="frame" x="261" y="-1.5" width="60" height="45"/>
+                                        <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="???" textAlignment="right" adjustsFontSizeToFit="NO" minimumFontSize="28" translatesAutoresizingMaskIntoConstraints="NO" id="3cv-gw-uMR">
+                                            <rect key="frame" x="261" y="4" width="60" height="34"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="60" id="jXn-SD-FsA"/>
                                             </constraints>
                                             <nil key="textColor"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="28"/>
                                             <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numbersAndPunctuation"/>
+                                            <connections>
+                                                <outlet property="delegate" destination="UO6-HI-qvZ" id="PTW-zt-AQE"/>
+                                            </connections>
                                         </textField>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="hrs" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Gd-h8-e5I">
                                             <rect key="frame" x="329" y="5" width="38" height="33.5"/>
@@ -580,21 +570,34 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="+ Add project" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="DNN-z2-gKC" customClass="MLPAutoCompleteTextField">
+                                            <rect key="frame" x="16" y="2" width="229" height="40"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="40" id="UUq-rl-uhN"/>
+                                            </constraints>
+                                            <nil key="textColor"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
+                                            <connections>
+                                                <outlet property="autoCompleteDataSource" destination="UO6-HI-qvZ" id="C8H-jK-SFX"/>
+                                                <outlet property="delegate" destination="UO6-HI-qvZ" id="3kM-aS-0i6"/>
+                                            </connections>
+                                        </textField>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="P2n-HT-Ifw" firstAttribute="leading" secondItem="rYr-nY-bqm" secondAttribute="trailing" constant="8" id="91h-Za-Q50"/>
-                                        <constraint firstItem="3cv-gw-uMR" firstAttribute="baseline" secondItem="P2n-HT-Ifw" secondAttribute="baseline" id="9Bf-fv-wq6"/>
                                         <constraint firstItem="5Gd-h8-e5I" firstAttribute="centerY" secondItem="9cV-th-U7d" secondAttribute="centerY" id="ELq-nf-Ikd"/>
                                         <constraint firstItem="5Gd-h8-e5I" firstAttribute="leading" secondItem="3cv-gw-uMR" secondAttribute="trailing" constant="8" id="GAX-hg-QNq"/>
                                         <constraint firstAttribute="trailing" secondItem="5Gd-h8-e5I" secondAttribute="trailing" constant="8" id="JOn-Jw-EDB"/>
-                                        <constraint firstItem="P2n-HT-Ifw" firstAttribute="centerY" secondItem="9cV-th-U7d" secondAttribute="centerY" id="Sa7-vu-gHR"/>
-                                        <constraint firstItem="3cv-gw-uMR" firstAttribute="leading" secondItem="P2n-HT-Ifw" secondAttribute="trailing" constant="8" id="Wng-hW-pfs"/>
-                                        <constraint firstItem="rYr-nY-bqm" firstAttribute="centerY" secondItem="9cV-th-U7d" secondAttribute="centerY" id="coN-W4-dpI"/>
+                                        <constraint firstItem="DNN-z2-gKC" firstAttribute="leading" secondItem="9cV-th-U7d" secondAttribute="leading" constant="16" id="g4a-xh-auB"/>
+                                        <constraint firstItem="3cv-gw-uMR" firstAttribute="leading" secondItem="DNN-z2-gKC" secondAttribute="trailing" constant="16" id="gKa-BT-RkW"/>
                                         <constraint firstItem="3cv-gw-uMR" firstAttribute="centerY" secondItem="9cV-th-U7d" secondAttribute="centerY" id="jG7-LN-pyn"/>
-                                        <constraint firstItem="rYr-nY-bqm" firstAttribute="centerY" secondItem="9cV-th-U7d" secondAttribute="centerY" id="mMM-YR-N62"/>
-                                        <constraint firstItem="rYr-nY-bqm" firstAttribute="leading" secondItem="9cV-th-U7d" secondAttribute="leadingMargin" id="nEZ-HH-wJ8"/>
+                                        <constraint firstItem="DNN-z2-gKC" firstAttribute="centerY" secondItem="9cV-th-U7d" secondAttribute="centerY" id="qKQ-0W-FbU"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="hoursField" destination="3cv-gw-uMR" id="iGj-C7-PcD"/>
+                                    <outlet property="projectField" destination="DNN-z2-gKC" id="9Bo-2e-scs"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -610,7 +613,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="J7u-kt-Vba" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4631" y="36"/>
+            <point key="canvasLocation" x="4629.6000000000004" y="35.532233883058474"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="5uF-B0-kLg">
@@ -705,7 +708,6 @@
                                 <action selector="openLeftView:" destination="5gY-Aj-Da7" id="V61-vG-NkI"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="QgB-8u-BH8"/>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics" barStyle="black" translucent="NO"/>
                 </tableViewController>
@@ -909,7 +911,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <textField opaque="NO" clipsSubviews="YES" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="bottom" placeholder="+ Add project" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dit-hK-IjO" customClass="MLPAutoCompleteTextField">
+                                        <textField opaque="NO" clipsSubviews="YES" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="bottom" placeholder="+ Add project" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="dit-hK-IjO" customClass="MLPAutoCompleteTextField">
                                             <rect key="frame" x="16" y="1" width="343" height="40"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="40" id="am1-bw-nTh"/>
@@ -1163,7 +1165,6 @@
     <resources>
         <image name="Ksquare" width="280" height="63"/>
         <image name="ic_menu_2" width="22" height="22"/>
-        <image name="ios7-plus-empty" width="22" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="TKG-tb-I5g"/>

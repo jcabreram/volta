@@ -11,6 +11,7 @@
 #import "DayTableViewCell.h"
 #import "TimesheetWeek.h"
 #import "AppState.h"
+#import "DayDetailTableViewController.h"
 
 typedef NS_ENUM (NSInteger, Field) {
     Field_Monday,
@@ -36,8 +37,28 @@ typedef NS_ENUM (NSInteger, Field) {
     [self configureDatabase];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self updateWeekViewWithStartDate:self.startDate forWeek:self.week];
+}
+
 - (void)configureDatabase {
     self.databaseRef = [[FIRDatabase database] reference];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:SeguesShowDayDetail]) {
+        DayDetailTableViewController *dayDetailController = segue.destinationViewController;
+        
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+        WeekDay weekDay = indexPath.row;
+        
+        dayDetailController.week = self.week;
+        dayDetailController.weekDay = weekDay;
+    }
 }
 
 #pragma mark - Helper methods
@@ -81,8 +102,6 @@ typedef NS_ENUM (NSInteger, Field) {
     
     return weekDay;
 }
-
-
 
 #pragma mark - Table view data source
 
@@ -253,7 +272,5 @@ typedef NS_ENUM (NSInteger, Field) {
     
     return YES;
 }
-
-
 
 @end

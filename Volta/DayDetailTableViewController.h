@@ -6,6 +6,12 @@
 //  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
 //
 
-@interface DayDetailTableViewController : UITableViewController
+#import "TimesheetWeek.h"
+#import "MLPAutoCompleteTextField.h"
+
+@interface DayDetailTableViewController : UITableViewController <UITextFieldDelegate, MLPAutoCompleteTextFieldDataSource>
+
+@property (nonatomic, strong) TimesheetWeek *week;
+@property (nonatomic, assign) WeekDay weekDay;
 
 @end

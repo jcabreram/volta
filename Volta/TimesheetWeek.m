@@ -70,7 +70,40 @@
            withProjectKey:(NSString *)projectKey
             numberOfHours:(NSNumber *)numberOfHours
 {
-    NSMutableDictionary *projectWork;
+    NSMutableDictionary *projectWork = [self projectsForDay:day];
+    
+    projectWork[projectKey] = numberOfHours;
+    
+    self.hoursPerDay[day] = @([self.hoursPerDay[day] doubleValue] + [numberOfHours doubleValue]);
+}
+
+- (NSNumber *)allocatedHours
+{
+    double allocatedHours = 0.0;
+    for (NSNumber *dayHours in self.hoursPerDay) {
+        if ([dayHours isKindOfClass:[NSNumber class]]) {
+            allocatedHours += [dayHours doubleValue];
+        }
+    }
+    
+    return @(allocatedHours);
+}
+
+- (NSDate *)startingDate
+{
+    NSCalendar *cal = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    
+    NSDateComponents *comp = [[NSDateComponents alloc] init];
+    comp.weekday = 2; // Monday
+    comp.weekOfYear = self.weekNumber;
+    comp.yearForWeekOfYear = self.year;
+    
+    return [cal dateFromComponents:comp];
+}
+
+- (NSMutableDictionary *)projectsForDay:(WeekDay)day
+{
+    NSDictionary *projectWork;
     
     switch (day) {
         case WeekDay_Monday:
@@ -105,21 +138,7 @@
             break;
     }
     
-    projectWork[projectKey] = numberOfHours;
-    
-    self.hoursPerDay[day] = @([self.hoursPerDay[day] doubleValue] + [numberOfHours doubleValue]);
-}
-
-- (NSNumber *)allocatedHours
-{
-    double allocatedHours = 0.0;
-    for (NSNumber *dayHours in self.hoursPerDay) {
-        if ([dayHours isKindOfClass:[NSNumber class]]) {
-            allocatedHours += [dayHours doubleValue];
-        }
-    }
-    
-    return @(allocatedHours);
+    return [projectWork mutableCopy];
 }
 
 @end
