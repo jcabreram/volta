@@ -395,7 +395,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         [self presentValidationErrorAlertWithTitle:@"Invalid Email"
                                            message:@"Please, verify the email format and try again."];
         return NO;
-    } else if (![password vol_isValidPassword]) {
+    } else if (![password vol_isValidPassword] && [self.user.key vol_isStringEmpty]) {
         [self presentValidationErrorAlertWithTitle:@"Invalid Password"
                                            message:@"Please, enter a password with at least 6 characters, one numeric digit and a letter"];
         return NO;
@@ -619,6 +619,16 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
     }
     
     return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Hide the password row for existing users
+    if (indexPath.row == FieldTag_Password && ![self.user.key vol_isStringEmpty]) {
+        return 0.0f;
+    } else {
+        return UITableViewAutomaticDimension;
+    }
 }
 
 #pragma mark - UITextField delegate

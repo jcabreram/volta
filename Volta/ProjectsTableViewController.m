@@ -35,10 +35,13 @@
 - (void)resetPresentingController {
     self.selectedProject = [[Project alloc] init];
     
-    NSIndexPath *indexPath = self.tableView.indexPathForSelectedRow;
-    if (indexPath) {
-        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    }
+    // Clear the projects data and reload the table to empty it
+    [self.projects removeAllObjects];
+    [self.tableView reloadData];
+    
+    // Load the project data back from the database
+    [[self.databaseRef child:@"projects"] removeObserverWithHandle:self.referenceHandle];
+    [self configureDatabase];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
