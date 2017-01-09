@@ -229,6 +229,14 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         timesheetKey = user.timesheet;
     }
     
+    if (!user.projects) {
+        user.projects = [[NSMutableDictionary alloc] init];
+    }
+    
+    if (!user.managers) {
+        user.managers = [[NSMutableDictionary alloc] init];
+    }
+    
     NSDictionary *userDict = @{@"email":user.email,
                                @"first_name":user.firstName,
                                @"last_name":user.lastName,

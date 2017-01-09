@@ -74,7 +74,7 @@
                                              lastName:user[@"last_name"]
                                                 email:user[@"email"]
                                              password:user[@"first_name"]
-                                            createdAt:[NSDate dateWithTimeIntervalSince1970:[user[@"date"] doubleValue]]
+                                            createdAt:[NSDate dateWithTimeIntervalSince1970:[user[@"created_at"] doubleValue]]
                                                  type:[User userTypeFromString:user[@"type"]]
                                             employees:user[@"employees"]
                                              managers:user[@"managers"]
