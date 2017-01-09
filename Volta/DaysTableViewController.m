@@ -135,7 +135,7 @@ typedef NS_ENUM (NSInteger, Field) {
         cell.dayLabel.text = dateString;
         
         NSNumber *hours = self.week.hoursPerDay[row];
-        if ([hours isKindOfClass:[NSNumber class]]) {
+        if ([hours isKindOfClass:[NSNumber class]] && [hours doubleValue] != 0.0) {
             cell.hoursTextField.text = [hours stringValue];
         } else {
             cell.hoursTextField.text = @"";
