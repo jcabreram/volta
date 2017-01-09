@@ -279,7 +279,11 @@
                                 <action selector="openLeftView:" destination="8my-8y-xgV" id="Uj8-Jl-xOs"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="sUM-FV-2i8"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="sUM-FV-2i8">
+                            <connections>
+                                <action selector="shareButtonPressed:" destination="8my-8y-xgV" id="EZU-qh-kVO"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="allocatedHoursLabel" destination="jzV-MN-lLX" id="Zo8-E6-DDY"/>

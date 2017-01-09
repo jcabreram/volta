@@ -248,6 +248,7 @@ static NSString * const reuseIdentifier = @"WeekCell";
     WeekCollectionViewCell *cell = [self collectionView:self.collectionView cellForItemAtIndexPath:indexPath];
 
     [self.delegate updateWeekViewWithStartDate:cell.startDate forWeek:cell.week];
+    [self.actionSheetDelegate chosenWeekChangedToWeek:cell.week];
 }
 
 @end

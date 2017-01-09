@@ -7,7 +7,12 @@
 //
 
 #import "DaysTableViewController.h"
+#import "WeeksCollectionViewController.h"
 
-@interface TimesheetsViewController : UIViewController <DaysTableViewControllerDelegate>
+@interface TimesheetsViewController : UIViewController <DaysTableViewControllerDelegate, WeeksCollectionViewControllerActionSheetDelegate>
+
+@property (nonatomic, strong) TimesheetWeek *week;
+
+- (void)chosenWeekChangedToWeek:(TimesheetWeek *)week;
 
 @end

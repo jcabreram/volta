@@ -15,8 +15,15 @@
 
 @end
 
+@protocol WeeksCollectionViewControllerActionSheetDelegate <NSObject>
+
+- (void)chosenWeekChangedToWeek:(TimesheetWeek *)week;
+
+@end
+
 @interface WeeksCollectionViewController : UICollectionViewController
 
 @property (nonatomic, weak) id<WeeksCollectionViewControllerDelegate> delegate;
+@property (nonatomic, weak) id<WeeksCollectionViewControllerActionSheetDelegate> actionSheetDelegate;
 
 @end
