@@ -128,7 +128,7 @@ typedef NS_ENUM (NSInteger, Field) {
                                                               options:0];
         
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"MMM dd"];
+        [dateFormatter setDateFormat:@"EEE dd"];
         
         NSString *dateString = [dateFormatter stringFromDate:date];
         
