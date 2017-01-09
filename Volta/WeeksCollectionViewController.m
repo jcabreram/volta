@@ -103,6 +103,16 @@ static NSString * const reuseIdentifier = @"WeekCell";
             self.timesheet[snapshot.key] = snapshot.value;
         
             [self.collectionView reloadData];
+        } else if ([snapshot.value isKindOfClass:[NSArray class]]) {
+            NSArray *weeks = snapshot.value;
+            NSMutableDictionary *weeksDictionary = [[NSMutableDictionary alloc] init];
+            for (NSInteger i = 0; i < weeks.count; i++) {
+                if ([weeks[i] isKindOfClass:[NSNumber class]]) {
+                    weeksDictionary[[@(i) stringValue]] = weeks[i];
+                }
+            }
+            self.timesheet[snapshot.key] = [weeksDictionary copy];
+            [self.collectionView reloadData];
         }
     }];
     
@@ -112,6 +122,16 @@ static NSString * const reuseIdentifier = @"WeekCell";
         if ([snapshot.value isKindOfClass:[NSDictionary class]]) {
             self.timesheet[snapshot.key] = snapshot.value;
             
+            [self.collectionView reloadData];
+        } else if ([snapshot.value isKindOfClass:[NSArray class]]) {
+            NSArray *weeks = snapshot.value;
+            NSMutableDictionary *weeksDictionary = [[NSMutableDictionary alloc] init];
+            for (NSInteger i = 0; i < weeks.count; i++) {
+                if ([weeks[i] isKindOfClass:[NSNumber class]]) {
+                    weeksDictionary[[@(i) stringValue]] = weeks[i];
+                }
+            }
+            self.timesheet[snapshot.key] = [weeksDictionary copy];
             [self.collectionView reloadData];
         }
     }];
