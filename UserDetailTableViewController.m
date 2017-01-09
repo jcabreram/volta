@@ -133,16 +133,16 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 {
     [self.view endEditing:YES];
     
-    // Before creating the user, we update the User object's projects to its respective keys
-    if (self.user.type == UserType_Employee) {
-        [self updateProjects];
-    }
-    
     NSString *secondaryAppString = [[[NSProcessInfo processInfo] globallyUniqueString] stringByReplacingOccurrencesOfString:@"-" withString:@""];
     
     if ([self validInput]) {
         
         User *user = self.user;
+        
+        // Before creating the user, we update the User object's projects to its respective keys
+        if (user.type == UserType_Employee) {
+            [self updateProjects];
+        }
         
         if ([user.key vol_isStringEmpty]) {
             
