@@ -516,6 +516,15 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
     return sectionName;
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    if (section == 0) {
+        return @"* all fields required";
+    } else {
+        return nil;
+    }
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     User *user = self.user;
     

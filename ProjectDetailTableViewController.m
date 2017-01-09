@@ -230,6 +230,12 @@ typedef NS_ENUM (NSInteger, Field) {
     return sectionName;
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    return @"* required field";
+}
+
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // TODO: If the user is an employee, hide the company row
     
