@@ -76,6 +76,10 @@ static NSString * const reuseIdentifier = @"WeekCell";
     } while (self.lastWeekOfLastYear == 1);
     
     self.timesheet = [[NSMutableDictionary alloc] init];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didChangeTimesheet:) name:NotificationKeysTimesheetDidChange object:nil];
+    
     [self configureDatabase];
 }
 
@@ -269,6 +273,16 @@ static NSString * const reuseIdentifier = @"WeekCell";
 
     [self.delegate updateWeekViewWithStartDate:cell.startDate forWeek:cell.week];
     [self.actionSheetDelegate chosenWeekChangedToWeek:cell.week];
+}
+
+#pragma mark - NSNotificationCenter Observer methods
+
+- (void)didChangeTimesheet:(NSNotification *)notification
+{    
+    self.timesheet = [[NSMutableDictionary alloc] init];
+    
+    [self configureDatabase];
+    
 }
 
 @end

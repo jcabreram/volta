@@ -10,7 +10,9 @@
 
 @implementation Constants
 
+// Notifications
 NSString *const NotificationKeysSignedIn = @"onSignInCompleted";
+NSString *const NotificationKeysTimesheetDidChange = @"timesheetDidChange";
 
 // Segues
 NSString *const SeguesSignInToMainScreen = @"SignInToMainScreen";

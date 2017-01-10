@@ -9,7 +9,9 @@
 
 @interface Constants : NSObject
 
+// Notifications
 extern NSString *const NotificationKeysSignedIn;
+extern NSString *const NotificationKeysTimesheetDidChange;
 
 // Segues
 extern NSString *const SeguesSignInToMainScreen;

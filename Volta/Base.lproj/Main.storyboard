@@ -194,7 +194,7 @@
                         <viewControllerLayoutGuide type="bottom" id="ka3-4r-M8I"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="gJX-fH-M70">
-                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                        <rect key="frame" x="0.0" y="64" width="375" height="559"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ymR-W8-uIM">
@@ -253,7 +253,7 @@
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y2V-PY-TMw">
-                                <rect key="frame" x="0.0" y="141" width="375" height="462"/>
+                                <rect key="frame" x="0.0" y="141" width="375" height="418"/>
                                 <connections>
                                     <segue destination="Z1T-nP-EPp" kind="embed" identifier="PresentDays" id="qah-6d-Puc"/>
                                 </connections>
@@ -273,6 +273,15 @@
                             <constraint firstItem="Y2V-PY-TMw" firstAttribute="top" secondItem="ymR-W8-uIM" secondAttribute="bottom" id="xZ3-bF-wTp"/>
                         </constraints>
                     </view>
+                    <toolbarItems>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="t9g-H2-zlM"/>
+                        <barButtonItem title="Select an employee..." id="Zw5-u1-nFI">
+                            <connections>
+                                <action selector="selectEmployeeButtonPressed:" destination="8my-8y-xgV" id="Fb5-lm-fCw"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="vjs-wb-E76"/>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" title="Timesheets" id="Duv-g2-fLo">
                         <barButtonItem key="leftBarButtonItem" image="ic_menu_2" id="Qso-Uc-pBe">
                             <connections>
@@ -287,6 +296,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="allocatedHoursLabel" destination="jzV-MN-lLX" id="Zo8-E6-DDY"/>
+                        <outlet property="selectEmployeeBarButtonItem" destination="Zw5-u1-nFI" id="bZw-5Z-w8Y"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MHc-UZ-oPu" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -388,7 +398,7 @@
             <objects>
                 <tableViewController id="Z1T-nP-EPp" customClass="DaysTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="47" sectionHeaderHeight="28" sectionFooterHeight="28" id="2xb-kd-clL">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="462"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="418"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -400,7 +410,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="•" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SKF-AV-Sv6">
-                                            <rect key="frame" x="156" y="13" width="16" height="39"/>
+                                            <rect key="frame" x="156.5" y="13" width="16" height="39"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -418,7 +428,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="???" textAlignment="right" adjustsFontSizeToFit="NO" minimumFontSize="28" translatesAutoresizingMaskIntoConstraints="NO" id="AG1-KY-eNL">
-                                            <rect key="frame" x="180" y="16" width="94" height="34"/>
+                                            <rect key="frame" x="180.5" y="16" width="93.5" height="34"/>
                                             <nil key="textColor"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="28"/>
                                             <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numbersAndPunctuation"/>
@@ -459,7 +469,7 @@
         <!--Navigation Controller-->
         <scene sceneID="Hqf-tS-CgG">
             <objects>
-                <navigationController storyboardIdentifier="TimesheetsNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="UuL-87-7mK" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="TimesheetsNavigationController" automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="UuL-87-7mK" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="jFU-xk-Bw8">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -468,6 +478,10 @@
                         <color key="barTintColor" red="0.16078431372549018" green="0.51372549019607838" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" id="3iu-oX-Jug">
+                        <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
                     <connections>
                         <segue destination="8my-8y-xgV" kind="relationship" relationship="rootViewController" id="4dd-oP-eEf"/>
                     </connections>
