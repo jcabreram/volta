@@ -16,22 +16,9 @@
 #import "ProjectsTableViewController.h"
 #import "UsersTableViewController.h"
 
-typedef NS_ENUM (NSInteger, SideMenuEntry) {
-    SideMenuEntry_DisplayName,
-    SideMenuEntry_Empty01,
-    SideMenuEntry_Users,
-    SideMenuEntry_Timesheets,
-    SideMenuEntry_Activities,
-    SideMenuEntry_Holidays,
-    SideMenuEntry_Expenses,
-    SideMenuEntry_Projects,
-    SideMenuEntry_Empty02,
-    SideMenuEntry_LogOut,
-};
-
 @interface SideMenuViewController ()
 
-@property (strong, nonatomic) NSArray *titlesArray;
+@property (strong, nonatomic) NSMutableArray *titlesArray;
 
 @end
 
@@ -40,20 +27,27 @@ typedef NS_ENUM (NSInteger, SideMenuEntry) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    AppState *state = [AppState sharedInstance];
+    
     NSString *displayName = [AppState sharedInstance].displayName;
     
     // -----
     
-    _titlesArray = @[displayName,
-                     @"",
-                     @"Users",
-                     @"Timesheets",
-                     @"Activities",
-                     @"Holidays",
-                     @"Expenses",
-                     @"Projects",
-                     @"",
-                     @"Log Out"];
+    self.titlesArray = [@[displayName,
+                          @"",
+                          @"Timesheets"] mutableCopy];
+    
+    if (state.type == UserType_Admin || state.type == UserType_Employee) {
+        [self.titlesArray addObject:@"Projects"];
+    }
+    
+    if (state.type == UserType_Admin) {
+        [self.titlesArray addObject:@"Users"];
+    }
+    
+    [self.titlesArray addObjectsFromArray:@[@"",
+                                            @"Log Out"]];
+    
     
     // -----
     
@@ -70,38 +64,41 @@ typedef NS_ENUM (NSInteger, SideMenuEntry) {
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger row = indexPath.row;
+    NSString *rowTitle = self.titlesArray[row];
+    NSString *displayName = [AppState sharedInstance].displayName;
+    
     SideMenuViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     
-    cell.textLabel.text = _titlesArray[row];
-    cell.separatorView.hidden = row <= SideMenuEntry_Empty01 || row >= SideMenuEntry_Empty02 || row == _titlesArray.count - 1;
-    cell.userInteractionEnabled = row != SideMenuEntry_Empty01 || row != SideMenuEntry_Empty02;
+    cell.textLabel.text = rowTitle;
+    
+    if ([rowTitle isEqualToString:@""]) {
+        cell.userInteractionEnabled = NO;
+        cell.separatorView.hidden = YES;
+    }
+    
+    if ([rowTitle isEqualToString:displayName] || [rowTitle isEqualToString:@"Log Out"]) {
+        cell.separatorView.hidden = YES;
+    }
+
     cell.tintColor = _tintColor;
     
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return indexPath.row == SideMenuEntry_Empty01 ? 22.f : 44.f;
+    return 44.0f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger row = indexPath.row;
+    NSString *rowTitle = self.titlesArray[row];
+    NSString *displayName = [AppState sharedInstance].displayName;
     
-    if (row == SideMenuEntry_DisplayName) { // 0
+    if ([rowTitle isEqualToString:displayName]) {
         [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
-    } else if (row == SideMenuEntry_Empty01) { // 1
+    } else if ([rowTitle isEqualToString:@""]) {
         // Empty
-    } else if (row == SideMenuEntry_Users) { // 2
-        UINavigationController *presentedNavigationController = (UINavigationController *)[self sideMenuController].rootViewController;
-        
-        // If the presented controller is different from selection
-        if (![presentedNavigationController.childViewControllers[0] isKindOfClass:[UsersTableViewController class]]) {
-            UINavigationController *usersNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:kUsersNavigationController];
-            [self sideMenuController].rootViewController = usersNavigationController;
-        }
-        
-        [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
-    } else if (row == SideMenuEntry_Timesheets) { // 3
+    } else if ([rowTitle isEqualToString:@"Timesheets"]) {
         UINavigationController *presentedNavigationController = (UINavigationController *)[self sideMenuController].rootViewController;
         
         // If the presented controller is different from selection
@@ -111,15 +108,7 @@ typedef NS_ENUM (NSInteger, SideMenuEntry) {
         }
         
         [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
-    } else if (row >= SideMenuEntry_Activities && row <= SideMenuEntry_Expenses) { // 4 to 6
-        UIViewController *viewController = [UIViewController new];
-        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
-        viewController.view.backgroundColor = [UIColor whiteColor];
-        viewController.title = _titlesArray[row];
-        [self sideMenuController].rootViewController = navigationController;
-        
-        [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
-    } else if (row == SideMenuEntry_Projects) { // 7
+    } else if ([rowTitle isEqualToString:@"Projects"]) {
         UINavigationController *presentedNavigationController = (UINavigationController *)[self sideMenuController].rootViewController;
         
         // If the presented controller is different from selection
@@ -129,9 +118,17 @@ typedef NS_ENUM (NSInteger, SideMenuEntry) {
         }
         
         [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
-    } else if (row == SideMenuEntry_Empty02) { // 8
-        // Empty
-    } else if (row == SideMenuEntry_LogOut) { // 9
+    } else if ([rowTitle isEqualToString:@"Users"]) {
+        UINavigationController *presentedNavigationController = (UINavigationController *)[self sideMenuController].rootViewController;
+        
+        // If the presented controller is different from selection
+        if (![presentedNavigationController.childViewControllers[0] isKindOfClass:[UsersTableViewController class]]) {
+            UINavigationController *usersNavigationController = [self.storyboard instantiateViewControllerWithIdentifier:kUsersNavigationController];
+            [self sideMenuController].rootViewController = usersNavigationController;
+        }
+        
+        [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
+    } else if ([rowTitle isEqualToString:@"Log Out"]) {
         FIRAuth *firebaseAuth = [FIRAuth auth];
         NSError *signOutError;
         BOOL status = [firebaseAuth signOut:&signOutError];
