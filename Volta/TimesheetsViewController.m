@@ -54,13 +54,31 @@
     
     UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
-    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         
         [[[[[self.databaseRef child:@"timesheets"]
             child:[AppState sharedInstance].timesheetKey]
            child:[@(self.week.year) stringValue]]
           child:[@(self.week.weekNumber) stringValue]]
          setValue:@(Status_Submitted)];
+    }]];
+    
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Approve" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        [[[[[self.databaseRef child:@"timesheets"]
+            child:[AppState sharedInstance].timesheetKey]
+           child:[@(self.week.year) stringValue]]
+          child:[@(self.week.weekNumber) stringValue]]
+         setValue:@(Status_Approved)];
+    }]];
+    
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Don't Approve" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        [[[[[self.databaseRef child:@"timesheets"]
+            child:[AppState sharedInstance].timesheetKey]
+           child:[@(self.week.year) stringValue]]
+          child:[@(self.week.weekNumber) stringValue]]
+         setValue:@(Status_NotApproved)];
     }]];
     
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
