@@ -154,6 +154,13 @@ typedef NS_ENUM (NSInteger, Field) {
         } else {
             cell.hoursTextField.enabled = YES;
         }
+        
+        // Change background of Sat and Sun
+        if (row >= 5) {
+            cell.backgroundColor = [UIColor colorWithRed:0.94 green:0.94 blue:0.96 alpha:1.0];
+        } else {
+            cell.backgroundColor = [UIColor whiteColor];
+        }
     }
     
     return cell;
