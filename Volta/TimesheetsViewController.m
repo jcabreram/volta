@@ -37,6 +37,18 @@
     [self configureDatabase];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    UserType currentUserType = [AppState sharedInstance].type;
+    if (currentUserType == UserType_Employee) {
+        self.navigationController.toolbarHidden = YES;
+    } else {
+        [self showSelectEmployeePickerWithCancelHidden:YES];
+    }
+}
+
 - (void)configureDatabase {
     self.databaseRef = [[FIRDatabase database] reference];
     
@@ -104,60 +116,69 @@
 
 - (IBAction)shareButtonPressed:(id)sender {
     
+    AppState *state = [AppState sharedInstance];
+    
     UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
-    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    if (state.type == UserType_Employee) {
         
-        [[[[[self.databaseRef child:@"timesheets"]
-            child:[AppState sharedInstance].timesheetKey]
-           child:[@(self.week.year) stringValue]]
-          child:[@(self.week.weekNumber) stringValue]]
-         setValue:@(Status_Submitted)];
-    }]];
-    
-    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Approve" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self changeWeekToStatus:Status_Submitted];
+        }]];
         
-        [[[[[self.databaseRef child:@"timesheets"]
-            child:[AppState sharedInstance].timesheetKey]
-           child:[@(self.week.year) stringValue]]
-          child:[@(self.week.weekNumber) stringValue]]
-         setValue:@(Status_Approved)];
-    }]];
-    
-    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Don't Approve" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    } else if (state.type == UserType_Admin || state.type == UserType_Manager) {
         
-        [[[[[self.databaseRef child:@"timesheets"]
-            child:[AppState sharedInstance].timesheetKey]
-           child:[@(self.week.year) stringValue]]
-          child:[@(self.week.weekNumber) stringValue]]
-         setValue:@(Status_NotApproved)];
-    }]];
+        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Approve" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self changeWeekToStatus:Status_Approved];
+        }]];
+        
+        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Don't Approve" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [self changeWeekToStatus:Status_NotApproved];
+        }]];
+    }
     
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
     
     [self presentViewController:actionSheet animated:YES completion:nil];
 }
 
+- (void)changeWeekToStatus:(Status)status
+{
+    [[[[[self.databaseRef child:@"timesheets"]
+        child:[AppState sharedInstance].timesheetKey]
+       child:[@(self.week.year) stringValue]]
+      child:[@(self.week.weekNumber) stringValue]]
+     setValue:@(status)];
+}
+
 - (IBAction)selectEmployeeButtonPressed:(id)sender {
+    [self showSelectEmployeePickerWithCancelHidden:NO];
+}
+
+- (void)showSelectEmployeePickerWithCancelHidden:(BOOL)cancelHidden
+
+{
     NSArray *employees = [self.availableEmployees allValues];
     
-    [ActionSheetStringPicker showPickerWithTitle:@"Select an Employee"
-                                            rows:employees
-                                initialSelection:0
-                                       doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue) {
-                                           
-                                           NSArray *employeeKeys = [self.availableEmployees allKeysForObject:selectedValue];
-                                           
-                                           if ([employeeKeys count] > 0) {
-                                               NSString *employeeKey = [employeeKeys firstObject];
-                                               [self showTimesheetForUserWithID:employeeKey];
-                                               
-                                               self.selectEmployeeBarButtonItem.title = selectedValue;
-                                           }
-                                       }
-                                     cancelBlock:nil
-                                          origin:sender];
+    ActionSheetStringPicker *picker = [[ActionSheetStringPicker alloc] initWithTitle:@"Select an Employee"
+                                                                                rows:employees
+                                                                    initialSelection:0
+                                                                           doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue) {
+                                                                               
+                                                                               NSArray *employeeKeys = [self.availableEmployees allKeysForObject:selectedValue];
+                                                                               
+                                                                               if ([employeeKeys count] > 0) {
+                                                                                   NSString *employeeKey = [employeeKeys firstObject];
+                                                                                   [self showTimesheetForUserWithID:employeeKey];
+                                                                                   
+                                                                                   self.selectEmployeeBarButtonItem.title = selectedValue;
+                                                                               }
+                                                                           }
+                                                                         cancelBlock:nil
+                                                                              origin:self.view];
     
+    picker.hideCancel = cancelHidden;
+    [picker showActionSheetPicker];
 }
 
 - (void)showTimesheetForUserWithID:(NSString *)userID
