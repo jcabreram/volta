@@ -114,6 +114,8 @@ typedef NS_ENUM (NSInteger, Field) {
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    UserType loggedUserType = [AppState sharedInstance].type;
 
     DayTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DayCell" forIndexPath:indexPath];
     
@@ -137,8 +139,15 @@ typedef NS_ENUM (NSInteger, Field) {
         NSNumber *hours = self.week.hoursPerDay[row];
         if ([hours isKindOfClass:[NSNumber class]] && [hours doubleValue] != 0.0) {
             cell.hoursTextField.text = [hours stringValue];
+        } else if (self.week.status == Status_Approved || loggedUserType == UserType_Manager) {
+            cell.hoursTextField.text = @"0";
         } else {
             cell.hoursTextField.text = @"";
+        }
+        
+        // If the week is approved, we disable interaction
+        if (self.week.status == Status_Approved || loggedUserType == UserType_Manager) {
+            cell.hoursTextField.enabled = NO;
         }
     }
     

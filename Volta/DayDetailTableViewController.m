@@ -28,6 +28,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    UserType loggedUserType = [AppState sharedInstance].type;
+    
     TimesheetWeek *week = self.week;
     self.dayProjects = [week projectsForDay:self.weekDay];
     
@@ -47,7 +49,12 @@
     
     self.availableProjects = [[NSMutableDictionary alloc] init];
     self.projectKeys = [self.dayProjects allKeys];
-    self.numberOfProjectsShown = [self.dayProjects count] + 1;
+    
+    if (self.week.status == Status_Approved || loggedUserType == UserType_Manager) {
+        self.numberOfProjectsShown = [self.dayProjects count];
+    } else {
+        self.numberOfProjectsShown = [self.dayProjects count] + 1;
+    }
     
     [self configureDatabase];
 }
@@ -196,6 +203,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    UserType loggedUserType = [AppState sharedInstance].type;
+    
     NSInteger row = indexPath.row;
     
     DayDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DayDetailCell" forIndexPath:indexPath];
@@ -215,6 +224,13 @@
         
         projectField.text = self.availableProjects[currentProjectKey];
         cell.hoursField.text = [self.dayProjects[currentProjectKey] stringValue];
+    }
+    
+    // If the week is approved, we disable interaction
+    if (self.week.status == Status_Approved || loggedUserType == UserType_Manager) {
+        cell.hoursField.enabled = NO;
+        cell.projectField.clearButtonMode = UITextFieldViewModeNever;
+        cell.projectField.enabled = NO;
     }
     
     return cell;
