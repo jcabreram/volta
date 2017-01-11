@@ -15,8 +15,10 @@
 @interface ProjectsTableViewController ()
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
-@property (nonatomic, assign) FIRDatabaseHandle referenceHandle;
-@property (nonatomic, strong) NSMutableArray<FIRDataSnapshot *> *projects;
+@property (nonatomic, assign) FIRDatabaseHandle projectsHandle;
+@property (nonatomic, assign) FIRDatabaseHandle userProjectsHandle;
+
+@property (nonatomic, strong) NSMutableArray<NSDictionary *> *projects;
 @property (nonatomic, strong) Project *selectedProject;
 
 @end
@@ -47,7 +49,7 @@
     [self.tableView reloadData];
     
     // Load the project data back from the database
-    [[self.databaseRef child:@"projects"] removeObserverWithHandle:self.referenceHandle];
+    [self removeObservers];
     [self configureDatabase];
 }
 
@@ -64,15 +66,15 @@
     
     if ([segue.identifier isEqualToString:SeguesShowProjectDetail]) {
         NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
-        FIRDataSnapshot *projectSnapshot = _projects[indexPath.row];
-        NSDictionary *project = projectSnapshot.value;
-        NSString *projectKey = projectSnapshot.key;
+        NSDictionary *project = _projects[indexPath.row];
+        NSDictionary *projectData = [[project allValues] firstObject];
+        NSString *projectKey = [[project allKeys] firstObject];
         
         self.selectedProject = [[Project alloc] initWithKey:projectKey
-                                                       name:project[@"name"]
-                                               organization:project[@"organization"]
-                                                 companyKey:project[@"company"]
-                                              totalDuration:[project[@"total_duration"] integerValue]];
+                                                       name:projectData[@"name"]
+                                               organization:projectData[@"organization"]
+                                                 companyKey:projectData[@"company"]
+                                              totalDuration:[projectData[@"total_duration"] integerValue]];
     }
     
     projectDetailController.project = self.selectedProject;
@@ -82,14 +84,38 @@
 
 - (void)configureDatabase {
     self.databaseRef = [[FIRDatabase database] reference];
-    self.referenceHandle = [[_databaseRef child:@"projects"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-        [self.projects addObject:snapshot];
-        [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.projects.count-1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-    }];
+    UserType currentUserType = [AppState sharedInstance].type;
+    NSString *loggedUserKey = [AppState sharedInstance].userID;
+    
+    if (currentUserType == UserType_Employee) {
+        self.userProjectsHandle = [[[[self.databaseRef child:@"users"] child:loggedUserKey] child:@"projects"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+            NSString *userProjectKey = snapshot.key;
+            
+            [[[self.databaseRef child:@"projects"] child:userProjectKey] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+                [self.projects addObject:@{snapshot.key : snapshot.value}];
+                [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.projects.count-1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+            }];
+            
+            
+        }];
+    } else {
+        self.projectsHandle = [[_databaseRef child:@"projects"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+            [self.projects addObject:@{snapshot.key : snapshot.value}];
+            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.projects.count-1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+        }];
+    }
 }
 
 - (void)dealloc {
-    [[self.databaseRef child:@"projects"] removeObserverWithHandle:self.referenceHandle];
+    [self removeObservers];
+}
+
+- (void)removeObservers
+{
+    NSString *loggedUserKey = [AppState sharedInstance].userID;
+    
+    [[self.databaseRef child:@"projects"] removeObserverWithHandle:self.projectsHandle];
+    [[[[self.databaseRef child:@"users"] child:loggedUserKey] child:@"projects"] removeObserverWithHandle:self.userProjectsHandle];
 }
 
 #pragma mark - Table view data source
@@ -105,13 +131,13 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ProjectCell" forIndexPath:indexPath];
     
-    FIRDataSnapshot *projectSnapshot = self.projects[indexPath.row];
-    NSDictionary<NSString *, NSString *> *project = projectSnapshot.value;
+    NSDictionary *project = self.projects[indexPath.row];
+    NSDictionary *projectData = [[project allValues] firstObject];
     
-    NSString *projectName = project[@"name"];
+    NSString *projectName = projectData[@"name"];
     cell.textLabel.text = projectName;
     
-    NSString *companyKey = project[@"company"];
+    NSString *companyKey = projectData[@"company"];
     
     [[[[self.databaseRef child:@"companies"] child:companyKey] child:@"name"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         
