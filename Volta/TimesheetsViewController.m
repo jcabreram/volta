@@ -54,19 +54,21 @@
           child:@"members"]
          observeSingleEventOfType:FIRDataEventTypeValue
          withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-             self.availableEmployees = snapshot.value;
-             
-             for (NSString *userKey in self.availableEmployees) {
-                 [[[self.databaseRef child:@"users"] child:userKey] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-                     if (snapshot.exists) {
-                         NSString *firstName = snapshot.value[@"first_name"];
-                         NSString *lastName = snapshot.value[@"last_name"];
-                         NSString *fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-                         self.availableEmployees[userKey] = fullName;
-                     } else {
-                         [self.availableEmployees removeObjectForKey:userKey];
-                     }
-                 }];
+             if (snapshot.exists) {
+                 self.availableEmployees = snapshot.value;
+                 
+                 for (NSString *userKey in self.availableEmployees) {
+                     [[[self.databaseRef child:@"users"] child:userKey] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+                         if (snapshot.exists) {
+                             NSString *firstName = snapshot.value[@"first_name"];
+                             NSString *lastName = snapshot.value[@"last_name"];
+                             NSString *fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+                             self.availableEmployees[userKey] = fullName;
+                         } else {
+                             [self.availableEmployees removeObjectForKey:userKey];
+                         }
+                     }];
+                 }
              }
          }];
     } else if (currentUserType == UserType_Manager) {
@@ -75,19 +77,21 @@
           child:@"employees"]
          observeSingleEventOfType:FIRDataEventTypeValue
          withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-             self.availableEmployees = snapshot.value;
-             
-             for (NSString *userKey in self.availableEmployees) {
-                 [[[self.databaseRef child:@"users"] child:userKey] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-                     if (snapshot.exists) {
-                         NSString *firstName = snapshot.value[@"first_name"];
-                         NSString *lastName = snapshot.value[@"last_name"];
-                         NSString *fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-                         self.availableEmployees[userKey] = fullName;
-                     } else {
-                         [self.availableEmployees removeObjectForKey:userKey];
-                     }
-                 }];
+             if (snapshot.exists) {
+                 self.availableEmployees = snapshot.value;
+                 
+                 for (NSString *userKey in self.availableEmployees) {
+                     [[[self.databaseRef child:@"users"] child:userKey] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+                         if (snapshot.exists) {
+                             NSString *firstName = snapshot.value[@"first_name"];
+                             NSString *lastName = snapshot.value[@"last_name"];
+                             NSString *fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+                             self.availableEmployees[userKey] = fullName;
+                         } else {
+                             [self.availableEmployees removeObjectForKey:userKey];
+                         }
+                     }];
+                 }
              }
          }];
     }
@@ -153,6 +157,9 @@
 
 {
     NSArray *employeeNames = [self.availableEmployees allValues];
+    if (!employeeNames) {
+        employeeNames = [[NSArray alloc] init];
+    }
     NSArray *orderedEmployeeNames = [employeeNames sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     
     ActionSheetStringPicker *picker = [[ActionSheetStringPicker alloc] initWithTitle:@"Select an Employee"
