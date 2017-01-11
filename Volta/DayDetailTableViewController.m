@@ -20,6 +20,7 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
 @property (nonatomic, assign) FIRDatabaseHandle availableProjectsHandle;
+@property (nonatomic, assign) FIRDatabaseHandle userProjectsHandle;
 
 @property (nonatomic, strong) NSMutableDictionary *availableProjects;
 @property (nonatomic, strong) NSArray *projectKeys;
@@ -67,17 +68,38 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
 - (void)configureDatabase
 {
     self.databaseRef = [[FIRDatabase database] reference];
+    UserType currentUserType = [AppState sharedInstance].type;
+    NSString *loggedUserKey = [AppState sharedInstance].userID;
     
-    self.availableProjectsHandle = [[self.databaseRef child:@"projects"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-        NSDictionary<NSString *, NSString *> *childDict = snapshot.value;
-        id expectedNameString = childDict[@"name"];
-        id expectedKeyString = snapshot.key;
-        if (expectedNameString != nil && [expectedNameString isKindOfClass:[NSString class]] && [expectedKeyString isKindOfClass:[NSString class]]) {
-            self.availableProjects[(NSString *)expectedKeyString] = expectedNameString;
+    if (currentUserType == UserType_Employee) {
+        self.userProjectsHandle = [[[[self.databaseRef child:@"users"] child:loggedUserKey] child:@"projects"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+            NSString *userProjectKey = snapshot.key;
             
-            [self.tableView reloadData];
-        }
-    }];
+            [[[self.databaseRef child:@"projects"] child:userProjectKey] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+                NSDictionary<NSString *, NSString *> *childDict = snapshot.value;
+                id expectedNameString = childDict[@"name"];
+                id expectedKeyString = snapshot.key;
+                if (expectedNameString != nil && [expectedNameString isKindOfClass:[NSString class]] && [expectedKeyString isKindOfClass:[NSString class]]) {
+                    self.availableProjects[(NSString *)expectedKeyString] = expectedNameString;
+                    
+                    [self.tableView reloadData];
+                }
+            }];
+            
+            
+        }];
+    } else {
+        self.availableProjectsHandle = [[self.databaseRef child:@"projects"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+            NSDictionary<NSString *, NSString *> *childDict = snapshot.value;
+            id expectedNameString = childDict[@"name"];
+            id expectedKeyString = snapshot.key;
+            if (expectedNameString != nil && [expectedNameString isKindOfClass:[NSString class]] && [expectedKeyString isKindOfClass:[NSString class]]) {
+                self.availableProjects[(NSString *)expectedKeyString] = expectedNameString;
+                
+                [self.tableView reloadData];
+            }
+        }];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -122,9 +144,16 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
     }
 }
 
-- (void)dealloc
+- (void)dealloc {
+    [self removeObservers];
+}
+
+- (void)removeObservers
 {
+    NSString *loggedUserKey = [AppState sharedInstance].userID;
+    
     [[self.databaseRef child:@"projects"] removeObserverWithHandle:self.availableProjectsHandle];
+    [[[[self.databaseRef child:@"users"] child:loggedUserKey] child:@"projects"] removeObserverWithHandle:self.userProjectsHandle];
 }
 
 #pragma mark - Helper methods
