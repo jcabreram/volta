@@ -259,6 +259,11 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         // Add the employee to its company's employees list
         childUpdates[[NSString stringWithFormat:@"/companies/%@/employees/%@", user.companyKey, userUID]] = @YES;
         
+        // Add the employee to its managers' employees list
+        for (NSString *managerKey in user.managers) {
+            childUpdates[[NSString stringWithFormat:@"/users/%@/employees/%@", managerKey, userUID]] = @YES;
+        }
+        
         // Get the current number of employees to increase it by 1
         [[[self.databaseRef child:@"employees"] child:@"no_of_users"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
             
