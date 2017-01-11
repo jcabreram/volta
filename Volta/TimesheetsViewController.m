@@ -21,10 +21,10 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *allocatedHoursLabel;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *selectEmployeeBarButtonItem;
+@property (weak, nonatomic) IBOutlet UIView *darkOverlay;
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
 @property (nonatomic, strong) NSMutableDictionary *availableEmployees;
-@property (nonatomic, assign) BOOL firstTimePickerShown;
 
 @end
 
@@ -37,23 +37,10 @@
     UserType currentUserType = [AppState sharedInstance].type;
     if (currentUserType == UserType_Employee) {
         self.navigationController.toolbarHidden = YES;
+        [self.darkOverlay removeFromSuperview];
     }
-    
-    self.firstTimePickerShown = NO;
     
     [self configureDatabase];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    UserType currentUserType = [AppState sharedInstance].type;
-    
-    if (currentUserType != UserType_Employee && !self.firstTimePickerShown) {
-        [self showSelectEmployeePickerWithCancelHidden:YES];
-        self.firstTimePickerShown = YES;
-    }
 }
 
 - (void)configureDatabase {
@@ -165,10 +152,11 @@
 - (void)showSelectEmployeePickerWithCancelHidden:(BOOL)cancelHidden
 
 {
-    NSArray *employees = [self.availableEmployees allValues];
+    NSArray *employeeNames = [self.availableEmployees allValues];
+    NSArray *orderedEmployeeNames = [employeeNames sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     
     ActionSheetStringPicker *picker = [[ActionSheetStringPicker alloc] initWithTitle:@"Select an Employee"
-                                                                                rows:employees
+                                                                                rows:orderedEmployeeNames
                                                                     initialSelection:0
                                                                            doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue) {
                                                                                
@@ -179,6 +167,7 @@
                                                                                    [self showTimesheetForUserWithID:employeeKey];
                                                                                    
                                                                                    self.selectEmployeeBarButtonItem.title = selectedValue;
+                                                                                   [self.darkOverlay removeFromSuperview];
                                                                                }
                                                                            }
                                                                          cancelBlock:nil
@@ -199,7 +188,6 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:NotificationKeysTimesheetDidChange object:nil];
         }
     }];
-    
 }
 
 #pragma mark - Days table view delegate
