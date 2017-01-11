@@ -281,6 +281,7 @@ static NSString * const reuseIdentifier = @"WeekCell";
 {
     self.timesheet = [[NSMutableDictionary alloc] init];
     [self configureDatabase];
+    [self.collectionView reloadData];
     
     WeekCollectionViewCell *cell = [self collectionView:self.collectionView cellForItemAtIndexPath:self.selectedIndexPath];
     [self.delegate updateWeekViewWithStartDate:cell.startDate forWeek:cell.week];
