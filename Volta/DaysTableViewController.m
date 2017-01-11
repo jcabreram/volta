@@ -138,7 +138,10 @@ typedef NS_ENUM (NSInteger, Field) {
         
         NSNumber *hours = self.week.hoursPerDay[row];
         if ([hours isKindOfClass:[NSNumber class]] && [hours doubleValue] != 0.0) {
-            cell.hoursTextField.text = [hours stringValue];
+            NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+            formatter.numberStyle = NSNumberFormatterDecimalStyle;
+            formatter.maximumFractionDigits = 2;
+            cell.hoursTextField.text = [formatter stringFromNumber:hours];
         } else if (self.week.status == Status_Approved || loggedUserType == UserType_Manager) {
             cell.hoursTextField.text = @"0";
         } else {
@@ -148,6 +151,8 @@ typedef NS_ENUM (NSInteger, Field) {
         // If the week is approved, we disable interaction
         if (self.week.status == Status_Approved || loggedUserType == UserType_Manager) {
             cell.hoursTextField.enabled = NO;
+        } else {
+            cell.hoursTextField.enabled = YES;
         }
     }
     

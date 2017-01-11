@@ -231,6 +231,10 @@
         cell.hoursField.enabled = NO;
         cell.projectField.clearButtonMode = UITextFieldViewModeNever;
         cell.projectField.enabled = NO;
+    } else {
+        cell.hoursField.enabled = YES;
+        cell.projectField.clearButtonMode = UITextFieldViewModeAlways;
+        cell.projectField.enabled = YES;
     }
     
     return cell;
