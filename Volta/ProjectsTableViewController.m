@@ -10,6 +10,7 @@
 #import "ProjectDetailTableViewController.h"
 #import "Constants.h"
 #import "Project.h"
+#import "AppState.h"
 
 @interface ProjectsTableViewController ()
 
@@ -26,6 +27,12 @@
     [super viewDidLoad];
     
     //self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    // If the user is an employee, don't show him the create project toolbar
+    UserType currentUserType = [AppState sharedInstance].type;
+    if (currentUserType == UserType_Employee) {
+        self.navigationController.toolbarHidden = YES;
+    }
     
     self.projects = [[NSMutableArray alloc] init];
     
@@ -111,7 +118,6 @@
         if ([snapshot.value isKindOfClass:[NSString class]]) {
             cell.detailTextLabel.text = snapshot.value;
         }
-        
     }];
     
     return cell;

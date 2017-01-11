@@ -12,6 +12,7 @@
 #import "Project.h"
 #import "Constants.h"
 #import "NSString+VOLValidation.h"
+#import "AppState.h"
 
 typedef NS_ENUM (NSInteger, Field) {
     Field_Name,
@@ -287,6 +288,15 @@ typedef NS_ENUM (NSInteger, Field) {
         if ([companyField.text vol_isStringEmpty]) {
             companyField.text = self.availableCompanies[project.companyKey];
         }
+    }
+    
+    // If the user is an employee, disable the fields
+    UserType currentUserType = [AppState sharedInstance].type;
+    if (currentUserType == UserType_Employee) {
+        cell.nameField.enabled = NO;
+        cell.totalDurationField.enabled = NO;
+        cell.organizationField.enabled = NO;
+        cell.companyField.enabled = NO;
     }
     
     return cell;
