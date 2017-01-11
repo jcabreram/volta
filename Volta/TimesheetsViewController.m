@@ -23,8 +23,8 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *selectEmployeeBarButtonItem;
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
-
 @property (nonatomic, strong) NSMutableDictionary *availableEmployees;
+@property (nonatomic, assign) BOOL firstTimePickerShown;
 
 @end
 
@@ -34,6 +34,13 @@
     
     [super viewDidLoad];
     
+    UserType currentUserType = [AppState sharedInstance].type;
+    if (currentUserType == UserType_Employee) {
+        self.navigationController.toolbarHidden = YES;
+    }
+    
+    self.firstTimePickerShown = NO;
+    
     [self configureDatabase];
 }
 
@@ -42,10 +49,10 @@
     [super viewDidAppear:animated];
     
     UserType currentUserType = [AppState sharedInstance].type;
-    if (currentUserType == UserType_Employee) {
-        self.navigationController.toolbarHidden = YES;
-    } else {
+    
+    if (currentUserType != UserType_Employee && !self.firstTimePickerShown) {
         [self showSelectEmployeePickerWithCancelHidden:YES];
+        self.firstTimePickerShown = YES;
     }
 }
 
