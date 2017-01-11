@@ -24,7 +24,7 @@
 
 // Collection View properties
 @property (nonatomic, assign) BOOL collectionViewScrolled;
-@property (nonatomic, assign) NSInteger selectedItem;
+@property (nonatomic, strong) NSIndexPath *selectedIndexPath;
 
 // Firebase properties
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
@@ -164,7 +164,7 @@ static NSString * const reuseIdentifier = @"WeekCell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     WeekCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     
-    if (indexPath.item == self.selectedItem) {
+    if (indexPath.item == self.selectedIndexPath.item) {
         cell.layer.borderWidth = 1.0f;
         cell.layer.borderColor = [UIColor darkGrayColor].CGColor;
     } else {
@@ -266,7 +266,7 @@ static NSString * const reuseIdentifier = @"WeekCell";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    self.selectedItem = indexPath.item;
+    self.selectedIndexPath = indexPath;
     [self.collectionView reloadData];
     
     WeekCollectionViewCell *cell = [self collectionView:self.collectionView cellForItemAtIndexPath:indexPath];
@@ -278,11 +278,13 @@ static NSString * const reuseIdentifier = @"WeekCell";
 #pragma mark - NSNotificationCenter Observer methods
 
 - (void)didChangeTimesheet:(NSNotification *)notification
-{    
+{
     self.timesheet = [[NSMutableDictionary alloc] init];
-    
     [self configureDatabase];
     
+    WeekCollectionViewCell *cell = [self collectionView:self.collectionView cellForItemAtIndexPath:self.selectedIndexPath];
+    [self.delegate updateWeekViewWithStartDate:cell.startDate forWeek:cell.week];
+    [self.actionSheetDelegate chosenWeekChangedToWeek:cell.week];
 }
 
 @end
