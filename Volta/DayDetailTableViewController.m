@@ -76,6 +76,23 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
             NSString *userProjectKey = snapshot.key;
             
             [[[self.databaseRef child:@"projects"] child:userProjectKey] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+                if (snapshot.exists) {
+                    NSDictionary<NSString *, NSString *> *childDict = snapshot.value;
+                    id expectedNameString = childDict[@"name"];
+                    id expectedKeyString = snapshot.key;
+                    if (expectedNameString != nil && [expectedNameString isKindOfClass:[NSString class]] && [expectedKeyString isKindOfClass:[NSString class]]) {
+                        self.availableProjects[(NSString *)expectedKeyString] = expectedNameString;
+                        
+                        [self.tableView reloadData];
+                    }
+                }
+            }];
+            
+            
+        }];
+    } else {
+        self.availableProjectsHandle = [[self.databaseRef child:@"projects"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+            if (snapshot.exists) {
                 NSDictionary<NSString *, NSString *> *childDict = snapshot.value;
                 id expectedNameString = childDict[@"name"];
                 id expectedKeyString = snapshot.key;
@@ -84,19 +101,6 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
                     
                     [self.tableView reloadData];
                 }
-            }];
-            
-            
-        }];
-    } else {
-        self.availableProjectsHandle = [[self.databaseRef child:@"projects"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-            NSDictionary<NSString *, NSString *> *childDict = snapshot.value;
-            id expectedNameString = childDict[@"name"];
-            id expectedKeyString = snapshot.key;
-            if (expectedNameString != nil && [expectedNameString isKindOfClass:[NSString class]] && [expectedKeyString isKindOfClass:[NSString class]]) {
-                self.availableProjects[(NSString *)expectedKeyString] = expectedNameString;
-                
-                [self.tableView reloadData];
             }
         }];
     }

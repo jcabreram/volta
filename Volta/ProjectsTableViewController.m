@@ -92,16 +92,20 @@
             NSString *userProjectKey = snapshot.key;
             
             [[[self.databaseRef child:@"projects"] child:userProjectKey] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-                [self.projects addObject:@{snapshot.key : snapshot.value}];
-                [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.projects.count-1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                if (snapshot.exists) {
+                    [self.projects addObject:@{snapshot.key : snapshot.value}];
+                    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.projects.count-1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                }
             }];
             
             
         }];
     } else {
         self.projectsHandle = [[_databaseRef child:@"projects"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-            [self.projects addObject:@{snapshot.key : snapshot.value}];
-            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.projects.count-1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+            if (snapshot.exists) {
+                [self.projects addObject:@{snapshot.key : snapshot.value}];
+                [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.projects.count-1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+            }
         }];
     }
 }
