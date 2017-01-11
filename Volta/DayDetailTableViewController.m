@@ -11,6 +11,11 @@
 #import "AppState.h"
 #import "NSString+VOLValidation.h"
 
+typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
+    DayDetailFieldTag_Project = 1,
+    DayDetailFieldTag_Hours
+};
+
 @interface DayDetailTableViewController ()
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
@@ -258,6 +263,13 @@
         self.numberOfProjectsShown = row + 2;
         [self.tableView reloadData];
     }
+    
+    // Erase text entered if it doesn't match an available project
+    if (textField.tag == DayDetailFieldTag_Project) {
+        if (![[self.availableProjects allValues] containsObject:textField.text]) {
+            textField.text = @"";
+        }
+    }
 }
 
 - (BOOL)textFieldShouldClear:(UITextField *)textField
@@ -275,7 +287,7 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    if (textField.tag == 2) {
+    if (textField.tag == DayDetailFieldTag_Hours) {
         // Allow backspace
         if (!string.length) {
             return YES;

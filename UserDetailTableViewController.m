@@ -701,6 +701,13 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             [self.tableView reloadData];
         }
     }
+    
+    // Erase text entered if it doesn't match an available project
+    if (textField.tag == FieldTag_Project) {
+        if (![[self.availableProjects allValues] containsObject:textField.text]) {
+            textField.text = @"";
+        }
+    }
 }
 
 #pragma mark - MLPAutoCompleteTextField delegate
