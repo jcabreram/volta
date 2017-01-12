@@ -114,8 +114,7 @@
     self.daysVC.delegate = self;
 }
 
-- (IBAction)shareButtonPressed:(id)sender {
-    
+- (IBAction)shareButtonPressed:(UIBarButtonItem *)sender {
     AppState *state = [AppState sharedInstance];
     
     UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
@@ -138,6 +137,11 @@
     }
     
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [actionSheet setModalPresentationStyle:UIModalPresentationPopover];
+    
+    UIPopoverPresentationController *popPresenter = [actionSheet popoverPresentationController];
+    popPresenter.barButtonItem = sender;
+    popPresenter.sourceView = self.view;
     
     [self presentViewController:actionSheet animated:YES completion:nil];
 }
