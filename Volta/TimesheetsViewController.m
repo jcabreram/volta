@@ -21,6 +21,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *allocatedHoursLabel;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *selectEmployeeBarButtonItem;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *shareButton;
 @property (weak, nonatomic) IBOutlet UIView *darkOverlay;
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
@@ -38,6 +39,7 @@
     if (currentUserType == UserType_Employee) {
         self.navigationController.toolbarHidden = YES;
         [self.darkOverlay removeFromSuperview];
+        self.shareButton.enabled = YES;
     }
     
     [self configureDatabase];
@@ -169,6 +171,7 @@
                                                                                    
                                                                                    self.selectEmployeeBarButtonItem.title = selectedValue;
                                                                                    [self.darkOverlay removeFromSuperview];
+                                                                                   self.shareButton.enabled = YES;
                                                                                }
                                                                            }
                                                                          cancelBlock:nil
