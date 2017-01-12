@@ -150,12 +150,6 @@
 }
 
 - (IBAction)selectEmployeeButtonPressed:(id)sender {
-    [self showSelectEmployeePickerWithCancelHidden:NO];
-}
-
-- (void)showSelectEmployeePickerWithCancelHidden:(BOOL)cancelHidden
-
-{
     NSArray *employeeNames = [self.availableEmployees allValues];
     if (!employeeNames) {
         employeeNames = [[NSArray alloc] init];
@@ -178,9 +172,8 @@
                                                                                }
                                                                            }
                                                                          cancelBlock:nil
-                                                                              origin:self.view];
+                                                                              origin:sender];
     
-    picker.hideCancel = cancelHidden;
     [picker showActionSheetPicker];
 }
 
