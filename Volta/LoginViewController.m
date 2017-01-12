@@ -13,6 +13,9 @@
 #import "GlobalVars.h"
 
 @interface LoginViewController ()
+{
+    CAGradientLayer *gradient;
+}
 
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
@@ -27,11 +30,14 @@
     [super viewDidLoad];
     
     // Add a background gradient to the view
-    CAGradientLayer *gradient = [CAGradientLayer layer];
+    gradient = [CAGradientLayer layer];
     gradient.frame = self.view.bounds;
     UIColor *lightBlue = [[UIColor alloc] initWithRed:140.0f/255.0f green:211.0f/255.0f blue:255.0f/255.0f alpha:1.0];
     gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor whiteColor] CGColor], (id)[lightBlue CGColor], nil];
     [self.view.layer insertSublayer:gradient atIndex:0];
+    
+    // Add an observer for updating background when rotating
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadBackground) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -48,6 +54,15 @@
     [super viewWillAppear:animated];
     
     [self loadCurrentUserToTextField];
+}
+
+- (void)reloadBackground {
+    gradient.frame = self.view.bounds;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 #pragma mark - IB Actions
