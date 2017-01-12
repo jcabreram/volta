@@ -3,50 +3,104 @@
     {
       "size" : "20x20",
       "idiom" : "iphone",
-      "filename" : "Volta_Spotlight Icon - 40x40.png",
+      "filename" : "app_icon_Spotlight Icon - 40x40.png",
       "scale" : "2x"
     },
     {
       "size" : "20x20",
       "idiom" : "iphone",
-      "filename" : "Volta_App Icon - 60x60.png",
+      "filename" : "app_icon_App Icon - 60x60.png",
       "scale" : "3x"
     },
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "Volta_Settings Icon - 58x58.png",
+      "filename" : "app_icon_Settings Icon - 58x58.png",
       "scale" : "2x"
     },
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "Volta_Settings Icon - 87x87.png",
+      "filename" : "app_icon_Settings Icon - 87x87.png",
       "scale" : "3x"
     },
     {
       "size" : "40x40",
       "idiom" : "iphone",
-      "filename" : "Volta_Spotlight Icon - 80x80.png",
+      "filename" : "app_icon_Spotlight Icon - 80x80.png",
       "scale" : "2x"
     },
     {
       "size" : "40x40",
       "idiom" : "iphone",
-      "filename" : "Volta_Spotlight Icon - 120x120.png",
+      "filename" : "app_icon_Spotlight Icon - 120x120.png",
       "scale" : "3x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "Volta_App Icon - 120x120.png",
+      "filename" : "app_icon_Spotlight Icon - 120x120-1.png",
       "scale" : "2x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "Volta_App Icon - 180x180.png",
+      "filename" : "app_icon_App Icon - 180x180.png",
       "scale" : "3x"
+    },
+    {
+      "size" : "20x20",
+      "idiom" : "ipad",
+      "filename" : "Volta_App Icon 20x20.png",
+      "scale" : "1x"
+    },
+    {
+      "size" : "20x20",
+      "idiom" : "ipad",
+      "filename" : "app_icon_Spotlight Icon - 40x40-1.png",
+      "scale" : "2x"
+    },
+    {
+      "size" : "29x29",
+      "idiom" : "ipad",
+      "filename" : "app_icon_Settings Icon - 29x29.png",
+      "scale" : "1x"
+    },
+    {
+      "size" : "29x29",
+      "idiom" : "ipad",
+      "filename" : "app_icon_Settings Icon - 58x58-1.png",
+      "scale" : "2x"
+    },
+    {
+      "size" : "40x40",
+      "idiom" : "ipad",
+      "filename" : "app_icon_Spotlight Icon - 40x40-2.png",
+      "scale" : "1x"
+    },
+    {
+      "size" : "40x40",
+      "idiom" : "ipad",
+      "filename" : "app_icon_Spotlight Icon - 80x80-1.png",
+      "scale" : "2x"
+    },
+    {
+      "size" : "76x76",
+      "idiom" : "ipad",
+      "filename" : "Volta_App Icon - 76x76.png",
+      "scale" : "1x"
+    },
+    {
+      "size" : "76x76",
+      "idiom" : "ipad",
+      "filename" : "Volta_App Icon -152x152.png",
+      "scale" : "2x"
+    },
+    {
+      "size" : "83.5x83.5",
+      "idiom" : "ipad",
+      "filename" : "Volta_App Icon - 167x167.png",
+      "scale" : "2x"
     }
   ],
   "info" : {
