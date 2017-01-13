@@ -123,14 +123,16 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
       child:[self stringWithNameOfDay:self.weekDay]]
      child:@"projects"] setValue:self.dayProjects];
     
-    // Update the total hours for the week
-    [[[[[[[self.databaseRef
-           child:@"timesheet_details"]
-          child:timesheetKey]
-         child:[@(self.week.year) stringValue]]
-        child:[@(self.week.weekNumber) stringValue]]
-       child:[self stringWithNameOfDay:self.weekDay]]
-      child:@"time"] setValue:[self sumOfProjectHours]];
+    if ([self.sumOfProjectHours doubleValue] != 0.0) {
+        // Update the total hours for the week
+        [[[[[[[self.databaseRef
+               child:@"timesheet_details"]
+              child:timesheetKey]
+             child:[@(self.week.year) stringValue]]
+            child:[@(self.week.weekNumber) stringValue]]
+           child:[self stringWithNameOfDay:self.weekDay]]
+          child:@"time"] setValue:[self sumOfProjectHours]];
+    }
 }
 
 - (void)updateProjects
