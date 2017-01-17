@@ -191,46 +191,59 @@ typedef NS_ENUM (NSInteger, Field) {
 
             if ([timesheetDetails valueForKeyPath:@"monday.time"]) {
                 week.hoursPerDay[0] = [timesheetDetails valueForKeyPath:@"monday.time"];
+                if ([timesheetDetails valueForKeyPath:@"monday.projects"]) {
+                    week.mon = [[timesheetDetails valueForKeyPath:@"monday.projects"] mutableCopy];
+                } else {
+                    week.mon = [[NSMutableDictionary alloc] init];
+                }
             }
             if ([timesheetDetails valueForKeyPath:@"tuesday.time"]) {
                 week.hoursPerDay[1] = [timesheetDetails valueForKeyPath:@"tuesday.time"];
+                if ([timesheetDetails valueForKeyPath:@"tuesday.projects"]) {
+                    week.tue = [[timesheetDetails valueForKeyPath:@"tuesday.projects"] mutableCopy];
+                } else {
+                    week.tue = [[NSMutableDictionary alloc] init];
+                }
             }
             if ([timesheetDetails valueForKeyPath:@"wednesday.time"]) {
                 week.hoursPerDay[2] = [timesheetDetails valueForKeyPath:@"wednesday.time"];
+                if ([timesheetDetails valueForKeyPath:@"wednesday.projects"]) {
+                    week.wed = [[timesheetDetails valueForKeyPath:@"wednesday.projects"] mutableCopy];
+                } else {
+                    week.wed = [[NSMutableDictionary alloc] init];
+                }
             }
             if ([timesheetDetails valueForKeyPath:@"thursday.time"]) {
                 week.hoursPerDay[3] = [timesheetDetails valueForKeyPath:@"thursday.time"];
+                if ([timesheetDetails valueForKeyPath:@"thursday.projects"]) {
+                    week.thu = [[timesheetDetails valueForKeyPath:@"thursday.projects"] mutableCopy];
+                } else {
+                    week.thu = [[NSMutableDictionary alloc] init];
+                }
             }
             if ([timesheetDetails valueForKeyPath:@"friday.time"]) {
                 week.hoursPerDay[4] = [timesheetDetails valueForKeyPath:@"friday.time"];
+                if ([timesheetDetails valueForKeyPath:@"friday.projects"]) {
+                    week.fri = [[timesheetDetails valueForKeyPath:@"friday.projects"] mutableCopy];
+                } else {
+                    week.fri = [[NSMutableDictionary alloc] init];
+                }
             }
             if ([timesheetDetails valueForKeyPath:@"saturday.time"]) {
                 week.hoursPerDay[5] = [timesheetDetails valueForKeyPath:@"saturday.time"];
+                if ([timesheetDetails valueForKeyPath:@"saturday.projects"]) {
+                    week.sat = [[timesheetDetails valueForKeyPath:@"saturday.projects"] mutableCopy];
+                } else {
+                    week.sat = [[NSMutableDictionary alloc] init];
+                }
             }
             if ([timesheetDetails valueForKeyPath:@"sunday.time"]) {
                 week.hoursPerDay[6] = [timesheetDetails valueForKeyPath:@"sunday.time"];
-            }
-    
-            if ([timesheetDetails valueForKeyPath:@"monday.projects"]) {
-                week.mon = [[timesheetDetails valueForKeyPath:@"monday.projects"] mutableCopy];
-            }
-            if ([timesheetDetails valueForKeyPath:@"tuesday.projects"]) {
-                week.tue = [[timesheetDetails valueForKeyPath:@"tuesday.projects"] mutableCopy];
-            }
-            if ([timesheetDetails valueForKeyPath:@"wednesday.projects"]) {
-                week.wed = [[timesheetDetails valueForKeyPath:@"wednesday.projects"] mutableCopy];
-            }
-            if ([timesheetDetails valueForKeyPath:@"thursday.projects"]) {
-                week.thu = [[timesheetDetails valueForKeyPath:@"thursday.projects"] mutableCopy];
-            }
-            if ([timesheetDetails valueForKeyPath:@"friday.projects"]) {
-                week.fri = [[timesheetDetails valueForKeyPath:@"friday.projects"] mutableCopy];
-            }
-            if ([timesheetDetails valueForKeyPath:@"saturday.projects"]) {
-                week.sat = [[timesheetDetails valueForKeyPath:@"saturday.projects"] mutableCopy];
-            }
-            if ([timesheetDetails valueForKeyPath:@"sunday.projects"]) {
-                week.sun = [[timesheetDetails valueForKeyPath:@"sunday.projects"] mutableCopy];
+                if ([timesheetDetails valueForKeyPath:@"sunday.projects"]) {
+                    week.sun = [[timesheetDetails valueForKeyPath:@"sunday.projects"] mutableCopy];
+                } else {
+                    week.sun = [[NSMutableDictionary alloc] init];
+                }
             }
         }
         

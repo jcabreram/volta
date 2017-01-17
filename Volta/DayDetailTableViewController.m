@@ -114,6 +114,10 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
     
     NSString *timesheetKey = [AppState sharedInstance].timesheetKey;
     
+    if ([self.dayProjects count] == 0) {
+        self.dayProjects = nil;
+    }
+    
     // Update the list of projects for the week
     [[[[[[[self.databaseRef
          child:@"timesheet_details"]
@@ -251,6 +255,7 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
     
     MLPAutoCompleteTextField *projectField = cell.projectField;
     projectField.autoCompleteTableAppearsAsKeyboardAccessory = YES;
+    projectField.autoCompleteDelegate = self;
     
     // Parent correction
     projectField.autoCompleteParentView = self.view;
@@ -294,11 +299,6 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
     
     NSInteger row = indexPath.row;
     
-    if (self.numberOfProjectsShown < row + 2) {
-        self.numberOfProjectsShown = row + 2;
-        [self.tableView reloadData];
-    }
-    
     // Erase text entered if it doesn't match an available project
     if (textField.tag == DayDetailFieldTag_Project) {
         if (![[self.availableProjects allValues] containsObject:textField.text]) {
@@ -310,14 +310,18 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
 - (BOOL)textFieldShouldClear:(UITextField *)textField
 {
     NSIndexPath *indexPath = [self.tableView indexPathForCell:(UITableViewCell *)[[textField superview] superview]];
-    
     NSInteger row = indexPath.row;
-    
     DayDetailTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]];
     
+    cell.projectField.text = @"";
     cell.hoursField.text = @"";
     
-    return YES;
+    self.numberOfProjectsShown--;
+    [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+    [textField resignFirstResponder];
+    
+    return NO;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
@@ -358,6 +362,12 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
         NSArray *completions = [self.availableProjects allValues];
         handler(completions);
     });
+}
+
+- (void)autoCompleteTextField:(MLPAutoCompleteTextField *)textField didSelectAutoCompleteString:(NSString *)selectedString withAutoCompleteObject:(id<MLPAutoCompletionObject>)selectedObject forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    self.numberOfProjectsShown++;
+    [self.tableView reloadData];
 }
 
 

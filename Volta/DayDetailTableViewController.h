@@ -9,7 +9,7 @@
 #import "TimesheetWeek.h"
 #import "MLPAutoCompleteTextField.h"
 
-@interface DayDetailTableViewController : UITableViewController <UITextFieldDelegate, MLPAutoCompleteTextFieldDataSource>
+@interface DayDetailTableViewController : UITableViewController <UITextFieldDelegate, MLPAutoCompleteTextFieldDataSource, MLPAutoCompleteTextFieldDelegate>
 
 @property (nonatomic, strong) TimesheetWeek *week;
 @property (nonatomic, assign) WeekDay weekDay;
