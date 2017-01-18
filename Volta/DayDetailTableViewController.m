@@ -294,11 +294,7 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:(UITableViewCell *)[[textField superview] superview]];
-    
-    NSInteger row = indexPath.row;
-    
+{   
     // Erase text entered if it doesn't match an available project
     if (textField.tag == DayDetailFieldTag_Project) {
         if (![[self.availableProjects allValues] containsObject:textField.text]) {
@@ -367,7 +363,7 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
 - (void)autoCompleteTextField:(MLPAutoCompleteTextField *)textField didSelectAutoCompleteString:(NSString *)selectedString withAutoCompleteObject:(id<MLPAutoCompletionObject>)selectedObject forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     self.numberOfProjectsShown++;
-    [self.tableView reloadData];
+    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.numberOfProjectsShown-1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 

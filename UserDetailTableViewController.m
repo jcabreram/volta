@@ -64,7 +64,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
     
     self.userProjectKeys = [user.projects allKeys];
     
-    self.numberOfProjectsShown = [user.projects count] + 1;
+    self.numberOfProjectsShown = [user.projects count] + 2;
     
     if ([user.key vol_isStringEmpty]) {
         switch (user.type) {
@@ -625,6 +625,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         if (section == SectionNumber_Two) {
             MLPAutoCompleteTextField *projectField = cell.projectTextField;
             projectField.autoCompleteDataSource = self;
+            projectField.autoCompleteDelegate = self;
             projectField.autoCompleteTableAppearsAsKeyboardAccessory = YES;
             
             // Parent correction
@@ -659,6 +660,21 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 {
     [textField resignFirstResponder];
     return YES;
+}
+
+- (BOOL)textFieldShouldClear:(UITextField *)textField
+{
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:(UITableViewCell *)[[textField superview] superview]];
+    
+    textField.text = @"";
+    
+    self.numberOfProjectsShown--;
+    [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+    [textField resignFirstResponder];
+    
+    return NO;
+
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
@@ -696,16 +712,12 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             }
         }
     } else if (section == SectionNumber_Two) {
-        if (self.numberOfProjectsShown < row + 2) {
-            self.numberOfProjectsShown = row + 2;
-            [self.tableView reloadData];
-        }
-    }
-    
-    // Erase text entered if it doesn't match an available project
-    if (textField.tag == FieldTag_Project) {
-        if (![[self.availableProjects allValues] containsObject:textField.text]) {
-            textField.text = @"";
+        
+        // Erase text entered if it doesn't match an available project
+        if (textField.tag == FieldTag_Project) {
+            if (![[self.availableProjects allValues] containsObject:textField.text]) {
+                textField.text = @"";
+            }
         }
     }
 }
@@ -735,7 +747,12 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             handler(completions);
         });
     }
-    
+}
+
+- (void)autoCompleteTextField:(MLPAutoCompleteTextField *)textField didSelectAutoCompleteString:(NSString *)selectedString withAutoCompleteObject:(id<MLPAutoCompletionObject>)selectedObject forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    self.numberOfProjectsShown++;
+    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.numberOfProjectsShown-1 inSection:SectionNumber_Two]] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 @end

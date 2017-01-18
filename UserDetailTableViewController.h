@@ -15,7 +15,7 @@
 
 @end
 
-@interface UserDetailTableViewController : UITableViewController <UITextFieldDelegate, MLPAutoCompleteTextFieldDataSource>
+@interface UserDetailTableViewController : UITableViewController <UITextFieldDelegate, MLPAutoCompleteTextFieldDataSource, MLPAutoCompleteTextFieldDelegate>
 
 @property (nonatomic, strong) User *user;
 @property (nonatomic, weak) id<UserDetailTableViewControllerDelegate> delegate;
