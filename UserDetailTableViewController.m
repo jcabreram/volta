@@ -93,9 +93,24 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 
 - (void)configureDatabase {
     _databaseRef = [[FIRDatabase database] reference];
+    UserType currentUserType = [AppState sharedInstance].type;
+    NSString *loggedUserKey = [AppState sharedInstance].userID;
     
-    self.availableProjectsHandle = [self handleForObservingKeyAndNameOfChild:@"projects"
-                                                    usingDictionary:self.availableProjects];
+    self.availableProjectsHandle = [[self.databaseRef child:@"projects"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        
+        if ([snapshot.value isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *project = snapshot.value;
+            
+            if (currentUserType != UserType_Manager ||  [project[@"created_by"] isEqualToString:loggedUserKey]) {
+                id projectName = project[@"name"];
+                id projectKey = snapshot.key;
+                if ([projectName isKindOfClass:[NSString class]] && [projectKey isKindOfClass:[NSString class]]) {
+                    self.availableProjects[(NSString *)projectKey] = projectName;
+                }
+            }
+        }
+    }];
+    
     self.availableCompaniesHandle = [self handleForObservingKeyAndNameOfChild:@"companies"
                                                      usingDictionary:self.availableCompanies];
     
