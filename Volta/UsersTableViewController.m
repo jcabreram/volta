@@ -10,6 +10,7 @@
 #import "UserDetailTableViewController.h"
 #import "Constants.h"
 #import "User.h"
+#import "AppState.h"
 
 @interface UsersTableViewController ()
 
@@ -26,6 +27,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // Change title to Employees if manager
+    UserType loggedInUserType = [AppState sharedInstance].type;
+    if (loggedInUserType == UserType_Manager) {
+        self.title = @"Employees";
+        self.navigationController.toolbarHidden = YES;
+    }
     
     //self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
@@ -89,10 +97,25 @@
 #pragma mark - Database
 
 - (void)configureDatabase {
+    AppState *state = [AppState sharedInstance];
+    UserType loggedInUserType = state.type;
+    NSString *userID = state.userID;
+
     self.databaseRef = [[FIRDatabase database] reference];
     self.referenceHandle = [[_databaseRef child:@"users"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-        [self.users addObject:snapshot];
-        [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.users.count-1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+        if (loggedInUserType == UserType_Manager) {
+            if ([snapshot.value isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *user = snapshot.value;
+                NSDictionary *managers = user[@"managers"];
+                if (managers[userID]) {
+                    [self.users addObject:snapshot];
+                    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.users.count-1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                }
+            }
+        } else {
+            [self.users addObject:snapshot];
+            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.users.count-1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+        }
     }];
 }
 

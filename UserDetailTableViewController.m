@@ -64,7 +64,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
     
     self.userProjectKeys = [user.projects allKeys];
     
-    self.numberOfProjectsShown = [user.projects count] + 2;
+    self.numberOfProjectsShown = [user.projects count] + 1;
     
     if ([user.key vol_isStringEmpty]) {
         switch (user.type) {
@@ -550,6 +550,8 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    UserType loggedUserType = [AppState sharedInstance].type;
+    
     NSString *reuseIdentifier;
     
     NSInteger section = indexPath.section;
@@ -620,6 +622,14 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
                     managerField.text = self.availableManagers[userManagerKey];
                 }
             }
+        }
+        
+        if (loggedUserType == UserType_Manager) {
+            cell.firstNameTextField.enabled = NO;
+            cell.lastNameTextField.enabled = NO;
+            cell.emailTextField.enabled = NO;
+            cell.companyTextField.enabled = NO;
+            cell.managerTextField.enabled = NO;
         }
     } else {
         if (section == SectionNumber_Two) {
