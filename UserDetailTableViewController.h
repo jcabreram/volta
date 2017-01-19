@@ -7,6 +7,7 @@
 //
 
 @class User;
+@import MessageUI;
 #import "MLPAutoCompleteTextField.h"
 
 @protocol UserDetailTableViewControllerDelegate <NSObject>
@@ -15,7 +16,7 @@
 
 @end
 
-@interface UserDetailTableViewController : UITableViewController <UITextFieldDelegate, MLPAutoCompleteTextFieldDataSource, MLPAutoCompleteTextFieldDelegate>
+@interface UserDetailTableViewController : UITableViewController <UITextFieldDelegate, MLPAutoCompleteTextFieldDataSource, MLPAutoCompleteTextFieldDelegate, MFMailComposeViewControllerDelegate>
 
 @property (nonatomic, strong) User *user;
 @property (nonatomic, weak) id<UserDetailTableViewControllerDelegate> delegate;

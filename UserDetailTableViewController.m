@@ -188,7 +188,23 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             [self updateDatabaseWithUserUID:user.key];
         }
     }
+}
+
+- (void)updateProjects
+{
+    User *user = self.user;
     
+    [user.projects removeAllObjects];
+    
+    for (NSInteger i = 0; i < [self.tableView numberOfRowsInSection:1]; ++i) {
+        NSString *projectName = [self textEnteredInTextField:i forSection:SectionNumber_Two];
+        NSArray *projectsKeys = [self.availableProjects allKeysForObject:projectName];
+        
+        if ([projectsKeys count] > 0) {
+            NSString *projectKey = [projectsKeys firstObject];
+            user.projects[projectKey] = @(YES);
+        }
+    }
 }
 
 - (void)updateDatabaseWithUserUID:(NSString *)userUID {
@@ -294,7 +310,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
                                                                        message:error.localizedDescription];
                                     NSLog(@"%@", error.localizedDescription);
                                 } else {
-                                    [self dismissController];
+                                    [self showMailComposeController];
                                 }
                             }];
             
@@ -323,7 +339,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
                                                                        message:error.localizedDescription];
                                     NSLog(@"%@", error.localizedDescription);
                                 } else {
-                                    [self dismissController];
+                                    [self showMailComposeController];
                                 }
                             }];
             
@@ -352,7 +368,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
                                                                        message:error.localizedDescription];
                                     NSLog(@"%@", error.localizedDescription);
                                 } else {
-                                    [self dismissController];
+                                    [self showMailComposeController];
                                 }
                             }];
             
@@ -362,24 +378,43 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             NSLog(@"%@", error.localizedDescription);
         }];
     }
-    
 }
 
-- (void)updateProjects
+- (void)showMailComposeController
 {
     User *user = self.user;
+    AppState *state = [AppState sharedInstance];
+    NSString *adminName = state.displayName;
     
-    [user.projects removeAllObjects];
+    NSString *emailTitle = @"Welcome to Volta!";
     
-    for (NSInteger i = 0; i < [self.tableView numberOfRowsInSection:1]; ++i) {
-        NSString *projectName = [self textEnteredInTextField:i forSection:SectionNumber_Two];
-        NSArray *projectsKeys = [self.availableProjects allKeysForObject:projectName];
-        
-        if ([projectsKeys count] > 0) {
-            NSString *projectKey = [projectsKeys firstObject];
-            user.projects[projectKey] = @(YES);
-        }
+    NSString *htmlFilePath = [[NSBundle mainBundle] pathForResource:@"Welcome email" ofType:@"html"];
+    NSMutableString *html = [[NSString stringWithContentsOfFile:htmlFilePath encoding:NSUTF8StringEncoding error:nil] mutableCopy];
+    
+    if (user.type != UserType_Employee) {
+        [html replaceOccurrencesOfString:@"<p>As an <strong>employee</strong> in Volta, you&#39;ll be able to enter timesheets, specify projects worked on the day and send them for approval in an easy and faster way. </p>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [html length])];
     }
+    
+    if (user.type != UserType_Manager) {
+        [html replaceOccurrencesOfString:@"<p>As a <strong>manager</strong> in Volta, you&#39;ll be able to inspect and approve your employees&#39; timesheets, as well as create and assign projects to them so that they can enter them on their timesheets.</p>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [html length])];
+    }
+    
+    if (user.type != UserType_Admin) {
+        [html replaceOccurrencesOfString:@"<p>As an <strong>admin</strong> in Volta, you&#39;ll be able to create users, assign them to projects, see Ksquare employees&#39; timesheets and download their weekly report.</p>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [html length])];
+    }
+    
+    [html replaceOccurrencesOfString:@"%newUserName%" withString:user.firstName options:NSCaseInsensitiveSearch range:NSMakeRange(0, [html length])];
+    [html replaceOccurrencesOfString:@"%email%" withString:user.email options:NSCaseInsensitiveSearch range:NSMakeRange(0, [html length])];
+    [html replaceOccurrencesOfString:@"%password%" withString:user.password options:NSCaseInsensitiveSearch range:NSMakeRange(0, [html length])];
+    [html replaceOccurrencesOfString:@"%adminName%" withString:adminName options:NSCaseInsensitiveSearch range:NSMakeRange(0, [html length])];
+    
+    MFMailComposeViewController *mailController = [[MFMailComposeViewController alloc] init];
+    mailController.mailComposeDelegate = self;
+    [mailController setSubject:emailTitle];
+    [mailController setMessageBody:html isHTML:YES];
+    [mailController setToRecipients:@[user.email]];
+    
+    [self presentViewController:mailController animated:YES completion:nil];
 }
 
 - (IBAction)tappedCancelButton:(id)sender
@@ -778,6 +813,14 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 {
     self.numberOfProjectsShown++;
     [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.numberOfProjectsShown-1 inSection:SectionNumber_Two]] withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
+#pragma mark - MFMailComposeViewControllerDelegate
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    [self.delegate resetPresentingController];
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
