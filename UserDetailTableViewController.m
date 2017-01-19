@@ -421,8 +421,8 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
                                            message:@"Please, select a manager for this employee."];
         return NO;
     } else if (user.type != UserType_Admin && [company vol_isStringEmpty]) {
-        [self presentValidationErrorAlertWithTitle:@"Company Missing"
-                                           message:@"Please, enter a company name for this user."];
+        [self presentValidationErrorAlertWithTitle:@"Client Missing"
+                                           message:@"Please, enter a client name for this user."];
         return NO;
     }
     

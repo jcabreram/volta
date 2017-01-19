@@ -168,8 +168,8 @@ typedef NS_ENUM (NSInteger, Field) {
                                            message:@"Please, enter a name for the project."];
         return NO;
     } else if ([project.companyKey vol_isStringEmpty]) {
-        [self presentValidationErrorAlertWithTitle:@"Company Missing"
-                                           message:@"Please, enter the company for this project"];
+        [self presentValidationErrorAlertWithTitle:@"Client Missing"
+                                           message:@"Please, enter the client for this project"];
         return NO;
     }
     
