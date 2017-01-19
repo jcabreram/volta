@@ -118,6 +118,8 @@ typedef NS_ENUM (NSInteger, Field) {
 }
 
 - (void)updateProjectInDatabase {
+    NSString *userID = [AppState sharedInstance].userID;
+    
     Project *project = self.project;
     
     NSString *projectKey;
@@ -131,7 +133,8 @@ typedef NS_ENUM (NSInteger, Field) {
     NSDictionary *projectDict = @{@"name":project.name,
                                   @"organization":project.organization,
                                   @"company":project.companyKey,
-                                  @"total_duration":@(project.totalDuration)};
+                                  @"total_duration":@(project.totalDuration),
+                                  @"created_by":userID};
     
     // Initialize the child updates dictionary with the user node
     NSMutableDictionary *childUpdates = [@{[@"/projects/" stringByAppendingString:projectKey]: projectDict} mutableCopy];

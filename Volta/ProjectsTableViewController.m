@@ -32,7 +32,7 @@
     
     // If the user is an employee, don't show him the create project toolbar
     UserType currentUserType = [AppState sharedInstance].type;
-    if (currentUserType == UserType_Employee) {
+    if (currentUserType == UserType_Employee || currentUserType == UserType_Admin) {
         self.navigationController.toolbarHidden = YES;
     }
     
@@ -99,6 +99,18 @@
             }];
             
             
+        }];
+    } else if (currentUserType == UserType_Manager) {
+        self.projectsHandle = [[_databaseRef child:@"projects"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+            if (snapshot.exists) {
+                if ([snapshot.value isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *project = snapshot.value;
+                    if ([project[@"created_by"] isEqualToString:loggedUserKey]) {
+                        [self.projects addObject:@{snapshot.key : snapshot.value}];
+                        [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.projects.count-1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    }
+                }
+            }
         }];
     } else {
         self.projectsHandle = [[_databaseRef child:@"projects"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {

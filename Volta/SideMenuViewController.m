@@ -35,11 +35,8 @@
     
     self.titlesArray = [@[displayName,
                           @"",
-                          @"Timesheets"] mutableCopy];
-    
-    if (state.type == UserType_Admin || state.type == UserType_Employee) {
-        [self.titlesArray addObject:@"Projects"];
-    }
+                          @"Timesheets",
+                          @"Projects"] mutableCopy];
     
     if (state.type == UserType_Admin) {
         [self.titlesArray addObject:@"Users"];
