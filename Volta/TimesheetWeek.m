@@ -141,4 +141,41 @@
     return [projectWork mutableCopy];
 }
 
+- (NSString *)stringWithDateRange
+{
+    NSCalendar *cal = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    
+    NSDate *startOfWeek = self.startingDate;
+    NSDate *endOfWeek = [cal dateByAddingUnit:NSCalendarUnitDay value:6 toDate:startOfWeek options:0];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"MMM dd"];
+    
+    NSString *startDateString = [dateFormatter stringFromDate:startOfWeek];
+    NSString *endDateString = [dateFormatter stringFromDate:endOfWeek];
+    
+    return [NSString stringWithFormat:@"%@ - %@", startDateString, endDateString];
+}
+
+- (NSString *)statusString
+{
+    switch (self.status) {
+        case Status_NotSubmitted:
+            return @"Not Submitted";
+            break;
+        case Status_Submitted:
+            return @"Submitted";
+            break;
+        case Status_Approved:
+            return @"Approved";
+            break;
+        case Status_NotApproved:
+            return @"Not Approved";
+            break;
+        default:
+            return @"";
+            break;
+    }
+}
+
 @end

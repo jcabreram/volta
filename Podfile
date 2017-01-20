@@ -15,5 +15,6 @@ pod 'Firebase/Auth'
 pod 'Firebase/Storage'
 pod 'LGSideMenuController', '~> 1.0.0'
 pod 'ActionSheetPicker-3.0'
+pod 'iOS-htmltopdf', '~> 1.0'
 
 end

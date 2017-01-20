@@ -66,6 +66,7 @@ PODS:
     - GoogleToolboxForMac/NSString+URLArguments (= 2.1.0)
   - GoogleToolboxForMac/NSString+URLArguments (2.1.0)
   - GTMSessionFetcher/Core (1.1.7)
+  - iOS-htmltopdf (1.0.3)
   - LGSideMenuController (1.0.10)
 
 DEPENDENCIES:
@@ -76,6 +77,7 @@ DEPENDENCIES:
   - Firebase/Database
   - Firebase/Messaging
   - Firebase/Storage
+  - iOS-htmltopdf (~> 1.0)
   - LGSideMenuController (~> 1.0.0)
 
 SPEC CHECKSUMS:
@@ -93,8 +95,9 @@ SPEC CHECKSUMS:
   GoogleSymbolUtilities: 631ee17048aa5e9ab133470d768ea997a5ef9b96
   GoogleToolboxForMac: 2b2596cbb7186865e98cadf2b1e262d851c2b168
   GTMSessionFetcher: a1f8ed39e4fe21c68957daed472c7afbcdf29166
+  iOS-htmltopdf: 1bd88a781cb4b20e4b8f921bd7374447a1876faf
   LGSideMenuController: 8682bdbd0008c1acfbce95eaf96cc3657bca5f95
 
-PODFILE CHECKSUM: e7fce34a4ec1df02085c4f3cf8c94c49344c8ab8
+PODFILE CHECKSUM: cf4be0d61b2fe7a359c1c3191a33681589815ebd
 
 COCOAPODS: 1.1.1

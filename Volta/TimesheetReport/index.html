@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+            <title>Volta - Timesheet report</title>
+            
+            <link rel="stylesheet" href="styles.css">
+                
+                </head>
+    <body>
+        <header>
+            <img src="volta_logo.png" class="logo" width="60px" height="60px" alt="">
+                <h1>Weekly timesheet</h1>
+                </header>
+        
+        
+        <main>
+            <div class="container-fluid">
+                <div class="row">
+                    
+                    
+                    
+                    <section class="main_table">
+                        <table>
+                            <tr>
+                                <th colspan="3">Week: %weekRange%</th>
+                            </tr>
+                            <tr>
+                                <th>Day of the week</th>
+                                <th>Hours</th>
+                                <th>Project disclosure</th>
+                            </tr>
+                            %dayHoursProjectsRows%
+                        </table>
+                    </section>
+                    
+                    <aside>
+                        <table>
+                            <tr>
+                                <th>Employee: %employeeName%</th>
+                            </tr>
+                            <tr>
+                                <td>Client: %clientName%</td>
+                            </tr>
+                            <tr>
+                                <td>Manager: %managerName%</td>
+                            </tr>
+                            <tr>
+                                <td>Status: %status%</td>
+                            </tr>
+                        </table>
+                        
+                        <section class="approval">
+                            <span>Approved by:</span>
+                            <span class="signature">
+                                <div class="img_box">
+                                    <img src="signature.png" alt="">
+                                        </div>
+                            </span>
+                        </section>
+                    </aside>
+                </div>
+                
+                
+            </div>
+        </main>
+        
+        
+        <footer>
+            <div class="container-fluid">
+                <img src="ksquare_logo_35px.png" alt="">
+                    <address>
+                        1707 Market Place Blvd. | Suite 330 | Irving, TX 75063<br>
+                        972-409-5940
+                        <a href="http://ksquareinc.com/">www.ksquareinc.com</a>
+                    </address>
+                    </div>
+        </footer>
+        
+    </body>
+</html>
+
+
+
