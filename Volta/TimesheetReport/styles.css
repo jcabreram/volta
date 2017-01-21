@@ -9,6 +9,7 @@
 body {
   font-family: 'Lato', sans-serif;
   font-size: 100%;
+  color: #666666;
 }
 .container-fluid {
   max-width: 1024px;
@@ -19,6 +20,9 @@ body {
   content: " ";
   display: block;
   clear: both;
+}
+.hide_this {
+  display: none;
 }
 /* Header
 ====================================*/
@@ -32,7 +36,7 @@ header .logo {
 header h1 {
   font-weight: 300;
   font-size: 2em;
-  color: #295678;
+  color: #266688;
 }
 /* Columns
 ====================================*/
@@ -46,28 +50,48 @@ main .main_table {
 }
 /* Tables
 ====================================*/
-table {
+.table_1 {
   width: 100%;
   text-align: left;
   margin-bottom: 20px;
   border-collapse: collapse;
+  font-size: 14px;
 }
-table tr {
+.table_1 tr {
   border-bottom: 1px solid #ffffff;
   border-top: 1px solid #ffffff;
 }
-table th,
-table td {
-  padding: 6px 20px;
+.table_1 tr:last-child td {
+  padding-bottom: 20px;
+}
+.table_1 th,
+.table_1 td {
+  padding: 10px 20px;
   font-weight: 300;
 }
-table th {
-  background: #035176;
+.table_1 th .fa,
+.table_1 td .fa {
+  margin-right: 10px;
+}
+.table_1 th {
+  background: #266688;
   color: #ffffff;
   padding: 15px 20px;
+  font-size: 1em;
 }
-table td {
-  background: #f2f2f2;
+.table_1 td {
+  background: #f9f9f9;
+}
+.table_1 .table_details {
+  font-size: 0.8em;
+  line-height: 1.2;
+}
+.table_1 .table_details strong {
+  font-size: 1.1em;
+}
+.table_1 .table_details em {
+  font-size: 1.1em;
+  font-style: normal;
 }
 /* Signature
 ====================================*/
@@ -78,7 +102,7 @@ table td {
   display: block;
   width: 100%;
   min-height: 50px;
-  border-bottom: 1px solid #295678;
+  border-bottom: 1px solid #266688;
 }
 .approval .signature .img_box {
   padding: 10px 30px;
@@ -100,6 +124,6 @@ address {
 }
 address a {
   display: block;
-  color: #cc3333;
+  color: #266688;
   text-decoration: none;
 }

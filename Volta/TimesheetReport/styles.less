@@ -2,12 +2,12 @@
 
 // Variables
 // ====================================
-@c_brand: #295678;
-@c_brand_secondary: #035176;
+@c_brand: #266688;
+//@c_brand_secondary: #005078;
 
 @c_brand_company: #cc3333;
 
-@c_bkg_light: #f2f2f2;
+@c_bkg_light: #f9f9f9;
 
 @c_white: #ffffff;
 @c_black: #000000;
@@ -28,6 +28,7 @@
 body {
     font-family: @font_1;
     font-size: 100%;
+    color: darken(@c_white,60);
 }
 
 .container-fluid {
@@ -41,6 +42,10 @@ body {
         display: block;
         clear: both;
     }
+}
+
+.hide_this {
+    display: none;
 }
 
 
@@ -66,27 +71,7 @@ header {
 
 /* Columns
 ====================================*/
-//main {
-//    aside, .main_table {
-//        display: inline-block;
-//        vertical-align: top;
-//    }
-//
-//    aside {
-//        width: 24%;
-//    }
-//
-//    .main_table {
-//        width: 72%;
-//    } 
-//}
-
 main {
-    aside, .main_table {
-//        display: inline-block;
-//        vertical-align: top;
-    }
-
     aside {
         width: 25%;
         float: right;
@@ -103,30 +88,51 @@ main {
 
 /* Tables
 ====================================*/
-table {
+.table_1 {
     width: 100%;
     text-align: left;
     margin-bottom: 20px;
     border-collapse: collapse;
+    font-size: 14px;
 
     tr {
         border-bottom: 1px solid #ffffff;
         border-top: 1px solid #ffffff;
+        
+        &:last-child {
+            td{
+                padding-bottom: 20px;
+            }
+        }
     }
 
     th, td {
-        padding: 6px 20px;
+        padding: 10px 20px;
         font-weight: 300;
+        
+        .fa {margin-right: 10px;}
     }
 
     th {
-        background: @c_brand_secondary;
-        color: #ffffff;
+        background: @c_brand;
+        color: @c_white;
         padding: 15px 20px;
+        font-size: 1em;
     }
 
     td {
         background: @c_bkg_light;
+    }
+    .table_details {
+        font-size: 0.8em;
+        line-height: 1.2;
+        strong {
+            font-size: 1.1em;
+        }
+        em {
+            font-size: 1.1em;
+            font-style: normal;
+        }
     }
 }
 
@@ -136,13 +142,13 @@ table {
 ====================================*/
 .approval {
     margin-top: 80px;
-    
+
     .signature {
         display: block;
         width: 100%;
         min-height: 50px;
         border-bottom: 1px solid @c_brand;
-        
+
         .img_box {
             padding: 10px 30px;
         }
@@ -166,10 +172,10 @@ address {
     font-style: normal;
     text-align: center;
     font-size: 0.8em;
-    
+
     a {
         display: block;
-        color: @c_brand_company;
+        color: @c_brand;
         text-decoration: none;
     }
 }
