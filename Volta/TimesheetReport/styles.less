@@ -16,6 +16,33 @@
 @font_1: 'Lato', sans-serif;
 @radius: 6px;
 
+@media print {
+
+    th {
+        padding: 10px 20px;
+        font-weight: 300;
+        
+    }
+        
+    th {
+        background: @c_brand;
+        color: @c_white;
+        font-weight: 300;
+       
+        }
+    td {
+        background: @c_bkg_light;
+    }
+
+
+    
+}
+
+
+
+
+
+
 
 
 /* General
@@ -48,6 +75,10 @@ body {
     display: none;
 }
 
+
+.no_wrap_text {
+    white-space: nowrap;
+}
 
 
 
@@ -179,3 +210,5 @@ address {
         text-decoration: none;
     }
 }
+
+

@@ -302,6 +302,9 @@
     
     NSError *error;
     [html writeToFile:htmlFilePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
+    if (!error) {
+        NSLog(@"Modified HTML at %@", htmlFilePath);
+    }
 }
 
 - (void)copyReportFolderToDocuments
