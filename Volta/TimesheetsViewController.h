@@ -8,10 +8,12 @@
 
 #import "DaysTableViewController.h"
 #import "WeeksCollectionViewController.h"
+#import "NDHTMLtoPDF.h"
 
-@interface TimesheetsViewController : UIViewController <DaysTableViewControllerDelegate, WeeksCollectionViewControllerActionSheetDelegate>
+@interface TimesheetsViewController : UIViewController <DaysTableViewControllerDelegate, WeeksCollectionViewControllerActionSheetDelegate, NDHTMLtoPDFDelegate, UIDocumentInteractionControllerDelegate>
 
 @property (nonatomic, strong) TimesheetWeek *week;
+@property (nonatomic, strong) NDHTMLtoPDF *PDFCreator;
 
 - (void)chosenWeekChangedToWeek:(TimesheetWeek *)week;
 

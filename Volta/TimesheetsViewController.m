@@ -24,6 +24,8 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *shareButton;
 @property (weak, nonatomic) IBOutlet UIView *darkOverlay;
 
+@property (nonatomic) UIDocumentInteractionController *interactionController;
+
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
 @property (nonatomic, assign) FIRDatabaseHandle availableCompaniesHandle;
 @property (nonatomic, assign) FIRDatabaseHandle availableManagersHandle;
@@ -305,6 +307,17 @@
     if (!error) {
         NSLog(@"Modified HTML at %@", htmlFilePath);
     }
+    
+    // Create PDF from HTML
+    
+    NSURL *htmlFileURL = [NSURL fileURLWithPath:htmlFilePath];
+    NSString *fileNameForPDF = [NSString stringWithFormat:@"Weekly timesheet for %@ (%@).pdf", employeeName, weekRange];
+    NSString *pathForPDF = [documentsDirectory stringByAppendingPathComponent:fileNameForPDF];
+    self.PDFCreator = [NDHTMLtoPDF createPDFWithURL:htmlFileURL
+                                         pathForPDF:pathForPDF
+                                           delegate:self
+                                           pageSize:kPaperSizeA4
+                                            margins:UIEdgeInsetsMake(0, 5, 0, 5)];
 }
 
 - (void)copyReportFolderToDocuments
@@ -365,6 +378,43 @@
 - (void)chosenWeekChangedToWeek:(TimesheetWeek *)week
 {
     self.week = week;
+}
+
+#pragma mark NDHTMLtoPDFDelegate
+
+- (void)HTMLtoPDFDidSucceed:(NDHTMLtoPDF*)htmlToPDF
+{
+    NSString *result = [NSString stringWithFormat:@"HTMLtoPDF did succeed (%@ / %@)", htmlToPDF, htmlToPDF.PDFpath];
+    NSLog(@"%@",result);
+    
+    self.interactionController = [UIDocumentInteractionController interactionControllerWithURL:[NSURL fileURLWithPath:htmlToPDF.PDFpath]];
+    self.interactionController.delegate = self;
+    CGRect navRect = self.view.frame;
+    [self.interactionController presentOptionsMenuFromRect:navRect inView:self.view animated:YES];
+    
+}
+
+- (void)HTMLtoPDFDidFail:(NDHTMLtoPDF*)htmlToPDF
+{
+    NSString *result = [NSString stringWithFormat:@"HTMLtoPDF did fail (%@)", htmlToPDF];
+    NSLog(@"%@",result);
+}
+
+#pragma mark - UIDocumentInteractionControllerDelegate
+
+- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller
+{
+    return self;
+}
+
+- (UIView *)documentInteractionControllerViewForPreview:(UIDocumentInteractionController *)controller
+{
+    return self.view;
+}
+
+- (CGRect)documentInteractionControllerRectForPreview:(UIDocumentInteractionController *)controller
+{
+    return self.view.frame;
 }
 
 @end
