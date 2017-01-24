@@ -31,7 +31,7 @@
     // Change title to Employees if manager
     UserType loggedInUserType = [AppState sharedInstance].type;
     if (loggedInUserType == UserType_Manager) {
-        self.title = @"Employees";
+        self.title = @"Team Members";
         self.navigationController.toolbarHidden = YES;
     }
     

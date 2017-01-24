@@ -41,7 +41,7 @@
     if (state.type == UserType_Admin) {
         [self.titlesArray addObject:@"Users"];
     } else if (state.type == UserType_Manager) {
-        [self.titlesArray addObject:@"Employees"];
+        [self.titlesArray addObject:@"Team Members"];
     }
     
     [self.titlesArray addObjectsFromArray:@[@"",
@@ -117,7 +117,7 @@
         }
         
         [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
-    } else if ([rowTitle isEqualToString:@"Users"] || [rowTitle isEqualToString:@"Employees"]) {
+    } else if ([rowTitle isEqualToString:@"Users"] || [rowTitle isEqualToString:@"Team Members"]) {
         UINavigationController *presentedNavigationController = (UINavigationController *)[self sideMenuController].rootViewController;
         
         // If the presented controller is different from selection
