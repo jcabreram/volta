@@ -177,7 +177,7 @@
             [self changeWeekToStatus:Status_Submitted];
         }]];
         
-    } else if (state.type == UserType_Admin || state.type == UserType_Manager) {
+    } else if (state.type == UserType_Manager) {
         
         [actionSheet addAction:[UIAlertAction actionWithTitle:@"Approve" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [self changeWeekToStatus:Status_Approved];
@@ -189,6 +189,14 @@
     }
     
     if (state.type == UserType_Admin) {
+        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Change to Not Submitted" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self changeWeekToStatus:Status_NotSubmitted];
+        }]];
+        
+        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Change to Submitted" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self changeWeekToStatus:Status_Submitted];
+        }]];
+        
         [actionSheet addAction:[UIAlertAction actionWithTitle:@"Export to PDF" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [self exportWeekToPDF];
         }]];
