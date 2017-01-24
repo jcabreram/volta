@@ -113,13 +113,35 @@
                                                                    completion:^(NSError * _Nullable error) {
                                                                        if (error) {
                                                                            NSLog(@"%@", error.localizedDescription);
+                                                                           UIAlertController *confirmation = [UIAlertController alertControllerWithTitle:@"Password Reset Error"
+                                                                                                                                                 message:error.localizedDescription
+                                                                                                                                          preferredStyle:UIAlertControllerStyleAlert];
+                                                                           UIAlertAction *okConfirmation = [UIAlertAction actionWithTitle:@"OK"
+                                                                                                                                    style:UIAlertActionStyleDefault
+                                                                                                                                  handler:nil];
+                                                                           [confirmation addAction:okConfirmation];
+                                                                           [self presentViewController:confirmation animated:YES completion:nil];
                                                                            return;
+                                                                       } else {
+                                                                           UIAlertController *confirmation = [UIAlertController alertControllerWithTitle:@"Password Reset Email Sent"
+                                                                                                                                                 message:[NSString stringWithFormat:@"An email has been sent to your email address, %@. Follow the directions in the email to reset your password.", userInput]
+                                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                                                                           UIAlertAction *okConfirmation = [UIAlertAction actionWithTitle:@"OK"
+                                                                                                                                    style:UIAlertActionStyleDefault
+                                                                                                                                  handler:nil];
+                                                                           [confirmation addAction:okConfirmation];
+                                                                           [self presentViewController:confirmation animated:YES completion:nil];
                                                                        }
                                                                    }];
                                    
                                }];
+    UIAlertAction *cancelAction = [UIAlertAction
+                                   actionWithTitle:@"Cancel"
+                                   style:UIAlertActionStyleCancel
+                                   handler:nil];
     [prompt addTextFieldWithConfigurationHandler:nil];
     [prompt addAction:okAction];
+    [prompt addAction:cancelAction];
     [self presentViewController:prompt animated:YES completion:nil];
 }
 
