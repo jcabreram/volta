@@ -211,6 +211,10 @@
        child:[@(self.week.year) stringValue]]
       child:[@(self.week.weekNumber) stringValue]]
      setValue:@(status)];
+    
+    if (status == Status_Approved) {
+        self.shareButton.enabled = NO;
+    }
 }
 
 - (IBAction)selectEmployeeButtonPressed:(id)sender {
@@ -378,6 +382,13 @@
 - (void)chosenWeekChangedToWeek:(TimesheetWeek *)week
 {
     self.week = week;
+    UserType currentUserType = [AppState sharedInstance].type;
+    
+    if (currentUserType == UserType_Manager && self.week.status == Status_Approved) {
+        self.shareButton.enabled = NO;
+    } else {
+        self.shareButton.enabled = YES;
+    }
 }
 
 #pragma mark NDHTMLtoPDFDelegate
