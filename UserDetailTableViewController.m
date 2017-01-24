@@ -45,6 +45,8 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 
 @property (nonatomic, assign) NSInteger numberOfProjectsShown;
 
+@property (nonatomic, assign) BOOL newUser;
+
 @end
 
 @implementation UserDetailTableViewController
@@ -67,6 +69,12 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
     self.numberOfProjectsShown = [user.projects count] + 1;
     
     if ([user.key vol_isStringEmpty]) {
+        self.newUser = YES;
+    } else {
+        self.newUser = NO;
+    }
+    
+    if (self.newUser) {
         switch (user.type) {
             case UserType_Admin:
                 self.navigationItem.title = @"Add admin";
@@ -310,7 +318,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
                                                                        message:error.localizedDescription];
                                     NSLog(@"%@", error.localizedDescription);
                                 } else {
-                                    [self showMailComposeController];
+                                    [self finishedCreatingUser];
                                 }
                             }];
             
@@ -339,7 +347,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
                                                                        message:error.localizedDescription];
                                     NSLog(@"%@", error.localizedDescription);
                                 } else {
-                                    [self showMailComposeController];
+                                    [self finishedCreatingUser];
                                 }
                             }];
             
@@ -368,7 +376,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
                                                                        message:error.localizedDescription];
                                     NSLog(@"%@", error.localizedDescription);
                                 } else {
-                                    [self showMailComposeController];
+                                    [self finishedCreatingUser];
                                 }
                             }];
             
@@ -377,6 +385,15 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
                                                message:error.localizedDescription];
             NSLog(@"%@", error.localizedDescription);
         }];
+    }
+}
+
+- (void)finishedCreatingUser
+{
+    if (self.newUser) {
+        [self showMailComposeController];
+    } else {
+        [self dismissController];
     }
 }
 
