@@ -68,6 +68,7 @@ PODS:
   - GTMSessionFetcher/Core (1.1.7)
   - iOS-htmltopdf (1.0.3)
   - LGSideMenuController (1.0.10)
+  - MBProgressHUD (1.0.0)
 
 DEPENDENCIES:
   - ActionSheetPicker-3.0
@@ -79,6 +80,7 @@ DEPENDENCIES:
   - Firebase/Storage
   - iOS-htmltopdf (~> 1.0)
   - LGSideMenuController (~> 1.0.0)
+  - MBProgressHUD (~> 1.0.0)
 
 SPEC CHECKSUMS:
   ActionSheetPicker-3.0: d11a4c12c6aaf704b8a3f56d179198c99f3e41e6
@@ -97,7 +99,8 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: a1f8ed39e4fe21c68957daed472c7afbcdf29166
   iOS-htmltopdf: 1bd88a781cb4b20e4b8f921bd7374447a1876faf
   LGSideMenuController: 8682bdbd0008c1acfbce95eaf96cc3657bca5f95
+  MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
 
-PODFILE CHECKSUM: cf4be0d61b2fe7a359c1c3191a33681589815ebd
+PODFILE CHECKSUM: 1a059fe20b33b5397aa14dc3927690ae6e9a5b2c
 
 COCOAPODS: 1.1.1
