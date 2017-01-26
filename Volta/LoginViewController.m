@@ -114,8 +114,13 @@
                                    {
                                        return;
                                    }
+                                   MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                   
                                    [[FIRAuth auth] sendPasswordResetWithEmail:userInput
                                                                    completion:^(NSError * _Nullable error) {
+                                                                       
+                                                                       [hud hideAnimated:YES];
+                                                                       
                                                                        if (error) {
                                                                            NSLog(@"%@", error.localizedDescription);
                                                                            UIAlertController *confirmation = [UIAlertController alertControllerWithTitle:@"Password Reset Error"
