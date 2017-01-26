@@ -12,6 +12,7 @@
 #import "TimesheetWeek.h"
 #import "AppState.h"
 #import "DayDetailTableViewController.h"
+#import "MBProgressHUD.h"
 
 typedef NS_ENUM (NSInteger, Field) {
     Field_Monday,
@@ -184,6 +185,8 @@ typedef NS_ENUM (NSInteger, Field) {
     NSString *yearString = [@(week.year) stringValue];
     NSString *weekString = [@(week.weekNumber) stringValue];
     
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    
     [[[[[self.databaseRef child:@"timesheet_details"] child:timesheetKey] child:yearString] child:weekString] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         NSDictionary *timesheetDetails = snapshot.value;
         
@@ -250,6 +253,8 @@ typedef NS_ENUM (NSInteger, Field) {
         [self.tableView reloadData];
         
         [self.delegate updateAllocatedHoursWithNumber:self.week.allocatedHours];
+        
+        [hud hideAnimated:YES];
     }];
 }
 

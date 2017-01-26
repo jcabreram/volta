@@ -13,6 +13,7 @@
 #import "AppState.h"
 #import "TimesheetWeek.h"
 #import "ActionSheetPicker.h"
+#import "MBProgressHUD.h"
 
 @interface TimesheetsViewController ()
 
@@ -39,6 +40,8 @@
 
 @property (nonatomic, strong) NSString *selectedEmployeeKey;
 
+@property (nonatomic, strong) MBProgressHUD *hud;
+
 @end
 
 @implementation TimesheetsViewController
@@ -52,6 +55,8 @@
         self.navigationController.toolbarHidden = YES;
         [self.darkOverlay removeFromSuperview];
         self.shareButton.enabled = YES;
+    } else {
+        self.shareButton.enabled = NO;
     }
     
     self.availableEmployees = [[NSMutableDictionary alloc] init];
@@ -68,6 +73,8 @@
     NSString *currentUserID = [AppState sharedInstance].userID;
     UserType currentUserType = [AppState sharedInstance].type;
     
+    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     if (currentUserType == UserType_Admin) {
         [[[self.databaseRef child:@"employees"]
           child:@"members"]
@@ -76,6 +83,7 @@
              if (snapshot.exists) {
                  self.availableEmployeeNames = snapshot.value;
                  
+                 NSInteger counter = 1;
                  for (NSString *userKey in self.availableEmployeeNames) {
                      [[[self.databaseRef child:@"users"] child:userKey] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
                          if (snapshot.exists) {
@@ -87,7 +95,12 @@
                          } else {
                              [self.availableEmployeeNames removeObjectForKey:userKey];
                          }
+                         
+                         if (counter == self.availableEmployeeNames.count) {
+                             [self.hud hideAnimated:YES];
+                         }
                      }];
+                     counter++;
                  }
              }
          }];
@@ -100,6 +113,7 @@
              if (snapshot.exists) {
                  self.availableEmployeeNames = snapshot.value;
                  
+                 NSInteger counter = 1;
                  for (NSString *userKey in self.availableEmployeeNames) {
                      [[[self.databaseRef child:@"users"] child:userKey] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
                          if (snapshot.exists) {
@@ -111,7 +125,12 @@
                          } else {
                              [self.availableEmployeeNames removeObjectForKey:userKey];
                          }
+                         
+                         if (counter == self.availableEmployeeNames.count) {
+                             [self.hud hideAnimated:YES];
+                         }
                      }];
+                     counter++;
                  }
              }
          }];
@@ -256,6 +275,8 @@
 
 - (void)exportWeekToPDF
 {
+    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     [self copyReportFolderToDocuments];
     
     TimesheetWeek *week = self.week;
@@ -369,11 +390,14 @@
     AppState *state = [AppState sharedInstance];
     self.selectedEmployeeKey = userID;
     
+    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     [[[self.databaseRef child:@"users"] child:userID] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         NSLog(@"");
         if (snapshot.exists) {
             state.timesheetKey = snapshot.value[@"timesheet"];
             [[NSNotificationCenter defaultCenter] postNotificationName:NotificationKeysTimesheetDidChange object:nil];
+            [self.hud hideAnimated:YES];
         }
     }];
 }
@@ -394,6 +418,8 @@
     
     if (currentUserType == UserType_Manager && self.week.status == Status_Approved) {
         self.shareButton.enabled = NO;
+    } else if (!self.selectedEmployeeKey) {
+        self.shareButton.enabled = NO;
     } else {
         self.shareButton.enabled = YES;
     }
@@ -406,17 +432,28 @@
     NSString *result = [NSString stringWithFormat:@"HTMLtoPDF did succeed (%@ / %@)", htmlToPDF, htmlToPDF.PDFpath];
     NSLog(@"%@",result);
     
+    [self.hud hideAnimated:YES];
+    
     self.interactionController = [UIDocumentInteractionController interactionControllerWithURL:[NSURL fileURLWithPath:htmlToPDF.PDFpath]];
     self.interactionController.delegate = self;
     CGRect navRect = self.view.frame;
     [self.interactionController presentOptionsMenuFromRect:navRect inView:self.view animated:YES];
-    
 }
 
 - (void)HTMLtoPDFDidFail:(NDHTMLtoPDF*)htmlToPDF
 {
-    NSString *result = [NSString stringWithFormat:@"HTMLtoPDF did fail (%@)", htmlToPDF];
+    NSString *result = [NSString stringWithFormat:@"PDF creation failed (%@)", htmlToPDF];
     NSLog(@"%@",result);
+    [self.hud hideAnimated:YES];
+    
+    UIAlertController *confirmation = [UIAlertController alertControllerWithTitle:@"Export to PDF Error"
+                                                                          message:result
+                                                                   preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okConfirmation = [UIAlertAction actionWithTitle:@"OK"
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:nil];
+    [confirmation addAction:okConfirmation];
+    [self presentViewController:confirmation animated:YES completion:nil];
 }
 
 #pragma mark - UIDocumentInteractionControllerDelegate

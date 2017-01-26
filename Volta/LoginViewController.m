@@ -11,6 +11,7 @@
 #import "Constants.h"
 #import "MainViewController.h"
 #import "GlobalVars.h"
+#import "MBProgressHUD.h"
 
 @interface LoginViewController ()
 {
@@ -74,10 +75,14 @@
     
     __weak LoginViewController *welf = self;
     
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     [[FIRAuth auth] signInWithEmail:email
                            password:password
                          completion:^(FIRUser * _Nullable user, NSError * _Nullable error) {
                              if (welf != nil) {
+                                 [hud hideAnimated:YES];
+                                 
                                  __strong LoginViewController *innerSelf = welf;
                                  
                                  if (error != nil) {
@@ -179,8 +184,11 @@
     
     state.userID = user.uid;
     
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     [[[ref child:@"users"] child:user.uid] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         NSLog(@"");
+        [hud hideAnimated:YES];
         if (snapshot.exists) {
             state.displayName = snapshot.value[@"first_name"];
             [state setTypeWithString:snapshot.value[@"type"]];
@@ -191,7 +199,7 @@
                                                                 object:nil userInfo:nil];
             [self performSegueWithIdentifier:SeguesSignInToMainScreen sender:self];
         } else {
-            [self presentLoginErrorAlert:@"The specified user doesn't have an account in our systems."];
+            [self presentLoginErrorAlert:@"The specified user doesn't have an account in Volta."];
             state.signedIn = NO;
         }
         

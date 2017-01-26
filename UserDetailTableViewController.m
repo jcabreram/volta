@@ -13,6 +13,7 @@
 #import "Constants.h"
 #import "UsersTableViewController.h"
 #import "AppState.h"
+#import "MBProgressHUD.h"
 
 typedef NS_ENUM (NSInteger, FieldTag) {
     FieldTag_FirstName,
@@ -46,6 +47,8 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 @property (nonatomic, assign) NSInteger numberOfProjectsShown;
 
 @property (nonatomic, assign) BOOL newUser;
+
+@property (nonatomic, strong) MBProgressHUD *hud;
 
 @end
 
@@ -155,6 +158,8 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 - (IBAction)tappedDoneButton:(id)sender
 {
     [self.view endEditing:YES];
+    
+    self.hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     
     NSString *secondaryAppString = [[[NSProcessInfo processInfo] globallyUniqueString] stringByReplacingOccurrencesOfString:@"-" withString:@""];
     
@@ -313,6 +318,8 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             // Atomically update all child values
             [self.databaseRef updateChildValues:childUpdates
                             withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
+                                [self.hud hideAnimated:YES];
+                                
                                 if (error) {
                                     [self presentValidationErrorAlertWithTitle:@"Error"
                                                                        message:error.localizedDescription];
@@ -342,6 +349,8 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             // Atomically update all child values
             [self.databaseRef updateChildValues:childUpdates
                             withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
+                                [self.hud hideAnimated:YES];
+                                
                                 if (error) {
                                     [self presentValidationErrorAlertWithTitle:@"Error"
                                                                        message:error.localizedDescription];
@@ -371,6 +380,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             // Atomically update all child values
             [self.databaseRef updateChildValues:childUpdates
                             withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
+                                [self.hud hideAnimated:YES];
                                 if (error) {
                                     [self presentValidationErrorAlertWithTitle:@"Error"
                                                                        message:error.localizedDescription];

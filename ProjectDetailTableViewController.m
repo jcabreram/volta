@@ -13,6 +13,7 @@
 #import "Constants.h"
 #import "NSString+VOLValidation.h"
 #import "AppState.h"
+#import "MBProgressHUD.h"
 
 typedef NS_ENUM (NSInteger, Field) {
     Field_Name,
@@ -27,6 +28,8 @@ typedef NS_ENUM (NSInteger, Field) {
 
 @property (nonatomic, assign) FIRDatabaseHandle availableCompaniesHandle;
 @property (nonatomic, strong) NSMutableDictionary *availableCompanies;
+
+@property (nonatomic, strong) MBProgressHUD *hud;
 
 @end
 
@@ -77,6 +80,8 @@ typedef NS_ENUM (NSInteger, Field) {
 - (IBAction)tappedDoneButton:(id)sender
 {
     [self.view endEditing:YES];
+    
+    self.hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     
     if ([self validInput]) {
         [self addCompanyToDatabase];
@@ -142,6 +147,8 @@ typedef NS_ENUM (NSInteger, Field) {
     // Atomically update child
     [self.databaseRef updateChildValues:childUpdates
                     withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
+                        [self.hud hideAnimated:YES];
+                        
                         if (error) {
                             [self presentValidationErrorAlertWithTitle:@"Error"
                                                                message:error.localizedDescription];
