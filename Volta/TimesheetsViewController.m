@@ -87,9 +87,9 @@
     NSString *currentUserID = [AppState sharedInstance].userID;
     UserType currentUserType = [AppState sharedInstance].type;
     
-    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
     if (currentUserType == UserType_Admin) {
+        self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
         [[[self.databaseRef child:@"employees"]
           child:@"members"]
          observeSingleEventOfType:FIRDataEventTypeValue
@@ -119,6 +119,8 @@
              }
          }];
     } else if (currentUserType == UserType_Manager) {
+        self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
         [[[[self.databaseRef child:@"users"]
            child:currentUserID]
           child:@"employees"]
