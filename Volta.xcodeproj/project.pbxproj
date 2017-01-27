@@ -27,6 +27,7 @@
 		9469E72F1DD3ECAC007EB4E6 /* SideMenuViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9469E72E1DD3ECAC007EB4E6 /* SideMenuViewCell.m */; };
 		9469E7321DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9469E7311DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m */; };
 		9469E7351DD4E903007EB4E6 /* TimesheetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9469E7341DD4E903007EB4E6 /* TimesheetsViewController.m */; };
+		9473D99B1E3A872B000B95D5 /* EPSignature.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9473D99A1E3A872B000B95D5 /* EPSignature.framework */; };
 		9477AD481DEE2DC7006FBF28 /* UsersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9477AD471DEE2DC7006FBF28 /* UsersTableViewController.m */; };
 		9477AD4B1DEE2DD6006FBF28 /* UserDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9477AD4A1DEE2DD6006FBF28 /* UserDetailTableViewController.m */; };
 		9477AD4F1DEF9534006FBF28 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 9477AD4E1DEF9534006FBF28 /* User.m */; };
@@ -90,6 +91,7 @@
 		9469E7311DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+LGSideMenuController.m"; sourceTree = "<group>"; };
 		9469E7331DD4E903007EB4E6 /* TimesheetsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimesheetsViewController.h; sourceTree = "<group>"; };
 		9469E7341DD4E903007EB4E6 /* TimesheetsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimesheetsViewController.m; sourceTree = "<group>"; };
+		9473D99A1E3A872B000B95D5 /* EPSignature.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EPSignature.framework; path = Carthage/Build/iOS/EPSignature.framework; sourceTree = "<group>"; };
 		9477AD461DEE2DC7006FBF28 /* UsersTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UsersTableViewController.h; path = Volta/UsersTableViewController.h; sourceTree = "<group>"; };
 		9477AD471DEE2DC7006FBF28 /* UsersTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UsersTableViewController.m; path = Volta/UsersTableViewController.m; sourceTree = "<group>"; };
 		9477AD491DEE2DD6006FBF28 /* UserDetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDetailTableViewController.h; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				48CA863A5411BEE94F114C96 /* libPods-Volta.a in Frameworks */,
+				9473D99B1E3A872B000B95D5 /* EPSignature.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +342,7 @@
 		F50D891C59A3888D2428FFBA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9473D99A1E3A872B000B95D5 /* EPSignature.framework */,
 				1621404D1707D0C63722AB0B /* libPods-Volta.a */,
 			);
 			name = Frameworks;
@@ -357,6 +361,7 @@
 				9415B6831DD2385C00C2020D /* Resources */,
 				752EE167C2A2B7ADE283AD11 /* [CP] Embed Pods Frameworks */,
 				0EB9A7263E8654B95C1B47ED /* [CP] Copy Pods Resources */,
+				9473D99C1E3A878F000B95D5 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -470,6 +475,20 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Volta/Pods-Volta-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		9473D99C1E3A878F000B95D5 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/EPSignature.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -628,9 +647,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8F03B93532F05B9B3ED04136 /* Pods-Volta.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Volta/Volta.entitlements;
 				DEVELOPMENT_TEAM = 3CMXR35696;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Volta/Volta-Prefix.pch";
 				INFOPLIST_FILE = Volta/Info.plist;
@@ -646,9 +670,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 78BA0D30EEC0DF5FA849BBB0 /* Pods-Volta.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Volta/Volta.entitlements;
 				DEVELOPMENT_TEAM = 3CMXR35696;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Volta/Volta-Prefix.pch";
 				INFOPLIST_FILE = Volta/Info.plist;

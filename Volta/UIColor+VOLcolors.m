@@ -24,7 +24,11 @@
 
 + (UIColor *)approvedStatusColor {
     return [UIColor colorWithRed:0.78 green:0.94 blue:0.81 alpha:1.0];
-    
+}
+
++ (UIColor *)redKsquareColor
+{
+    return [UIColor colorWithRed:0.80 green:0.20 blue:0.20 alpha:1.0];
 }
 
 @end

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="ufC-wZ-h7g">
+            <objects>
+                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="EPSignature_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
+                        <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eNl-8i-VIW">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="7CY-LA-m1o"/>
+                                    <constraint firstAttribute="height" constant="300" id="sy0-nZ-JjE"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F49-k1-lFh">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="136" id="rXq-XI-ub3"/>
+                                    <constraint firstAttribute="height" constant="30" id="vYa-xh-dif"/>
+                                </constraints>
+                                <state key="normal" title="Add my Signature"/>
+                                <connections>
+                                    <action selector="onTouchSignatureButtonWithSender:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="7Gq-Ox-puA"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="F49-k1-lFh" firstAttribute="top" secondItem="eNl-8i-VIW" secondAttribute="bottom" constant="8" id="1Pc-Lb-3n2"/>
+                            <constraint firstItem="eNl-8i-VIW" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="LcW-vx-hgA"/>
+                            <constraint firstItem="eNl-8i-VIW" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="163" id="V89-tr-E2q"/>
+                            <constraint firstItem="F49-k1-lFh" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="j3e-mv-wSt"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="imgViewSignature" destination="eNl-8i-VIW" id="2uF-FQ-cLn"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="245" y="298"/>
+        </scene>
+    </scenes>
+</document>

@@ -14,8 +14,11 @@
 #import "TimesheetWeek.h"
 #import "ActionSheetPicker.h"
 #import "MBProgressHUD.h"
+#import "UIColor+VOLcolors.h"
 
-@interface TimesheetsViewController ()
+@import EPSignature;
+
+@interface TimesheetsViewController () <EPSignatureDelegate>
 
 @property (nonatomic, strong) WeeksCollectionViewController *weeksVC;
 @property (nonatomic, strong) DaysTableViewController *daysVC;
@@ -57,6 +60,17 @@
         self.shareButton.enabled = YES;
     } else {
         self.shareButton.enabled = NO;
+    }
+    
+    // Show the signature VC to the manager
+    if (currentUserType == UserType_Manager) {
+        EPSignatureViewController *signatureVC = [[EPSignatureViewController alloc] initWithSignatureDelegate:self showsDate:YES showsSaveSignatureOption:NO];
+        signatureVC.subtitleText = @"I agree to the terms and conditions";
+        signatureVC.tintColor = [UIColor redKsquareColor];
+        signatureVC.title = @"John Doe";
+        
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:signatureVC];
+        [self presentViewController:nav animated:YES completion:nil];
     }
     
     self.availableEmployees = [[NSMutableDictionary alloc] init];
@@ -393,11 +407,10 @@
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     [[[self.databaseRef child:@"users"] child:userID] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-        NSLog(@"");
+        [self.hud hideAnimated:YES];
         if (snapshot.exists) {
             state.timesheetKey = snapshot.value[@"timesheet"];
             [[NSNotificationCenter defaultCenter] postNotificationName:NotificationKeysTimesheetDidChange object:nil];
-            [self.hud hideAnimated:YES];
         }
     }];
 }
@@ -472,5 +485,17 @@
 {
     return self.view.frame;
 }
+
+#pragma mark - EPSignature delegate
+
+- (void)epSignature:(EPSignatureViewController *)_ didCancel:(NSError *)error {
+    NSLog(@"user cancelled");
+}
+
+- (void)epSignature:(EPSignatureViewController *)_ didSign:(UIImage *)signatureImage boundingRect:(CGRect)boundingRect
+{
+    NSLog(@"%@", signatureImage);
+}
+
 
 @end

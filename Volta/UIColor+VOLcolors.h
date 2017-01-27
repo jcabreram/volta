@@ -14,5 +14,6 @@
 + (UIColor *)submittedStatusColor;
 + (UIColor *)notApprovedStatusColor;
 + (UIColor *)approvedStatusColor;
++ (UIColor *)redKsquareColor;
 
 @end
