@@ -62,15 +62,8 @@
         self.shareButton.enabled = NO;
     }
     
-    // Show the signature VC to the manager
     if (currentUserType == UserType_Manager) {
-        EPSignatureViewController *signatureVC = [[EPSignatureViewController alloc] initWithSignatureDelegate:self showsDate:YES showsSaveSignatureOption:NO];
-        signatureVC.subtitleText = @"I agree to the terms and conditions";
-        signatureVC.tintColor = [UIColor redKsquareColor];
-        signatureVC.title = @"John Doe";
-        
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:signatureVC];
-        [self presentViewController:nav animated:YES completion:nil];
+        [self verifySignatureInStorage];
     }
     
     self.availableEmployees = [[NSMutableDictionary alloc] init];
@@ -357,16 +350,44 @@
         NSLog(@"Modified HTML at %@", htmlFilePath);
     }
     
-    // Create PDF from HTML
+    // Download signature from Firebase Storage
+    NSString *signatureFilename = [NSString stringWithFormat:@"%@.png", managerKey];
     
-    NSURL *htmlFileURL = [NSURL fileURLWithPath:htmlFilePath];
-    NSString *fileNameForPDF = [NSString stringWithFormat:@"Weekly timesheet for %@ (%@).pdf", employeeName, weekRange];
-    NSString *pathForPDF = [documentsDirectory stringByAppendingPathComponent:fileNameForPDF];
-    self.PDFCreator = [NDHTMLtoPDF createPDFWithURL:htmlFileURL
-                                         pathForPDF:pathForPDF
-                                           delegate:self
-                                           pageSize:kPaperSizeA4
-                                            margins:UIEdgeInsetsMake(0, 5, 0, 5)];
+    FIRStorageReference *signatureRef = [[[[FIRStorage storage] reference] child:@"signatures"] child:signatureFilename];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *signatureDirectoryPath = [documentsDirectory stringByAppendingPathComponent:@"TimesheetReport/"];
+    NSString *signaturePath = [signatureDirectoryPath stringByAppendingPathComponent:@"signature.png"];
+    NSURL *localURL = [NSURL fileURLWithPath:signaturePath];
+    [fileManager removeItemAtPath:signaturePath error:&error];
+
+    [signatureRef writeToFile:localURL completion:^(NSURL * _Nullable URL, NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"Error while downloading signature");
+            
+            NSString *message = [NSString stringWithFormat:@"%@ will be asked to create a signature in the next login.", manager];
+            UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"No Signature From Manager"
+                                                                                message:message
+                                                                         preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                     style:UIAlertActionStyleDefault
+                                                                   handler:nil];
+            [errorAlert addAction:okAction];
+            [self presentViewController:errorAlert animated:YES completion:nil];
+            
+            [self.hud hideAnimated:YES];
+        } else {
+            // Create PDF from HTML
+            NSURL *htmlFileURL = [NSURL fileURLWithPath:htmlFilePath];
+            NSString *fileNameForPDF = [NSString stringWithFormat:@"Weekly timesheet for %@ (%@).pdf", employeeName, weekRange];
+            NSString *pathForPDF = [documentsDirectory stringByAppendingPathComponent:fileNameForPDF];
+            self.PDFCreator = [NDHTMLtoPDF createPDFWithURL:htmlFileURL
+                                                 pathForPDF:pathForPDF
+                                                   delegate:self
+                                                   pageSize:kPaperSizeA4
+                                                    margins:UIEdgeInsetsMake(0, 5, 0, 5)];
+        }
+    }];
 }
 
 - (void)copyReportFolderToDocuments
@@ -417,6 +438,88 @@
     }];
 }
 
+- (void)verifySignatureInStorage
+{
+    NSString *userID = [AppState sharedInstance].userID;
+    NSString *signatureFilename = [NSString stringWithFormat:@"%@.png", userID];
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    FIRStorageReference *storageRef = [[[[FIRStorage storage] reference] child:@"signatures"] child:signatureFilename];
+    
+    [storageRef metadataWithCompletion:^(FIRStorageMetadata * _Nullable metadata, NSError * _Nullable error) {
+        [hud hideAnimated:YES];
+        
+        if (!error) {
+            return;
+        } else {
+            FIRStorageErrorCode errorCode = error.code;
+            
+            if (errorCode == FIRStorageErrorCodeObjectNotFound) {
+                [self showSignatureVC];
+            }
+        }
+    }];
+}
+
+- (void)showSignatureVC
+{
+    NSString *userName = [AppState sharedInstance].displayName;
+    
+    EPSignatureViewController *signatureVC = [[EPSignatureViewController alloc] initWithSignatureDelegate:self showsDate:YES showsSaveSignatureOption:NO];
+    signatureVC.subtitleText = @"I agree to the terms and conditions";
+    signatureVC.tintColor = [UIColor redKsquareColor];
+    signatureVC.title = userName;
+    
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:signatureVC];
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)uploadImageToFirebaseStorage:(NSData *)data
+{
+    NSString *userID = [AppState sharedInstance].userID;
+    NSString *signatureFilename = [NSString stringWithFormat:@"%@.png", userID];
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.label.text = @"Saving signature...";
+                          
+    FIRStorageReference *storageRef = [[[[FIRStorage storage] reference] child:@"signatures"] child:signatureFilename];
+    FIRStorageMetadata *uploadMetadata = [[FIRStorageMetadata alloc] init];
+    uploadMetadata.contentType = @"image/png";
+    
+    [storageRef putData:data
+               metadata:uploadMetadata
+             completion:^(FIRStorageMetadata * _Nullable metadata, NSError * _Nullable error) {
+                 [hud hideAnimated:YES];
+                 if (error) {
+                     NSLog(@"Error uploading image: %@", error.localizedDescription);
+                     
+                     UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"Error While Saving Image"
+                                                                                         message:error.localizedDescription
+                                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                     UIAlertAction *tryAgainAction = [UIAlertAction actionWithTitle:@"Try again"
+                                                                              style:UIAlertActionStyleDefault
+                                                                            handler:^(UIAlertAction * _Nonnull action) {
+                                                                                [self showSignatureVC];
+                                                                            }];
+                     [errorAlert addAction:tryAgainAction];
+                     [self presentViewController:errorAlert animated:YES completion:nil];
+                 } else {
+                     NSLog(@"Upload complete! Image metadata: %@", metadata);
+                     
+                     UIAlertController *successAlert = [UIAlertController alertControllerWithTitle:@"Signature Saved"
+                                                                                           message:@"Your signature will be used for approving timesheets"
+                                                                                    preferredStyle:UIAlertControllerStyleAlert];
+                     UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                        style:UIAlertActionStyleDefault
+                                                                      handler:nil];
+                     [successAlert addAction:okAction];
+                     [self presentViewController:successAlert animated:YES completion:nil];
+                     
+                 }
+             }];
+}
+
 #pragma mark - Days table view delegate
 
 - (void)updateAllocatedHoursWithNumber:(NSNumber *)allocatedHours
@@ -440,7 +543,7 @@
     }
 }
 
-#pragma mark NDHTMLtoPDFDelegate
+#pragma mark - NDHTMLtoPDFDelegate
 
 - (void)HTMLtoPDFDidSucceed:(NDHTMLtoPDF*)htmlToPDF
 {
@@ -497,6 +600,15 @@
 - (void)epSignature:(EPSignatureViewController *)_ didSign:(UIImage *)signatureImage boundingRect:(CGRect)boundingRect
 {
     NSLog(@"%@", signatureImage);
+    
+    // We cut the top half off
+    CGImageRef tmpImgRef = signatureImage.CGImage;
+    CGImageRef bottomImgRef = CGImageCreateWithImageInRect(tmpImgRef, CGRectMake(0, signatureImage.size.height / 2.0,  signatureImage.size.width, signatureImage.size.height / 2.0));
+    UIImage *bottomImage = [UIImage imageWithCGImage:bottomImgRef];
+    CGImageRelease(bottomImgRef);
+    
+    NSData *imageData = UIImagePNGRepresentation(bottomImage);
+    [self uploadImageToFirebaseStorage:imageData];
 }
 
 
