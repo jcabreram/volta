@@ -15,7 +15,7 @@
 
 @end
 
-@interface ProjectDetailTableViewController : UITableViewController <UITextFieldDelegate, MLPAutoCompleteTextFieldDataSource>
+@interface ProjectDetailTableViewController : UITableViewController <UITextFieldDelegate>
 
 @property (nonatomic, strong) Project *project;
 @property (nonatomic, weak) id<ProjectDetailTableViewControllerDelegate> delegate;

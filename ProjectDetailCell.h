@@ -13,6 +13,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *nameField;
 @property (weak, nonatomic) IBOutlet UITextField *totalDurationField;
 @property (weak, nonatomic) IBOutlet UITextField *organizationField;
-@property (weak, nonatomic) IBOutlet MLPAutoCompleteTextField *companyField;
+@property (weak, nonatomic) IBOutlet UITextField *companyField;
 
 @end

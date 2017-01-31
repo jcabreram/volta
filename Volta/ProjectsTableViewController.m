@@ -156,9 +156,10 @@
     NSString *companyKey = projectData[@"company"];
     
     [[[[self.databaseRef child:@"companies"] child:companyKey] child:@"name"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-        
-        if ([snapshot.value isKindOfClass:[NSString class]]) {
-            cell.detailTextLabel.text = snapshot.value;
+        if (snapshot) {
+            if ([snapshot.value isKindOfClass:[NSString class]]) {
+                cell.detailTextLabel.text = snapshot.value;
+            }
         }
     }];
     

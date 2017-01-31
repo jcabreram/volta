@@ -24,6 +24,8 @@ typedef NS_ENUM (NSInteger, Field) {
 
 @interface ProjectDetailTableViewController ()
 
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
+
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
 
 @property (nonatomic, assign) FIRDatabaseHandle availableCompaniesHandle;
@@ -51,6 +53,13 @@ typedef NS_ENUM (NSInteger, Field) {
         self.navigationItem.title = project.name;
     }
     
+    UserType currentUserType = [AppState sharedInstance].type;
+    
+    if (currentUserType != UserType_Manager) {
+        [self.doneButton setEnabled:NO];
+        [self.doneButton setTintColor:[UIColor clearColor]];
+    }
+    
     [self configureDatabase];
 }
 
@@ -58,6 +67,22 @@ typedef NS_ENUM (NSInteger, Field) {
     self.databaseRef = [[FIRDatabase database] reference];
     
     self.availableCompaniesHandle = [self handleForObservingKeyAndNameOfChild:@"companies"];
+    
+    NSString *userID = [AppState sharedInstance].userID;
+    UserType currentUserType = [AppState sharedInstance].type;
+    
+    if (currentUserType == UserType_Manager) {
+        self.hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+        
+        [[[[self.databaseRef child:@"users"] child:userID] child:@"company"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+            if (snapshot) {
+                if ([snapshot.value isKindOfClass:[NSString class]]) {
+                    self.project.companyKey = snapshot.value;
+                    [self.hud hideAnimated:YES];
+                }
+            }
+        }];
+    }
 }
 
 - (FIRDatabaseHandle)handleForObservingKeyAndNameOfChild:(NSString *)child
@@ -84,42 +109,8 @@ typedef NS_ENUM (NSInteger, Field) {
     self.hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     
     if ([self validInput]) {
-        [self addCompanyToDatabase];
-    }
-}
-
-- (void)addCompanyToDatabase {
-    
-    Project *project = self.project;
-    
-    // We create the company first if it's not already on the existing list of companies on the database, then we call updateProjectInDatabase when that's ready to continue with the user creation process
-    
-    NSString *companyName = [self textEnteredInTextField:Field_Company];
-    NSArray *companyKeys = [self.availableCompanies allKeysForObject:companyName];
-    
-    if ([companyKeys count] > 0) {
-        NSString *companyKey = [companyKeys firstObject];
-        project.companyKey = companyKey;
         [self updateProjectInDatabase];
-    } else {
-        project.companyKey = [[self.databaseRef child:@"companies"] childByAutoId].key;
-        
-        NSDictionary *companyStructure = @{@"name":companyName};
-        
-        NSMutableDictionary *childUpdates = [@{[@"/companies/" stringByAppendingString:project.companyKey]: companyStructure} mutableCopy];
-        
-        [self.databaseRef updateChildValues:childUpdates
-                        withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
-                            if (error) {
-                                [self presentValidationErrorAlertWithTitle:@"Error"
-                                                                   message:error.localizedDescription];
-                                NSLog(@"%@", error.localizedDescription);
-                            } else {
-                                [self updateProjectInDatabase];
-                            }
-                        }];
     }
-    
 }
 
 - (void)updateProjectInDatabase {
@@ -174,10 +165,6 @@ typedef NS_ENUM (NSInteger, Field) {
         [self presentValidationErrorAlertWithTitle:@"Name Missing"
                                            message:@"Please, enter a name for the project."];
         return NO;
-    } else if ([project.companyKey vol_isStringEmpty]) {
-        [self presentValidationErrorAlertWithTitle:@"Client Missing"
-                                           message:@"Please, enter the client for this project"];
-        return NO;
     }
     
     return YES;
@@ -193,8 +180,6 @@ typedef NS_ENUM (NSInteger, Field) {
         return cell.totalDurationField.text;
     } else if (textField == Field_Organization) {
         return cell.organizationField.text;
-    } else if (textField == Field_Company) {
-        return cell.companyField.text;
     }
     
     return @"";
@@ -248,9 +233,15 @@ typedef NS_ENUM (NSInteger, Field) {
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // TODO: If the user is an employee, hide the company row
     
-    return 4;
+    UserType currentUserType = [AppState sharedInstance].type;
+    
+    if (currentUserType != UserType_Admin) {
+        return 3;
+    } else {
+        return 4;
+    }
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -284,25 +275,16 @@ typedef NS_ENUM (NSInteger, Field) {
     } else if (row == Field_Organization) {
         cell.organizationField.text = project.organization;
     } else if (row == Field_Company) {
-        MLPAutoCompleteTextField *companyField = cell.companyField;
-        companyField.autoCompleteDataSource = self;
-        companyField.autoCompleteTableAppearsAsKeyboardAccessory = YES;
-        
-        // Parent correction
-        companyField.autoCompleteParentView = self.view;
-        
-        // Offset correction
-        CGPoint pt = [companyField convertPoint:CGPointMake(0, companyField.frame.origin.y) toView:self.view];
-        companyField.autoCompleteTableOriginOffset = CGSizeMake(0, pt.y);
+        UITextField *companyField = cell.companyField;
         
         if ([companyField.text vol_isStringEmpty]) {
             companyField.text = self.availableCompanies[project.companyKey];
         }
     }
     
-    // If the user is an employee, disable the fields
+    // If the user is not a manager, disable the fields
     UserType currentUserType = [AppState sharedInstance].type;
-    if (currentUserType == UserType_Employee) {
+    if (currentUserType != UserType_Manager) {
         cell.nameField.enabled = NO;
         cell.totalDurationField.enabled = NO;
         cell.organizationField.enabled = NO;
@@ -360,19 +342,6 @@ typedef NS_ENUM (NSInteger, Field) {
     } else {
         return YES;
     }
-}
-
-#pragma mark - MLPAutoCompleteTextField delegate
-
-- (void)autoCompleteTextField:(MLPAutoCompleteTextField *)textField
- possibleCompletionsForString:(NSString *)string
-            completionHandler:(void (^)(NSArray *))handler
-{
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-    dispatch_async(queue, ^{
-        NSArray *completions = [self.availableCompanies allValues];
-        handler(completions);
-    });
 }
 
 @end
