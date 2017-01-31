@@ -286,7 +286,7 @@
 {
     self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    [self copyReportFolderToDocuments];
+    [self copyReportFolderToTemporalDirectory];
     
     TimesheetWeek *week = self.week;
     
@@ -330,9 +330,8 @@
     
     [dayHoursProjectsRows appendFormat:@"<tr><td>Total</td><td>%@</td><td></td></tr>", [week allocatedHours]];
     
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths firstObject];
-    NSString *htmlFilePath = [documentsDirectory stringByAppendingPathComponent:@"TimesheetReport/index.html"];
+    NSString *tempDir = NSTemporaryDirectory();
+    NSString *htmlFilePath = [tempDir stringByAppendingPathComponent:@"TimesheetReport/index.html"];
 
     NSMutableString *html = [[NSString stringWithContentsOfFile:htmlFilePath encoding:NSUTF8StringEncoding error:nil] mutableCopy];
     NSRange htmlRange = NSMakeRange(0, [html length]);
@@ -356,7 +355,7 @@
     FIRStorageReference *signatureRef = [[[[FIRStorage storage] reference] child:@"signatures"] child:signatureFilename];
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *signatureDirectoryPath = [documentsDirectory stringByAppendingPathComponent:@"TimesheetReport/"];
+    NSString *signatureDirectoryPath = [tempDir stringByAppendingPathComponent:@"TimesheetReport/"];
     NSString *signaturePath = [signatureDirectoryPath stringByAppendingPathComponent:@"signature.png"];
     NSURL *localURL = [NSURL fileURLWithPath:signaturePath];
     [fileManager removeItemAtPath:signaturePath error:&error];
@@ -380,7 +379,7 @@
             // Create PDF from HTML
             NSURL *htmlFileURL = [NSURL fileURLWithPath:htmlFilePath];
             NSString *fileNameForPDF = [NSString stringWithFormat:@"Weekly timesheet for %@ (%@).pdf", employeeName, weekRange];
-            NSString *pathForPDF = [documentsDirectory stringByAppendingPathComponent:fileNameForPDF];
+            NSString *pathForPDF = [tempDir stringByAppendingPathComponent:fileNameForPDF];
             self.PDFCreator = [NDHTMLtoPDF createPDFWithURL:htmlFileURL
                                                  pathForPDF:pathForPDF
                                                    delegate:self
@@ -390,32 +389,31 @@
     }];
 }
 
-- (void)copyReportFolderToDocuments
+- (void)copyReportFolderToTemporalDirectory
 {
     NSString *directory = @"TimesheetReport";
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSError *error;
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths firstObject];
-    NSString *documentDBFolderPath = [documentsDirectory stringByAppendingPathComponent:directory];
-    NSString *resourceDBFolderPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:directory];
+    NSString *tempDir = NSTemporaryDirectory();
+    NSString *tempTimesheetDir = [tempDir stringByAppendingPathComponent:directory];
+    NSString *resourceTimesheetDir = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:directory];
     
-    if (![fileManager fileExistsAtPath:documentDBFolderPath]) {
-        [fileManager createDirectoryAtPath:documentDBFolderPath
+    if (![fileManager fileExistsAtPath:tempTimesheetDir]) {
+        [fileManager createDirectoryAtPath:tempTimesheetDir
                withIntermediateDirectories:NO
                                 attributes:nil
                                      error:&error];
     }
     
-    NSArray *fileList = [fileManager contentsOfDirectoryAtPath:resourceDBFolderPath
+    NSArray *fileList = [fileManager contentsOfDirectoryAtPath:resourceTimesheetDir
                                                          error:&error];
     
-    NSString *indexPath = [documentDBFolderPath stringByAppendingPathComponent:@"index.html"];
+    NSString *indexPath = [tempTimesheetDir stringByAppendingPathComponent:@"index.html"];
     [fileManager removeItemAtPath:indexPath error:&error];
     
     for (NSString *fileName in fileList) {
-        NSString *newFilePath = [documentDBFolderPath stringByAppendingPathComponent:fileName];
-        NSString *oldFilePath = [resourceDBFolderPath stringByAppendingPathComponent:fileName];
+        NSString *newFilePath = [tempTimesheetDir stringByAppendingPathComponent:fileName];
+        NSString *oldFilePath = [resourceTimesheetDir stringByAppendingPathComponent:fileName];
         if (![fileManager fileExistsAtPath:newFilePath]) {
             [fileManager copyItemAtPath:oldFilePath toPath:newFilePath error:&error];
         }
