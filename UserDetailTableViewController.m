@@ -664,6 +664,9 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         } else if (row == FieldTag_LastName) {
             cell.lastNameTextField.text = user.lastName;
         } else if (row == FieldTag_Email) {
+            if (!self.newUser) {
+                cell.emailTextField.enabled = NO;
+            }
             cell.emailTextField.text = user.email;
         } else if (row == FieldTag_Company) {
             MLPAutoCompleteTextField *companyField = cell.companyTextField;
