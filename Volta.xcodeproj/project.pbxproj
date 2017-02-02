@@ -27,6 +27,7 @@
 		9469E72F1DD3ECAC007EB4E6 /* SideMenuViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9469E72E1DD3ECAC007EB4E6 /* SideMenuViewCell.m */; };
 		9469E7321DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9469E7311DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m */; };
 		9469E7351DD4E903007EB4E6 /* TimesheetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9469E7341DD4E903007EB4E6 /* TimesheetsViewController.m */; };
+		94730FA71E43DB9400163ECC /* TimesheetReport in Resources */ = {isa = PBXBuildFile; fileRef = 94730FA61E43DB9400163ECC /* TimesheetReport */; };
 		9473D99B1E3A872B000B95D5 /* EPSignature.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9473D99A1E3A872B000B95D5 /* EPSignature.framework */; };
 		9477AD481DEE2DC7006FBF28 /* UsersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9477AD471DEE2DC7006FBF28 /* UsersTableViewController.m */; };
 		9477AD4B1DEE2DD6006FBF28 /* UserDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9477AD4A1DEE2DD6006FBF28 /* UserDetailTableViewController.m */; };
@@ -36,7 +37,6 @@
 		9477AD5C1DF75ED3006FBF28 /* ProjectDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9477AD5B1DF75ED3006FBF28 /* ProjectDetailCell.m */; };
 		9477AD5F1DF75F44006FBF28 /* ProjectDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9477AD5E1DF75F44006FBF28 /* ProjectDetailTableViewController.m */; };
 		94A0779A1E31505B00A3D18D /* Welcome email.html in Resources */ = {isa = PBXBuildFile; fileRef = 94A077991E31505B00A3D18D /* Welcome email.html */; };
-		94A077A21E366BE400A3D18D /* TimesheetReport in Resources */ = {isa = PBXBuildFile; fileRef = 94A077A11E366BE400A3D18D /* TimesheetReport */; };
 		94ADACD21DDBAA6300C01279 /* WeeksCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD11DDBAA6300C01279 /* WeeksCollectionViewController.m */; };
 		94ADACD51DDBAA9400C01279 /* DaysTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD41DDBAA9400C01279 /* DaysTableViewController.m */; };
 		94ADACD81DDBAADA00C01279 /* DayTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADACD71DDBAADA00C01279 /* DayTableViewCell.m */; };
@@ -91,6 +91,7 @@
 		9469E7311DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+LGSideMenuController.m"; sourceTree = "<group>"; };
 		9469E7331DD4E903007EB4E6 /* TimesheetsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimesheetsViewController.h; sourceTree = "<group>"; };
 		9469E7341DD4E903007EB4E6 /* TimesheetsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimesheetsViewController.m; sourceTree = "<group>"; };
+		94730FA61E43DB9400163ECC /* TimesheetReport */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TimesheetReport; sourceTree = "<group>"; };
 		9473D99A1E3A872B000B95D5 /* EPSignature.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EPSignature.framework; path = Carthage/Build/iOS/EPSignature.framework; sourceTree = "<group>"; };
 		9477AD461DEE2DC7006FBF28 /* UsersTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UsersTableViewController.h; path = Volta/UsersTableViewController.h; sourceTree = "<group>"; };
 		9477AD471DEE2DC7006FBF28 /* UsersTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UsersTableViewController.m; path = Volta/UsersTableViewController.m; sourceTree = "<group>"; };
@@ -107,7 +108,6 @@
 		9477AD5D1DF75F44006FBF28 /* ProjectDetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectDetailTableViewController.h; sourceTree = "<group>"; };
 		9477AD5E1DF75F44006FBF28 /* ProjectDetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectDetailTableViewController.m; sourceTree = "<group>"; };
 		94A077991E31505B00A3D18D /* Welcome email.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "Welcome email.html"; sourceTree = "<group>"; };
-		94A077A11E366BE400A3D18D /* TimesheetReport */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TimesheetReport; sourceTree = "<group>"; };
 		94ADACD01DDBAA6300C01279 /* WeeksCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeeksCollectionViewController.h; sourceTree = "<group>"; };
 		94ADACD11DDBAA6300C01279 /* WeeksCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeeksCollectionViewController.m; sourceTree = "<group>"; };
 		94ADACD31DDBAA9400C01279 /* DaysTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DaysTableViewController.h; sourceTree = "<group>"; };
@@ -190,7 +190,7 @@
 		9415B6881DD2385C00C2020D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				94A077A11E366BE400A3D18D /* TimesheetReport */,
+				94730FA61E43DB9400163ECC /* TimesheetReport */,
 				94A077991E31505B00A3D18D /* Welcome email.html */,
 				942AEE8C1DDE11DA004C3FF8 /* Volta.entitlements */,
 				9415B6991DD2385C00C2020D /* Info.plist */,
@@ -424,7 +424,7 @@
 				9415B6951DD2385C00C2020D /* Assets.xcassets in Resources */,
 				94A0779A1E31505B00A3D18D /* Welcome email.html in Resources */,
 				9415B6931DD2385C00C2020D /* Main.storyboard in Resources */,
-				94A077A21E366BE400A3D18D /* TimesheetReport in Resources */,
+				94730FA71E43DB9400163ECC /* TimesheetReport in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
