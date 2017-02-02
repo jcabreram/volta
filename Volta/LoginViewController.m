@@ -202,6 +202,11 @@
             state.signedIn = YES;
             [[NSNotificationCenter defaultCenter] postNotificationName:NotificationKeysSignedIn
                                                                 object:nil userInfo:nil];
+            
+            // We subscribe the user to his topic based notification
+            NSString *userTopic = [[NSString alloc] initWithFormat:@"/topics/user_%@", user.email];
+            [[FIRMessaging messaging] subscribeToTopic:userTopic];
+            
             [self performSegueWithIdentifier:SeguesSignInToMainScreen sender:self];
         } else {
             [self presentLoginErrorAlert:@"The specified user doesn't have an account in Volta."];
