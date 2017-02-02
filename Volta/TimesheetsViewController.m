@@ -532,12 +532,26 @@
     self.week = week;
     UserType currentUserType = [AppState sharedInstance].type;
     
-    if (currentUserType == UserType_Manager && self.week.status == Status_Approved) {
-        self.shareButton.enabled = NO;
-    } else if (!self.selectedEmployeeKey) {
-        self.shareButton.enabled = NO;
-    } else {
-        self.shareButton.enabled = YES;
+    switch (currentUserType) {
+        case UserType_Employee:
+            if (self.week.status == Status_Approved) {
+                self.shareButton.enabled = NO;
+            } else {
+                self.shareButton.enabled = YES;
+            }
+            break;
+            
+        case UserType_Manager:
+            if (self.week.status == Status_Approved || !self.selectedEmployeeKey) {
+                self.shareButton.enabled = NO;
+            } else {
+                self.shareButton.enabled = YES;
+            }
+            break;
+            
+        case UserType_Admin:
+            self.shareButton.enabled = YES;
+            break;
     }
 }
 
