@@ -211,7 +211,7 @@
             [self changeWeekToStatus:Status_Approved];
         }]];
         
-        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Don't Approve" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Deny" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
             [self changeWeekToStatus:Status_NotApproved];
         }]];
     }
