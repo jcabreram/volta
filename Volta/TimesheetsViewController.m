@@ -15,10 +15,12 @@
 #import "ActionSheetPicker.h"
 #import "MBProgressHUD.h"
 #import "UIColor+VOLcolors.h"
+#import "UIImage+VOLImage.h"
 
 @import EPSignature;
+@import AVFoundation;
 
-@interface TimesheetsViewController () <EPSignatureDelegate>
+@interface TimesheetsViewController () <EPSignatureDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic, strong) WeeksCollectionViewController *weeksVC;
 @property (nonatomic, strong) DaysTableViewController *daysVC;
@@ -44,6 +46,8 @@
 @property (nonatomic, strong) NSString *selectedEmployeeKey;
 
 @property (nonatomic, strong) MBProgressHUD *hud;
+
+@property (nonatomic, strong) UIImagePickerController *imagePickerController;
 
 @end
 
@@ -203,6 +207,10 @@
         
         [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [self changeWeekToStatus:Status_Submitted];
+        }]];
+        
+        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week With Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self submitWeekWithPhotoUsingSender:sender];
         }]];
         
     } else if (state.type == UserType_Manager) {
@@ -518,6 +526,74 @@
              }];
 }
 
+- (void)submitWeekWithPhotoUsingSender:(UIBarButtonItem *)sender
+{
+    if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+    {
+        // There is not a camera on this device, so show alert.
+        UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"No Camera Available"
+                                                                            message:@"A camera is required to upload the timesheet's photo"
+                                                                     preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:nil];
+        [errorAlert addAction:okAction];
+        [self presentViewController:errorAlert animated:YES completion:nil];
+    }
+    
+    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    if (authStatus == AVAuthorizationStatusDenied)
+    {
+        // Denies access to camera, alert the user.
+        // The user has previously denied access. Remind the user that we need camera access to be useful.
+        UIAlertController *alertController =
+        [UIAlertController alertControllerWithTitle:@"Unable to access the Camera"
+                                            message:@"To enable access, go to Settings > Privacy > Camera and turn on Camera access for this app."
+                                     preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+        [alertController addAction:ok];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+    else if (authStatus == AVAuthorizationStatusNotDetermined)
+        // The user has not yet been presented with the option to grant access to the camera hardware.
+        // Ask for it.
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^( BOOL granted ) {
+            // If access was denied, we do not set the setup error message since access was just denied.
+            if (granted)
+            {
+                // Allowed access to camera, go ahead and present the UIImagePickerController.
+                [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera fromButton:sender];
+            }
+        }];
+    else
+    {
+        // Allowed access to camera, go ahead and present the UIImagePickerController.
+        [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera fromButton:sender];
+    }
+}
+
+- (void)showImagePickerForSourceType:(UIImagePickerControllerSourceType)sourceType fromButton:(UIBarButtonItem *)button
+{
+    UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+    imagePickerController.modalPresentationStyle = UIModalPresentationCurrentContext;
+    imagePickerController.sourceType = sourceType;
+    imagePickerController.showsCameraControls = YES;
+    imagePickerController.delegate = self;
+    imagePickerController.modalPresentationStyle =
+    (sourceType == UIImagePickerControllerSourceTypeCamera) ? UIModalPresentationFullScreen : UIModalPresentationPopover;
+    
+    UIPopoverPresentationController *presentationController = imagePickerController.popoverPresentationController;
+    presentationController.barButtonItem = button;  // display popover from the UIBarButtonItem as an anchor
+    presentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    
+    _imagePickerController = imagePickerController; // we need this for later
+    
+    [self presentViewController:self.imagePickerController animated:YES completion:^{
+        //.. done presenting
+    }];
+}
+
 #pragma mark - Days table view delegate
 
 - (void)updateAllocatedHoursWithNumber:(NSNumber *)allocatedHours
@@ -623,5 +699,75 @@
     [self uploadImageToFirebaseStorage:imageData];
 }
 
+
+#pragma mark - UIImagePickerControllerDelegate
+
+// This method is called when an image has been chosen from the library or taken from the camera.
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    // Dismiss the image picker.
+    [self dismissViewControllerAnimated:YES completion:^{
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        UIImage *image = [info valueForKey:UIImagePickerControllerOriginalImage];
+        
+        UIImage *scaledImage = [image resizeWithMaxDimension:1000.0]; // Increase for better quality. 1500 is more than enough.
+        
+        NSData *data = UIImageJPEGRepresentation(scaledImage, 0.7);
+        
+        NSString *timesheetID = [AppState sharedInstance].timesheetKey;
+        NSString *yearString = [@(self.week.year) stringValue];
+        NSString *weekNumberString = [@(self.week.weekNumber) stringValue];
+        NSString *signatureFilename = [NSString stringWithFormat:@"%@.jpg", weekNumberString];
+        
+        hud.label.text = @"Uploading photo...";
+        
+        FIRStorageReference *storageRef = [[[[[[FIRStorage storage] reference] child:@"ts_photos"] child:timesheetID] child:yearString] child:signatureFilename];
+        FIRStorageMetadata *uploadMetadata = [[FIRStorageMetadata alloc] init];
+        uploadMetadata.contentType = @"image/jpeg";
+        
+        [storageRef putData:data
+                   metadata:uploadMetadata
+                 completion:^(FIRStorageMetadata * _Nullable metadata, NSError * _Nullable error) {
+                     [hud hideAnimated:YES];
+                     if (error) {
+                         NSLog(@"Error uploading image: %@", error.localizedDescription);
+                         
+                         UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"Error While Saving Image"
+                                                                                             message:error.localizedDescription
+                                                                                      preferredStyle:UIAlertControllerStyleAlert];
+                         UIAlertAction *tryAgainAction = [UIAlertAction actionWithTitle:@"Try again"
+                                                                                  style:UIAlertActionStyleDefault
+                                                                                handler:^(UIAlertAction * _Nonnull action) {
+                                                                                    [self showSignatureVC];
+                                                                                }];
+                         [errorAlert addAction:tryAgainAction];
+                         [self presentViewController:errorAlert animated:YES completion:nil];
+                     } else {
+                         NSLog(@"Upload complete! Image metadata: %@", metadata);
+                         
+                         [self changeWeekToStatus:Status_Submitted];
+                         
+                         UIAlertController *successAlert = [UIAlertController alertControllerWithTitle:@"Week Timesheet And Photo Submitted"
+                                                                                               message:@"Your manager can now approve it."
+                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                         UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                            style:UIAlertActionStyleDefault
+                                                                          handler:nil];
+                         [successAlert addAction:okAction];
+                         [self presentViewController:successAlert animated:YES completion:nil];
+                     }
+                 }];
+    }];
+    
+    self.imagePickerController = nil;
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        //.. done dismissing
+    }];
+}
 
 @end
