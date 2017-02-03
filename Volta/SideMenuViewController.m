@@ -130,7 +130,8 @@
     } else if ([rowTitle isEqualToString:@"Log Out"]) {
         // We unsubscribe the user to his topic based notification
         FIRUser *user = [FIRAuth auth].currentUser;
-        NSString *userTopic = [[NSString alloc] initWithFormat:@"/topics/user_%@", user.email];
+        NSString *userEmailNoAt = [user.email stringByReplacingOccurrencesOfString:@"@" withString:@"_"];
+        NSString *userTopic = [[NSString alloc] initWithFormat:@"/topics/user_%@", userEmailNoAt];
         [[FIRMessaging messaging] unsubscribeFromTopic:userTopic];
         
         FIRAuth *firebaseAuth = [FIRAuth auth];
