@@ -128,11 +128,15 @@
         
         [[self sideMenuController] hideLeftViewAnimated:YES completionHandler:nil];
     } else if ([rowTitle isEqualToString:@"Log Out"]) {
+        AppState *state = [AppState sharedInstance];
+        
         // We unsubscribe the user to his topic based notification
         FIRUser *user = [FIRAuth auth].currentUser;
-        NSString *userEmailNoAt = [user.email stringByReplacingOccurrencesOfString:@"@" withString:@"_"];
-        NSString *userTopic = [[NSString alloc] initWithFormat:@"/topics/user_%@", userEmailNoAt];
+        NSString *userTopic = [[NSString alloc] initWithFormat:@"/topics/user_%@", user.uid];
         [[FIRMessaging messaging] unsubscribeFromTopic:userTopic];
+        
+        NSString *userTypeTopic = [[NSString alloc] initWithFormat:@"/topics/%@", [state stringInPluralWithType]];
+        [[FIRMessaging messaging] unsubscribeFromTopic:userTypeTopic];
         
         FIRAuth *firebaseAuth = [FIRAuth auth];
         NSError *signOutError;
@@ -142,7 +146,7 @@
             return;
         }
         
-        [AppState sharedInstance].signedIn = false;
+        state.signedIn = false;
         [(MainViewController *)self.sideMenuController logout];
     }
 }

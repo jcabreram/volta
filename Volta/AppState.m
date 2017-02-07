@@ -30,4 +30,21 @@
     }
 }
 
+- (NSString *)stringInPluralWithType
+{
+    switch (self.type) {
+        case UserType_Employee:
+            return @"employees";
+            break;
+        case UserType_Manager:
+            return @"managers";
+            break;
+        case UserType_Admin:
+            return @"admins";
+            break;
+        default:
+            break;
+    }
+}
+
 @end

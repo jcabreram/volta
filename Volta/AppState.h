@@ -19,5 +19,6 @@
 + (AppState *)sharedInstance;
 
 - (void)setTypeWithString:(NSString *)typeString;
+- (NSString *)stringInPluralWithType;
 
 @end

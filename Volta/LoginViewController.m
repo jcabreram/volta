@@ -204,9 +204,11 @@
                                                                 object:nil userInfo:nil];
             
             // We subscribe the user to his topic based notification
-            NSString *userEmailNoAt = [user.email stringByReplacingOccurrencesOfString:@"@" withString:@"_"];
-            NSString *userTopic = [[NSString alloc] initWithFormat:@"/topics/user_%@", userEmailNoAt];
+            NSString *userTopic = [[NSString alloc] initWithFormat:@"/topics/user_%@", user.uid];
             [[FIRMessaging messaging] subscribeToTopic:userTopic];
+            
+            NSString *userTypeTopic = [[NSString alloc] initWithFormat:@"/topics/%@", [state stringInPluralWithType]];
+            [[FIRMessaging messaging] subscribeToTopic:userTypeTopic];
             
             [self performSegueWithIdentifier:SeguesSignInToMainScreen sender:self];
         } else {
