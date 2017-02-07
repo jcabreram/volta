@@ -10,7 +10,6 @@
 #import "DayDetailTableViewCell.h"
 #import "AppState.h"
 #import "NSString+VOLValidation.h"
-//#import "MBProgressHUD.h"
 
 typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
     DayDetailFieldTag_Project = 1,
@@ -121,12 +120,12 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
     
     // Update the list of projects for the week
     [[[[[[[self.databaseRef
-         child:@"timesheet_details"]
-        child:timesheetKey]
-       child:[@(self.week.year) stringValue]]
-      child:[@(self.week.weekNumber) stringValue]]
-      child:[self stringWithNameOfDay:self.weekDay]]
-     child:@"projects"] setValue:self.dayProjects];
+           child:@"timesheet_details"]
+          child:timesheetKey]
+         child:[@(self.week.year) stringValue]]
+        child:[@(self.week.weekNumber) stringValue]]
+       child:[self stringWithNameOfDay:self.weekDay]]
+      child:@"projects"] setValue:self.dayProjects];
     
     if ([self.sumOfProjectHours doubleValue] != 0.0) {
         // Update the total hours for the week
@@ -142,9 +141,6 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
 
 - (void)updateProjects
 {
-    // We create a copy of the previous projects to compare to the new values
-    NSDictionary *oldProjects = [self.dayProjects copy];
-    
     [self.dayProjects removeAllObjects];
     
     for (NSInteger i = 0; i < [self.tableView numberOfRowsInSection:0]; ++i) {
@@ -156,58 +152,6 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
             self.dayProjects[projectKey] = [self hoursEnteredInRow:i];
         }
     }
-    
-    // We calculate the differences in project times and update the current_duration of the project
-    NSMutableDictionary *timeDifferences = [NSMutableDictionary new];
-    
-    for (NSString *projectKey in oldProjects) {
-        double original = [oldProjects[projectKey] doubleValue];
-        if (self.dayProjects[projectKey]) {
-            double new = [self.dayProjects[projectKey] doubleValue];
-            double difference = new - original;
-            timeDifferences[projectKey] = @(difference);
-        } else {
-            timeDifferences[projectKey] = @(-original);
-        }
-    }
-    
-    NSArray *timeDifferencesKeys = [timeDifferences allKeys];
-    
-    //MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    for (NSInteger i = 0; i < timeDifferences.count; i++) {
-        NSString *projectKey = timeDifferencesKeys[i];
-        
-        // Get the current_duration of the project to update it
-        [[[[self.databaseRef child:@"projects"] child:projectKey] child:@"current_duration"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-            
-            double currentDuration = 0.0;
-            
-            if (snapshot.exists) {
-                currentDuration = [snapshot.value doubleValue];
-            }
-            
-            double difference = [timeDifferences[projectKey] doubleValue];
-            NSNumber *updatedDuration = @(currentDuration + difference);
-            
-            // Update the list of projects for the week
-            [[[[self.databaseRef
-                   child:@"projects"]
-                  child:projectKey]
-                 child:@"current_duration"] setValue:updatedDuration];
-            
-        } withCancelBlock:^(NSError * _Nonnull error) {
-            [self presentErrorAlertWithTitle:@"Error"
-                                     message:error.localizedDescription];
-            NSLog(@"%@", error.localizedDescription);
-        }];
-        
-        
-//        if (i == timeDifferences.count - 1) {
-//            [hud hideAnimated:YES];
-//        }
-    }
-    
 }
 
 - (void)dealloc {
@@ -291,29 +235,6 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
     return weekDay;
 }
 
-- (void)presentErrorAlertWithTitle:(NSString *)errorTitle
-                           message:(NSString *)errorMessage {
-    NSLog(@"Presenting Login Error Alert with message:\n%@", errorMessage);
-    
-    UIAlertController *alert;
-    alert = [UIAlertController alertControllerWithTitle:errorTitle
-                                                message:errorMessage
-                                         preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *defaultAction;
-    defaultAction = [UIAlertAction actionWithTitle:@"OK"
-                                             style:UIAlertActionStyleDefault
-                                           handler:nil];
-    
-    [alert addAction:defaultAction];
-    
-    __weak DayDetailTableViewController *weakSelf = self;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (weakSelf != nil)
-            [weakSelf presentViewController:alert animated:YES completion:nil];
-    });
-}
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -373,7 +294,7 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
-{   
+{
     // Erase text entered if it doesn't match an available project
     if (textField.tag == DayDetailFieldTag_Project) {
         if (![[self.availableProjects allValues] containsObject:textField.text]) {

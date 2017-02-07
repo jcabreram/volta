@@ -217,6 +217,7 @@
         
         [actionSheet addAction:[UIAlertAction actionWithTitle:@"Approve" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [self changeWeekToStatus:Status_Approved];
+            [self updateProjectsCurrentDuration];
         }]];
         
         [actionSheet addAction:[UIAlertAction actionWithTitle:@"Deny" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
@@ -592,6 +593,51 @@
     [self presentViewController:self.imagePickerController animated:YES completion:^{
         //.. done presenting
     }];
+}
+
+- (void)updateProjectsCurrentDuration
+{
+    NSArray *projectsArray = [self.week arrayWithProjects];
+    NSMutableDictionary *timeDifferences = [NSMutableDictionary new];
+    
+    for (NSDictionary *dayProjects in projectsArray) {
+        for (NSString *projectKey in dayProjects) {
+            if (timeDifferences[projectKey]) {
+                double previous = [timeDifferences[projectKey] doubleValue];
+                double new = [dayProjects[projectKey] doubleValue];
+                double total = new + previous;
+                timeDifferences[projectKey] = @(total);
+            } else {
+                timeDifferences[projectKey] = dayProjects[projectKey];
+            }
+        }
+    }
+    
+    NSArray *timeDifferencesKeys = [timeDifferences allKeys];
+    
+    for (NSInteger i = 0; i < timeDifferences.count; i++) {
+        NSString *projectKey = timeDifferencesKeys[i];
+        
+        // Get the current_duration of the project to update it
+        [[[[self.databaseRef child:@"projects"] child:projectKey] child:@"current_duration"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+            
+            double currentDuration = 0.0;
+            
+            if (snapshot.exists) {
+                currentDuration = [snapshot.value doubleValue];
+            }
+            
+            double difference = [timeDifferences[projectKey] doubleValue];
+            NSNumber *updatedDuration = @(currentDuration + difference);
+            
+            // Update the list of projects for the week
+            [[[[self.databaseRef
+                child:@"projects"]
+               child:projectKey]
+              child:@"current_duration"] setValue:updatedDuration];
+        }];
+    }
+
 }
 
 #pragma mark - Days table view delegate

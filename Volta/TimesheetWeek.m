@@ -178,4 +178,9 @@
     }
 }
 
+- (NSArray *)arrayWithProjects
+{
+    return @[self.mon, self.tue, self.wed, self.thu, self.fri, self.sat, self.sun];
+}
+
 @end

@@ -71,4 +71,6 @@ typedef NS_ENUM(NSInteger, WeekDay) {
 
 - (NSString *)statusString;
 
+- (NSArray *)arrayWithProjects;
+
 @end
