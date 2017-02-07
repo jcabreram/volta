@@ -259,6 +259,10 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             childUpdates[[NSString stringWithFormat:@"/users/%@/employees/%@", managerKey, userUID]] = @YES;
         }
         
+        // Add the employee ID and his manager's ID to the timesheet for easy notifications
+        childUpdates[[NSString stringWithFormat:@"/timesheets/%@/user", timesheetKey]] = userUID;
+        childUpdates[[NSString stringWithFormat:@"/timesheets/%@/manager", timesheetKey]] = [[user.managers allKeys] firstObject];
+        
         // Get the current number of employees to increase it by 1
         [[[self.databaseRef child:@"employees"] child:@"no_of_users"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
             
