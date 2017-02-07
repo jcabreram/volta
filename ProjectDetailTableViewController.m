@@ -110,6 +110,8 @@ typedef NS_ENUM (NSInteger, Field) {
     
     if ([self validInput]) {
         [self updateProjectInDatabase];
+    } else {
+        [self.hud hideAnimated:YES];
     }
 }
 

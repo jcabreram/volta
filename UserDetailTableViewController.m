@@ -316,6 +316,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
                             }];
             
         } withCancelBlock:^(NSError * _Nonnull error) {
+            [self.hud hideAnimated:YES];
             [self presentValidationErrorAlertWithTitle:@"Error"
                                                message:error.localizedDescription];
             NSLog(@"%@", error.localizedDescription);
@@ -346,6 +347,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
                             }];
             
         } withCancelBlock:^(NSError * _Nonnull error) {
+            [self.hud hideAnimated:YES];
             [self presentValidationErrorAlertWithTitle:@"Error"
                                                message:error.localizedDescription];
             NSLog(@"%@", error.localizedDescription);
@@ -446,6 +448,8 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         } else {
             [self updateDatabaseWithUserUID:user.key];
         }
+    } else {
+        [self.hud hideAnimated:YES];
     }
 }
 
@@ -467,15 +471,11 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 - (BOOL)validInput
 {
     User *user = self.user;
-    
-    NSString *firstName = [self textEnteredInTextField:FieldTag_FirstName forSection:SectionNumber_One];
-    NSString *lastName = [self textEnteredInTextField:FieldTag_LastName forSection:SectionNumber_One];
-    NSString *email = [self textEnteredInTextField:FieldTag_Email forSection:SectionNumber_One];
-    NSString *password = [self textEnteredInTextField:FieldTag_Password forSection:SectionNumber_One];
+
     NSString *company = [self textEnteredInTextField:FieldTag_Company forSection:SectionNumber_One];
     NSString *manager = [self textEnteredInTextField:FieldTag_Manager forSection:SectionNumber_One];
     
-    if (self.user.type == UserType_Employee) {
+    if (user.type == UserType_Employee) {
         NSArray *existingProjects = [self.availableProjects allValues];
         for (NSInteger i = 0; i < self.numberOfProjectsShown; i++) {
             NSString *projectName = [self textEnteredInTextField:i forSection:SectionNumber_Two];
@@ -494,15 +494,15 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         }
     }
     
-    if (![email vol_isValidEmail]) {
+    if (![user.email vol_isValidEmail]) {
         [self presentValidationErrorAlertWithTitle:@"Invalid Email"
                                            message:@"Please, verify the email format and try again."];
         return NO;
-    } else if (![password vol_isValidPassword] && [self.user.key vol_isStringEmpty]) {
+    } else if (![user.password vol_isValidPassword] && [user.key vol_isStringEmpty]) {
         [self presentValidationErrorAlertWithTitle:@"Invalid Password"
                                            message:@"Please, enter a password with at least 6 characters, one numeric digit and a letter"];
         return NO;
-    } else if ([firstName vol_isStringEmpty] || [lastName vol_isStringEmpty]) {
+    } else if ([user.firstName vol_isStringEmpty] || [user.lastName vol_isStringEmpty]) {
         [self presentValidationErrorAlertWithTitle:@"No Name"
                                            message:@"A user has no name but this is not Game of Thrones. Enter one please."];
         return NO;
