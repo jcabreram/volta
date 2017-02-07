@@ -55,6 +55,7 @@
         _companyKey = companyKey;
         _timesheet = timesheet;
         _projects = projects;
+        _requiresPhoto = NO;
     }
     
     return self;

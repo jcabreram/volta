@@ -28,6 +28,7 @@ typedef NS_ENUM (NSInteger, UserType) {
 @property (nonatomic, copy) NSString *companyKey;
 @property (nonatomic, copy) NSString *timesheet;
 @property (nonatomic, copy) NSMutableDictionary<NSString *, NSNumber *> *projects;
+@property (nonatomic, assign) BOOL requiresPhoto;
 
 - (instancetype)init;
 - (instancetype)initWithKey:(NSString *)key

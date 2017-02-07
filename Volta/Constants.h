@@ -42,6 +42,7 @@ extern NSString *const kEmailCell;
 extern NSString *const kPasswordCell;
 extern NSString *const kCompanyCell;
 extern NSString *const kManagerCell;
+extern NSString *const kRequiresPhotoCell;
 extern NSString *const kProjectCell;
 
 // Project Detail Cells

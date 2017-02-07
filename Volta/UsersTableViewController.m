@@ -89,6 +89,13 @@
                                            companyKey:user[@"company"]
                                             timesheet:user[@"timesheet"]
                                              projects:user[@"projects"]];
+        
+        if (user[@"requires_photo"]) {
+            NSNumber *requiresPhotoNumber = user[@"requires_photo"];
+            if ([requiresPhotoNumber isKindOfClass:[NSNumber class]]) {
+                self.selectedUser.requiresPhoto = [requiresPhotoNumber boolValue];
+            }
+        }
     }
     
     userDetailController.user = self.selectedUser;

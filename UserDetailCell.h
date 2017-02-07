@@ -17,5 +17,6 @@
 @property (weak, nonatomic) IBOutlet MLPAutoCompleteTextField *companyTextField;
 @property (weak, nonatomic) IBOutlet MLPAutoCompleteTextField *managerTextField;
 @property (weak, nonatomic) IBOutlet MLPAutoCompleteTextField *projectTextField;
+@property (weak, nonatomic) IBOutlet UISwitch *requiresPhotoSwitch;
 
 @end

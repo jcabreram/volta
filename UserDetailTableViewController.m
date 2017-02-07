@@ -22,6 +22,7 @@ typedef NS_ENUM (NSInteger, FieldTag) {
     FieldTag_Password,
     FieldTag_Company,
     FieldTag_Manager,
+    FieldTag_RequiresPhoto,
     FieldTag_Project
 };
 
@@ -155,54 +156,6 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
     [[self.databaseRef child:@"managers"] removeObserverWithHandle:self.availableManagersHandle];
 }
 
-- (IBAction)tappedDoneButton:(id)sender
-{
-    [self.view endEditing:YES];
-    
-    self.hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-    
-    NSString *secondaryAppString = [[[NSProcessInfo processInfo] globallyUniqueString] stringByReplacingOccurrencesOfString:@"-" withString:@""];
-    
-    if ([self validInput]) {
-        
-        User *user = self.user;
-        
-        // Before creating the user, we update the User object's projects to its respective keys
-        if (user.type == UserType_Employee) {
-            [self updateProjects];
-        }
-        
-        if ([user.key vol_isStringEmpty]) {
-            
-            // Creating the user on another app instance so that the current user isn't logged out
-            // Source: http://stackoverflow.com/questions/37517208/firebase-kicks-out-current-user/37614090#37614090
-            
-            NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info" ofType:@"plist"];
-            FIROptions *secondaryAppOptions = [[FIROptions alloc] initWithContentsOfFile:plistPath];
-            [FIRApp configureWithName:secondaryAppString options:secondaryAppOptions];
-            FIRApp *secondaryApp = [FIRApp appNamed:secondaryAppString];
-            FIRAuth *secondaryAppAuth = [FIRAuth authWithApp:secondaryApp];
-            
-            [secondaryAppAuth createUserWithEmail:user.email
-                                         password:user.password
-                                       completion:^(FIRUser * _Nullable user, NSError * _Nullable error) {
-                                           [secondaryAppAuth signOut:nil];
-                                           
-                                           if (error) {
-                                               [self presentValidationErrorAlertWithTitle:@"Error"
-                                                                                  message:error.localizedDescription];
-                                               NSLog(@"%@", error.localizedDescription);
-                                           } else {
-                                               
-                                               [self updateDatabaseWithUserUID:user.uid];
-                                           }
-                                       }];
-        } else {
-            [self updateDatabaseWithUserUID:user.key];
-        }
-    }
-}
-
 - (void)updateProjects
 {
     User *user = self.user;
@@ -255,9 +208,6 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
     } else {
         [self updateUserInDatabaseWithUserUID:userUID];
     }
-    
-    
-    
 }
 
 - (void)updateUserInDatabaseWithUserUID:(NSString *)userUID {
@@ -290,7 +240,8 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
                                @"managers":user.managers,
                                @"company":user.companyKey,
                                @"timesheet":timesheetKey,
-                               @"projects":user.projects};
+                               @"projects":user.projects,
+                               @"requires_photo":@(user.requiresPhoto)};
     
     // Initialize the child updates dictionary with the user node
     NSMutableDictionary *childUpdates = [@{[@"/users/" stringByAppendingString:userUID]: userDict} mutableCopy];
@@ -444,9 +395,67 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
     [self presentViewController:mailController animated:YES completion:nil];
 }
 
+#pragma mark - IBAction Methods
+
+- (IBAction)tappedDoneButton:(id)sender
+{
+    [self.view endEditing:YES];
+    
+    self.hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    
+    NSString *secondaryAppString = [[[NSProcessInfo processInfo] globallyUniqueString] stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    
+    if ([self validInput]) {
+        
+        User *user = self.user;
+        
+        // Before creating the user, we update the User object's projects to its respective keys
+        if (user.type == UserType_Employee) {
+            [self updateProjects];
+        }
+        
+        if ([user.key vol_isStringEmpty]) {
+            
+            // Creating the user on another app instance so that the current user isn't logged out
+            // Source: http://stackoverflow.com/questions/37517208/firebase-kicks-out-current-user/37614090#37614090
+            
+            NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info" ofType:@"plist"];
+            FIROptions *secondaryAppOptions = [[FIROptions alloc] initWithContentsOfFile:plistPath];
+            [FIRApp configureWithName:secondaryAppString options:secondaryAppOptions];
+            FIRApp *secondaryApp = [FIRApp appNamed:secondaryAppString];
+            FIRAuth *secondaryAppAuth = [FIRAuth authWithApp:secondaryApp];
+            
+            [secondaryAppAuth createUserWithEmail:user.email
+                                         password:user.password
+                                       completion:^(FIRUser * _Nullable user, NSError * _Nullable error) {
+                                           [secondaryAppAuth signOut:nil];
+                                           
+                                           if (error) {
+                                               [self presentValidationErrorAlertWithTitle:@"Error"
+                                                                                  message:error.localizedDescription];
+                                               NSLog(@"%@", error.localizedDescription);
+                                           } else {
+                                               
+                                               [self updateDatabaseWithUserUID:user.uid];
+                                           }
+                                       }];
+        } else {
+            [self updateDatabaseWithUserUID:user.key];
+        }
+    }
+}
+
 - (IBAction)tappedCancelButton:(id)sender
 {
     [self dismissController];
+}
+
+- (IBAction)changedPhotoRequiredSwitch:(UISwitch *)sender {
+    if (sender.isOn) {
+        self.user.requiresPhoto = YES;
+    } else {
+        self.user.requiresPhoto = NO;
+    }
 }
 
 #pragma mark - Helper Methods
@@ -614,7 +623,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
         if (user.type == UserType_Manager) {
             return 5;
         } else if (user.type == UserType_Employee) {
-            return 6;
+            return 7;
         } else if (user.type == UserType_Admin) {
             return 4;
         } else {
@@ -647,6 +656,8 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             reuseIdentifier = kCompanyCell;
         } else if (row == FieldTag_Manager) {
             reuseIdentifier = kManagerCell;
+        } else if (row == FieldTag_RequiresPhoto) {
+            reuseIdentifier = kRequiresPhotoCell;
         } else {
             reuseIdentifier = @"";
         }
@@ -702,6 +713,8 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
                     managerField.text = self.availableManagers[userManagerKey];
                 }
             }
+        } else if (row == FieldTag_RequiresPhoto) {
+            cell.requiresPhotoSwitch.on = user.requiresPhoto;
         }
         
         if (loggedUserType == UserType_Manager) {
@@ -710,6 +723,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             cell.emailTextField.enabled = NO;
             cell.companyTextField.enabled = NO;
             cell.managerTextField.enabled = NO;
+            cell.requiresPhotoSwitch.enabled = NO;
         }
     } else {
         if (section == SectionNumber_Two) {
