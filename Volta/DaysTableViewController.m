@@ -150,7 +150,7 @@ typedef NS_ENUM (NSInteger, Field) {
         }
         
         // If the week is approved, we disable interaction
-        if (self.week.status == Status_Approved || loggedUserType == UserType_Manager) {
+        if (self.week.status == Status_Approved || self.week.status == Status_Submitted || loggedUserType == UserType_Manager || loggedUserType == UserType_Admin) {
             cell.hoursTextField.enabled = NO;
         } else {
             cell.hoursTextField.enabled = YES;
@@ -185,7 +185,7 @@ typedef NS_ENUM (NSInteger, Field) {
     NSString *yearString = [@(week.year) stringValue];
     NSString *weekString = [@(week.weekNumber) stringValue];
     
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     [[[[[self.databaseRef child:@"timesheet_details"] child:timesheetKey] child:yearString] child:weekString] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         NSDictionary *timesheetDetails = snapshot.value;

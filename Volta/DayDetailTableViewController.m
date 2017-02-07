@@ -56,7 +56,7 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
     self.availableProjects = [[NSMutableDictionary alloc] init];
     self.projectKeys = [self.dayProjects allKeys];
     
-    if (self.week.status == Status_Approved || loggedUserType == UserType_Manager) {
+    if (self.week.status == Status_Approved || self.week.status == Status_Submitted || loggedUserType == UserType_Manager || loggedUserType == UserType_Admin) {
         self.numberOfProjectsShown = [self.dayProjects count];
     } else {
         self.numberOfProjectsShown = [self.dayProjects count] + 1;
@@ -272,7 +272,7 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
     }
     
     // If the week is approved, we disable interaction
-    if (self.week.status == Status_Approved || loggedUserType == UserType_Manager) {
+    if (self.week.status == Status_Approved || self.week.status == Status_Submitted || loggedUserType == UserType_Manager || loggedUserType == UserType_Admin) {
         cell.hoursField.enabled = NO;
         cell.projectField.clearButtonMode = UITextFieldViewModeNever;
         cell.projectField.enabled = NO;
