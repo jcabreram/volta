@@ -258,6 +258,25 @@ typedef NS_ENUM (NSInteger, Field) {
     }];
 }
 
+- (void)weekStatusChangedTo:(Status)status
+{
+    self.week.status = status;
+    
+    NSArray *visibleCells = [self.tableView visibleCells];
+    
+    UserType loggedUserType = [AppState sharedInstance].type;
+    
+    if (self.week.status == Status_Approved || self.week.status == Status_Submitted || loggedUserType == UserType_Manager || loggedUserType == UserType_Admin) {
+        for (DayTableViewCell *cell in visibleCells) {
+            cell.hoursTextField.enabled = NO;
+        }
+    } else {
+        for (DayTableViewCell *cell in visibleCells) {
+            cell.hoursTextField.enabled = YES;
+        }
+    }
+}
+
 #pragma mark - UITextField delegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

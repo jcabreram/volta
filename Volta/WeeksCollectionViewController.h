@@ -6,18 +6,20 @@
 //  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
 //
 
-@class TimesheetWeek;
+#import "TimesheetWeek.h"
 
 @protocol WeeksCollectionViewControllerDelegate <NSObject>
 
 - (void)updateWeekViewWithStartDate:(NSDate *)startDate
                             forWeek:(TimesheetWeek *)week;
+- (void)weekStatusChangedTo:(Status)status;
 
 @end
 
 @protocol WeeksCollectionViewControllerActionSheetDelegate <NSObject>
 
 - (void)chosenWeekChangedToWeek:(TimesheetWeek *)week;
+- (void)weekStatusChangedTo:(Status)status;
 
 @end
 

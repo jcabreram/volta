@@ -205,13 +205,19 @@
     
     if (state.type == UserType_Employee) {
         
-        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self changeWeekToStatus:Status_Submitted];
-        }]];
-        
-        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week With Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self submitWeekWithPhotoUsingSender:sender];
-        }]];
+        if (self.week.status == Status_Submitted) {
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Edit Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self changeWeekToStatus:Status_NotSubmitted];
+            }]];
+        } else {
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self changeWeekToStatus:Status_Submitted];
+            }]];
+            
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week With Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self submitWeekWithPhotoUsingSender:sender];
+            }]];
+        }
         
     } else if (state.type == UserType_Manager) {
         
@@ -251,6 +257,8 @@
 
 - (void)changeWeekToStatus:(Status)status
 {
+    self.week.status = status;
+    
     [[[[[self.databaseRef child:@"timesheets"]
         child:[AppState sharedInstance].timesheetKey]
        child:[@(self.week.year) stringValue]]
@@ -675,6 +683,11 @@
             self.shareButton.enabled = YES;
             break;
     }
+}
+
+- (void)weekStatusChangedTo:(Status)status
+{
+    self.week.status = status;
 }
 
 #pragma mark - NDHTMLtoPDFDelegate

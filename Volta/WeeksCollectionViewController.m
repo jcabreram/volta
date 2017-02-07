@@ -118,6 +118,10 @@ static NSString * const reuseIdentifier = @"WeekCell";
             self.timesheet[snapshot.key] = [weeksDictionary copy];
             [self.collectionView reloadData];
         }
+        
+        WeekCollectionViewCell *cell = [self collectionView:self.collectionView cellForItemAtIndexPath:self.selectedIndexPath];
+        [self.delegate weekStatusChangedTo:cell.week.status];
+        [self.actionSheetDelegate weekStatusChangedTo:cell.week.status];
     }];
     
     // Listen for modified weeks
@@ -138,6 +142,10 @@ static NSString * const reuseIdentifier = @"WeekCell";
             self.timesheet[snapshot.key] = [weeksDictionary copy];
             [self.collectionView reloadData];
         }
+        
+        WeekCollectionViewCell *cell = [self collectionView:self.collectionView cellForItemAtIndexPath:self.selectedIndexPath];
+        [self.delegate weekStatusChangedTo:cell.week.status];
+        [self.actionSheetDelegate weekStatusChangedTo:cell.week.status];
     }];
 }
 
