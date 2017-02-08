@@ -198,7 +198,7 @@
             state.displayName = snapshot.value[@"first_name"];
             [state setTypeWithString:snapshot.value[@"type"]];
             state.timesheetKey = snapshot.value[@"timesheet"];
-            state.requiresPhoto = snapshot.value[@"requires_photo"];
+            state.requiresPhoto = [snapshot.value[@"requires_photo"] boolValue];
             
             state.signedIn = YES;
             [[NSNotificationCenter defaultCenter] postNotificationName:NotificationKeysSignedIn
