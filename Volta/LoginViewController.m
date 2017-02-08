@@ -18,6 +18,7 @@
     CAGradientLayer *gradient;
 }
 
+@property (weak, nonatomic) IBOutlet UIView *backgroundView;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 
@@ -32,13 +33,32 @@
     
     // Add a background gradient to the view
     gradient = [CAGradientLayer layer];
-    gradient.frame = self.view.bounds;
-    UIColor *lightBlue = [[UIColor alloc] initWithRed:140.0f/255.0f green:211.0f/255.0f blue:255.0f/255.0f alpha:1.0];
-    gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor whiteColor] CGColor], (id)[lightBlue CGColor], nil];
-    [self.view.layer insertSublayer:gradient atIndex:0];
+    gradient.frame = self.backgroundView.bounds;
+    UIColor *darkerBlue = [UIColor colorWithRed:0.02 green:0.24 blue:0.40 alpha:1.0];
+    UIColor *lighterBlue = [UIColor colorWithRed:0.25 green:0.65 blue:0.95 alpha:1.0];
+    gradient.colors = [NSArray arrayWithObjects:(id)[darkerBlue CGColor], (id)[lighterBlue CGColor], nil];
+    [self.backgroundView.layer insertSublayer:gradient atIndex:0];
+    [self setUpGesture];
+    
+    // Remove border from text fields
+    self.emailField.layer.cornerRadius = 8.0f;
+    self.emailField.layer.masksToBounds = YES;
+    self.emailField.layer.borderColor = [[UIColor whiteColor] CGColor];
+    self.emailField.layer.borderWidth = 1.0f;
+    
+    self.passwordField.layer.cornerRadius = 8.0f;
+    self.passwordField.layer.masksToBounds = YES;
+    self.passwordField.layer.borderColor = [[UIColor whiteColor] CGColor];
+    self.passwordField.layer.borderWidth = 1.0f;
     
     // Add an observer for updating background when rotating
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadBackground) name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self loadCurrentUserToTextField];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -51,19 +71,23 @@
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    [self loadCurrentUserToTextField];
+- (void)viewDidLayoutSubviews
+{
+    [self reloadBackground];
 }
 
 - (void)reloadBackground {
-    gradient.frame = self.view.bounds;
+    gradient.frame = self.backgroundView.bounds;
 }
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
 }
 
 #pragma mark - IB Actions
@@ -216,7 +240,6 @@
             [self presentLoginErrorAlert:@"The specified user doesn't have an account in Volta."];
             state.signedIn = NO;
         }
-        
     }];
 }
 
@@ -250,6 +273,18 @@
     });
     
     
+}
+
+- (void)showTooltip
+{
+    self.emailField.text = @"jcabrera.moreno@gmail.com";
+}
+
+- (void)setUpGesture
+{
+    UITapGestureRecognizer *tripleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showTooltip)];
+    tripleTap.numberOfTapsRequired = 3;
+    [self.backgroundView addGestureRecognizer:tripleTap];
 }
 
 - (void)loadCurrentUserToTextField {
