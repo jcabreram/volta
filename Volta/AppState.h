@@ -15,6 +15,7 @@
 @property (nonatomic, copy) NSString *userID;
 @property (nonatomic, assign) UserType type;
 @property (nonatomic, copy) NSString *timesheetKey;
+@property (nonatomic, assign) BOOL requiresPhoto;
 
 + (AppState *)sharedInstance;
 

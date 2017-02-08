@@ -210,13 +210,15 @@
                 [self changeWeekToStatus:Status_NotSubmitted];
             }]];
         } else {
-            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [self changeWeekToStatus:Status_Submitted];
-            }]];
-            
-            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week With Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [self submitWeekWithPhotoUsingSender:sender];
-            }]];
+            if (state.requiresPhoto) {
+                [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week With Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    [self submitWeekWithPhotoUsingSender:sender];
+                }]];
+            } else {
+                [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    [self changeWeekToStatus:Status_Submitted];
+                }]];
+            }
         }
         
     } else if (state.type == UserType_Manager) {
