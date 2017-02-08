@@ -11,6 +11,7 @@
 #import "Constants.h"
 #import "User.h"
 #import "AppState.h"
+#import "UIImage+VOLImage.h"
 
 @interface UsersTableViewController ()
 
@@ -36,6 +37,9 @@
     }
     
     //self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    // Change the navigation bar color to gradient
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageLayerForGradientBackgroundWithBounds:self.navigationController.navigationBar.bounds] forBarMetrics:UIBarMetricsDefault];
     
     self.users = [[NSMutableArray alloc] init];
     

@@ -66,6 +66,9 @@
         self.shareButton.enabled = NO;
     }
     
+    // Change the navigation bar color to gradient
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageLayerForGradientBackgroundWithBounds:self.navigationController.navigationBar.bounds] forBarMetrics:UIBarMetricsDefault];
+    
     if (currentUserType == UserType_Manager) {
         [self verifySignatureInStorage];
     }
@@ -647,7 +650,6 @@
               child:@"current_duration"] setValue:updatedDuration];
         }];
     }
-
 }
 
 #pragma mark - Days table view delegate

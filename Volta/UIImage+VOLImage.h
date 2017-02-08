@@ -11,5 +11,6 @@
 @interface UIImage (VOLImage)
 
 - (UIImage *)resizeWithMaxDimension:(CGFloat)maxDimension;
++ (UIImage *)imageLayerForGradientBackgroundWithBounds:(CGRect)bounds;
 
 @end

@@ -42,7 +42,7 @@
     self.leftViewStatusBarVisibleOptions = LGSideMenuStatusBarVisibleOnAll;
     
     
-    self.leftViewBackgroundImage = [UIImage imageNamed:@"image"];
+    self.leftViewBackgroundImage = [UIImage imageNamed:@"gradient-background"];
     
     _sideMenuViewController.tableView.backgroundColor = [UIColor clearColor];
     _sideMenuViewController.tintColor = [UIColor whiteColor];

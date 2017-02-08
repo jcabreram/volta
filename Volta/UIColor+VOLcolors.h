@@ -15,5 +15,7 @@
 + (UIColor *)notApprovedStatusColor;
 + (UIColor *)approvedStatusColor;
 + (UIColor *)redKsquareColor;
++ (UIColor *)darkerBlue;
++ (UIColor *)lighterBlue;
 
 @end

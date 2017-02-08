@@ -133,7 +133,7 @@
                                 </constraints>
                             </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="login-ksquare" translatesAutoresizingMaskIntoConstraints="NO" id="UfV-fv-7CD">
-                                <rect key="frame" x="139" y="625" width="98" height="22"/>
+                                <rect key="frame" x="139" y="615" width="98" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="Mju-g7-IEK"/>
                                     <constraint firstAttribute="width" constant="98" id="unM-Ym-13M"/>
@@ -153,7 +153,7 @@
                             <constraint firstItem="Eie-ot-nPh" firstAttribute="top" secondItem="Aji-3Z-mhv" secondAttribute="bottom" constant="20" id="JcN-M8-fc3"/>
                             <constraint firstItem="Eie-ot-nPh" firstAttribute="leading" secondItem="Aji-3Z-mhv" secondAttribute="leading" id="LT7-0c-AYe"/>
                             <constraint firstItem="iSc-Ca-FgS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="VoZ-69-Evj"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="UfV-fv-7CD" secondAttribute="bottom" constant="20" id="X8d-KB-x7X"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="UfV-fv-7CD" secondAttribute="bottom" constant="30" id="X8d-KB-x7X"/>
                             <constraint firstItem="6u8-sD-B47" firstAttribute="centerX" secondItem="Eie-ot-nPh" secondAttribute="centerX" id="gW5-Dh-cO4"/>
                             <constraint firstAttribute="trailing" secondItem="iSc-Ca-FgS" secondAttribute="trailing" id="hpc-0a-ZyH"/>
                             <constraint firstItem="Aji-3Z-mhv" firstAttribute="top" secondItem="zsy-Iy-LbC" secondAttribute="bottom" constant="20" id="k9O-6X-jN5"/>
@@ -502,7 +502,7 @@
             <objects>
                 <navigationController storyboardIdentifier="TimesheetsNavigationController" automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="UuL-87-7mK" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="jFU-xk-Bw8">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" translucent="NO" id="jFU-xk-Bw8">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.99963909390000005" green="1" blue="0.99975615740000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -668,7 +668,7 @@
         <scene sceneID="5uF-B0-kLg">
             <objects>
                 <navigationController storyboardIdentifier="UsersNavigationController" toolbarHidden="NO" id="k0Q-cK-t5u" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="MtM-B1-Mtz">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" translucent="NO" id="MtM-B1-Mtz">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.99963909390000005" green="1" blue="0.99975615740000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

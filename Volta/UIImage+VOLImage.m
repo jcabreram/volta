@@ -7,6 +7,7 @@
 //
 
 #import "UIImage+VOLImage.h"
+#import "UIColor+VOLcolors.h"
 
 @implementation UIImage (VOLImage)
 
@@ -32,6 +33,22 @@
     UIGraphicsEndImageContext();
     
     return newImage;
+}
+
++ (UIImage *)imageLayerForGradientBackgroundWithBounds:(CGRect)bounds
+{
+    CGRect updatedFrame = bounds;
+    updatedFrame.size.height += 20;
+    
+    CAGradientLayer *layer = [[CAGradientLayer alloc] init];
+    layer.frame = updatedFrame;
+    layer.colors = @[(id)[[UIColor darkerBlue] CGColor], (id)[[UIColor lighterBlue] CGColor]];
+    
+    UIGraphicsBeginImageContext(layer.bounds.size);
+    [layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
 }
 
 @end

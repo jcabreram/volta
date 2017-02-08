@@ -12,6 +12,7 @@
 #import "MainViewController.h"
 #import "GlobalVars.h"
 #import "MBProgressHUD.h"
+#import "UIColor+VOLcolors.h"
 
 @interface LoginViewController ()
 {
@@ -34,9 +35,7 @@
     // Add a background gradient to the view
     gradient = [CAGradientLayer layer];
     gradient.frame = self.backgroundView.bounds;
-    UIColor *darkerBlue = [UIColor colorWithRed:0.02 green:0.24 blue:0.40 alpha:1.0];
-    UIColor *lighterBlue = [UIColor colorWithRed:0.25 green:0.65 blue:0.95 alpha:1.0];
-    gradient.colors = [NSArray arrayWithObjects:(id)[darkerBlue CGColor], (id)[lighterBlue CGColor], nil];
+    gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor darkerBlue] CGColor], (id)[[UIColor lighterBlue] CGColor], nil];
     [self.backgroundView.layer insertSublayer:gradient atIndex:0];
     [self setUpGesture];
     

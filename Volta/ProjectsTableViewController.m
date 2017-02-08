@@ -11,6 +11,7 @@
 #import "Constants.h"
 #import "Project.h"
 #import "AppState.h"
+#import "UIImage+VOLImage.h"
 
 @interface ProjectsTableViewController ()
 
@@ -29,6 +30,9 @@
     [super viewDidLoad];
     
     //self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    // Change the navigation bar color to gradient
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageLayerForGradientBackgroundWithBounds:self.navigationController.navigationBar.bounds] forBarMetrics:UIBarMetricsDefault];
     
     // If the user is an employee, don't show him the create project toolbar
     UserType currentUserType = [AppState sharedInstance].type;
