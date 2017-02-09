@@ -265,8 +265,8 @@
                                     <segue destination="wkX-nX-NKi" kind="embed" identifier="PresentWeeks" id="QSG-83-BVw"/>
                                 </connections>
                             </containerView>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kdw-Yx-jHo">
-                                <rect key="frame" x="370" y="0.0" width="375" height="559"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kdw-Yx-jHo">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="559"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.69777397260273977" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                         </subviews>
@@ -348,7 +348,7 @@
         <scene sceneID="j6g-9b-lt4">
             <objects>
                 <collectionViewController id="wkX-nX-NKi" customClass="WeeksCollectionViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceHorizontal="YES" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="MC1-5W-Liu">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="MC1-5W-Liu">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="58"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.96078431372549022" green="0.96078431372549022" blue="0.96078431372549022" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -527,7 +527,7 @@
             <objects>
                 <navigationController storyboardIdentifier="TimesheetsNavigationController" automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="UuL-87-7mK" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" translucent="NO" id="jFU-xk-Bw8">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="jFU-xk-Bw8">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.99963909390000005" green="1" blue="0.99975615740000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -693,7 +693,7 @@
         <scene sceneID="5uF-B0-kLg">
             <objects>
                 <navigationController storyboardIdentifier="UsersNavigationController" toolbarHidden="NO" id="k0Q-cK-t5u" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" translucent="NO" id="MtM-B1-Mtz">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="MtM-B1-Mtz">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.99963909390000005" green="1" blue="0.99975615740000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -534,7 +534,7 @@
              }];
 }
 
-- (void)showCameraUsingSender:(UIButton *)sender
+- (void)showCamera
 {
     if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
     {
@@ -547,53 +547,48 @@
                                                          handler:nil];
         [errorAlert addAction:okAction];
         [self presentViewController:errorAlert animated:YES completion:nil];
-    }
-    
-    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-    if (authStatus == AVAuthorizationStatusDenied)
-    {
-        // Denies access to camera, alert the user.
-        // The user has previously denied access. Remind the user that we need camera access to be useful.
-        UIAlertController *alertController =
-        [UIAlertController alertControllerWithTitle:@"Unable to access the Camera"
-                                            message:@"To enable access, go to Settings > Privacy > Camera and turn on Camera access for this app."
-                                     preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
-        [alertController addAction:ok];
-        
-        [self presentViewController:alertController animated:YES completion:nil];
-    }
-    else if (authStatus == AVAuthorizationStatusNotDetermined)
-        // The user has not yet been presented with the option to grant access to the camera hardware.
-        // Ask for it.
-        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^( BOOL granted ) {
-            // If access was denied, we do not set the setup error message since access was just denied.
-            if (granted)
-            {
-                // Allowed access to camera, go ahead and present the UIImagePickerController.
-                [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera fromButton:sender];
-            }
-        }];
-    else
-    {
-        // Allowed access to camera, go ahead and present the UIImagePickerController.
-        [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera fromButton:sender];
+    } else {
+        AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+        if (authStatus == AVAuthorizationStatusDenied)
+        {
+            // Denies access to camera, alert the user.
+            // The user has previously denied access. Remind the user that we need camera access to be useful.
+            UIAlertController *alertController =
+            [UIAlertController alertControllerWithTitle:@"Unable to access the Camera"
+                                                message:@"To enable access, go to Settings > Privacy > Camera and turn on Camera access for this app."
+                                         preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+            [alertController addAction:ok];
+            
+            [self presentViewController:alertController animated:YES completion:nil];
+        }
+        else if (authStatus == AVAuthorizationStatusNotDetermined)
+            // The user has not yet been presented with the option to grant access to the camera hardware.
+            // Ask for it.
+            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^( BOOL granted ) {
+                // If access was denied, we do not set the setup error message since access was just denied.
+                if (granted)
+                {
+                    // Allowed access to camera, go ahead and present the UIImagePickerController.
+                    [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
+                }
+            }];
+        else
+        {
+            // Allowed access to camera, go ahead and present the UIImagePickerController.
+            [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
+        }
     }
 }
 
-- (void)showImagePickerForSourceType:(UIImagePickerControllerSourceType)sourceType fromButton:(UIBarButtonItem *)button
+- (void)showImagePickerForSourceType:(UIImagePickerControllerSourceType)sourceType
 {
     UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
     imagePickerController.modalPresentationStyle = UIModalPresentationCurrentContext;
     imagePickerController.sourceType = sourceType;
     imagePickerController.showsCameraControls = YES;
     imagePickerController.delegate = self;
-    imagePickerController.modalPresentationStyle =
-    (sourceType == UIImagePickerControllerSourceTypeCamera) ? UIModalPresentationFullScreen : UIModalPresentationPopover;
-    
-    UIPopoverPresentationController *presentationController = imagePickerController.popoverPresentationController;
-    presentationController.barButtonItem = button;  // display popover from the UIBarButtonItem as an anchor
-    presentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
+    imagePickerController.modalPresentationStyle = UIModalPresentationFullScreen;
     
     _imagePickerController = imagePickerController; // we need this for later
     
@@ -647,7 +642,7 @@
 }
 
 - (IBAction)tappedPhotoButton:(UIButton *)sender {
-    [self showCameraUsingSender:sender];
+    [self showCamera];
 }
 
 #pragma mark - Days table view delegate
