@@ -11,6 +11,7 @@
 @interface UIColor (VOLcolors)
 
 + (UIColor *)notSubmittedStatusColor;
++ (UIColor *)notSubmittedPastStatusColor;
 + (UIColor *)submittedStatusColor;
 + (UIColor *)notApprovedStatusColor;
 + (UIColor *)approvedStatusColor;

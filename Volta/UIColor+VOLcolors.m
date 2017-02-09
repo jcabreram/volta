@@ -11,19 +11,23 @@
 @implementation UIColor (VOLcolors)
 
 + (UIColor *)notSubmittedStatusColor {
-    return [UIColor colorWithRed:1.00 green:0.92 blue:0.61 alpha:1.0];
+    return [UIColor colorWithRed:0.58 green:0.60 blue:0.60 alpha:1.0];
+}
+
++ (UIColor *)notSubmittedPastStatusColor {
+    return [UIColor colorWithRed:0.93 green:0.53 blue:0.06 alpha:1.0];
 }
 
 + (UIColor *)submittedStatusColor {
-    return [UIColor colorWithRed:0.71 green:0.78 blue:0.91 alpha:1.0];
+    return [UIColor colorWithRed:0.00 green:0.56 blue:0.99 alpha:1.0];
 }
 
 + (UIColor *)notApprovedStatusColor {
-    return [UIColor colorWithRed:1.00 green:0.78 blue:0.81 alpha:1.0];
+    return [UIColor colorWithRed:0.99 green:0.00 blue:0.00 alpha:1.0];
 }
 
 + (UIColor *)approvedStatusColor {
-    return [UIColor colorWithRed:0.78 green:0.94 blue:0.81 alpha:1.0];
+    return [UIColor colorWithRed:0.33 green:0.78 blue:0.42 alpha:1.0];
 }
 
 + (UIColor *)redKsquareColor

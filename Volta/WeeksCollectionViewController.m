@@ -44,7 +44,7 @@ static NSString * const reuseIdentifier = @"WeekCell";
     [super viewDidLoad];
     
     UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
-    flow.itemSize = CGSizeMake(75, 80);
+    flow.itemSize = CGSizeMake(170, 58);
     flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     flow.minimumInteritemSpacing = 0;
     flow.minimumLineSpacing = 0;
@@ -157,6 +157,18 @@ static NSString * const reuseIdentifier = @"WeekCell";
     [[[self.databaseRef child:@"timesheets"] child:timesheetKey] removeObserverWithHandle:self.modifiedWeekHandle];
 }
 
+#pragma mark - Helper Methods
+
+- (void)animateTransitionForView:(UIView *)view toHidden:(BOOL)hidden
+{
+    [UIView transitionWithView:view
+                      duration:0.8
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:^{
+                        view.hidden = hidden;
+                    } completion:NULL];
+}
+
 
 #pragma mark <UICollectionViewDataSource>
 
@@ -173,11 +185,9 @@ static NSString * const reuseIdentifier = @"WeekCell";
     WeekCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     
     if (indexPath.item == self.selectedIndexPath.item) {
-        cell.layer.borderWidth = 1.0f;
-        cell.layer.borderColor = [UIColor darkGrayColor].CGColor;
+        [self animateTransitionForView:cell.selectedIndicatorView toHidden:NO];
     } else {
-        cell.layer.borderWidth = 0.0f;
-        cell.layer.borderColor = [UIColor clearColor].CGColor;
+        cell.selectedIndicatorView.hidden = YES;
     }
     
     NSInteger indexFromRightToLeft = kNumberOfWeeksInPicker - indexPath.item - 1;
@@ -227,41 +237,50 @@ static NSString * const reuseIdentifier = @"WeekCell";
         
         switch (weekStatus) {
             case Status_NotSubmitted:
-                cell.backgroundColor = [UIColor notSubmittedStatusColor];
                 cell.statusLabel.text = @"not submitted";
+                cell.statusLabel.textColor = [UIColor notSubmittedPastStatusColor];
+                cell.dotStatusLabel.textColor = [UIColor notSubmittedPastStatusColor];
                 break;
             case Status_Submitted:
-                cell.backgroundColor = [UIColor submittedStatusColor];
                 cell.statusLabel.text = @"submitted";
+                cell.statusLabel.textColor = [UIColor submittedStatusColor];
+                cell.dotStatusLabel.textColor = [UIColor submittedStatusColor];
                 break;
             case Status_Approved:
-                cell.backgroundColor = [UIColor approvedStatusColor];
                 cell.statusLabel.text = @"approved";
+                cell.statusLabel.textColor = [UIColor approvedStatusColor];
+                cell.dotStatusLabel.textColor = [UIColor approvedStatusColor];
                 break;
             case Status_NotApproved:
-                cell.backgroundColor = [UIColor notApprovedStatusColor];
                 cell.statusLabel.text = @"not approved";
+                cell.statusLabel.textColor = [UIColor notApprovedStatusColor];
+                cell.dotStatusLabel.textColor = [UIColor notApprovedStatusColor];
                 break;
             default:
                 break;
         }
     } else {
-        cell.backgroundColor = [UIColor notSubmittedStatusColor];
         cell.statusLabel.text = @"not submitted";
+        cell.statusLabel.textColor = [UIColor notSubmittedPastStatusColor];
+        cell.dotStatusLabel.textColor = [UIColor notSubmittedPastStatusColor];
     }
     
-    if ([[NSDate date] isBetweenDate:startOfWeek andDate:endOfWeek]) {
-        cell.statusLabel.text = @"this week";
-        if (weekStatus == Status_NotSubmitted) {
-            cell.backgroundColor = [UIColor whiteColor];
-        }
+    BOOL thisWeek = [[NSDate date] isBetweenDate:startOfWeek andDate:endOfWeek];
+    BOOL nextWeek = [startOfWeek isAfterDate:[NSDate date]];
+    
+    if ((thisWeek || nextWeek) && weekStatus == Status_NotSubmitted) {
+        cell.statusLabel.textColor = [UIColor notSubmittedStatusColor];
+        cell.dotStatusLabel.textColor = [UIColor notSubmittedStatusColor];
     }
     
-    if ([startOfWeek isAfterDate:[NSDate date]]) {
-        cell.statusLabel.text = @"next week";
-        if (weekStatus == Status_NotSubmitted) {
-            cell.backgroundColor = [UIColor whiteColor];
-        }
+    if (thisWeek) {
+        UIFont *boldFont = [UIFont systemFontOfSize:19.0 weight:UIFontWeightSemibold];
+        cell.dateRangeLabel.attributedText = [[NSAttributedString alloc]
+                                              initWithString:dateRangeString
+                                              attributes:@{
+                                                           NSFontAttributeName : boldFont,
+                                                           NSForegroundColorAttributeName : [UIColor blackColor]
+                                                           }];
     }
     
     TimesheetWeek *week = [[TimesheetWeek alloc] initWithWeekNumber:weekOfYear year:year status:weekStatus];
