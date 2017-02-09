@@ -158,7 +158,7 @@ typedef NS_ENUM (NSInteger, Field) {
         
         // Change background of Sat and Sun
         if (row >= 5) {
-            cell.backgroundColor = [UIColor colorWithRed:0.94 green:0.94 blue:0.96 alpha:1.0];
+            cell.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
         } else {
             cell.backgroundColor = [UIColor whiteColor];
         }

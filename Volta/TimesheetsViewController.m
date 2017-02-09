@@ -213,15 +213,9 @@
                 [self changeWeekToStatus:Status_NotSubmitted];
             }]];
         } else {
-            if (state.requiresPhoto) {
-                [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week With Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    [self submitWeekWithPhotoUsingSender:sender];
-                }]];
-            } else {
-                [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    [self changeWeekToStatus:Status_Submitted];
-                }]];
-            }
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self changeWeekToStatus:Status_Submitted];
+            }]];
         }
         
     } else if (state.type == UserType_Manager) {
@@ -540,7 +534,7 @@
              }];
 }
 
-- (void)submitWeekWithPhotoUsingSender:(UIBarButtonItem *)sender
+- (void)showCameraUsingSender:(UIButton *)sender
 {
     if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
     {
@@ -650,6 +644,10 @@
               child:@"current_duration"] setValue:updatedDuration];
         }];
     }
+}
+
+- (IBAction)tappedPhotoButton:(UIButton *)sender {
+    [self showCameraUsingSender:sender];
 }
 
 #pragma mark - Days table view delegate
@@ -809,10 +807,8 @@
                      } else {
                          NSLog(@"Upload complete! Image metadata: %@", metadata);
                          
-                         [self changeWeekToStatus:Status_Submitted];
-                         
-                         UIAlertController *successAlert = [UIAlertController alertControllerWithTitle:@"Week Timesheet And Photo Submitted"
-                                                                                               message:@"Your manager can now approve it."
+                         UIAlertController *successAlert = [UIAlertController alertControllerWithTitle:@"Photo Uploaded!"
+                                                                                               message:@"This photo will be attached to your timesheet once you submit it."
                                                                                         preferredStyle:UIAlertControllerStyleAlert];
                          UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
                                                                             style:UIAlertActionStyleDefault
