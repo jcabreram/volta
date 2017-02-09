@@ -30,9 +30,9 @@
     return [UIColor colorWithRed:0.33 green:0.78 blue:0.42 alpha:1.0];
 }
 
-+ (UIColor *)redKsquareColor
++ (UIColor *)voltaBlue
 {
-    return [UIColor colorWithRed:0.80 green:0.20 blue:0.20 alpha:1.0];
+    return [UIColor colorWithRed:0.18 green:0.51 blue:0.74 alpha:1.0];
 }
 
 + (UIColor *)darkerBlue

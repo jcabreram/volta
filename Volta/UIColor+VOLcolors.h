@@ -15,7 +15,7 @@
 + (UIColor *)submittedStatusColor;
 + (UIColor *)notApprovedStatusColor;
 + (UIColor *)approvedStatusColor;
-+ (UIColor *)redKsquareColor;
++ (UIColor *)voltaBlue;
 + (UIColor *)darkerBlue;
 + (UIColor *)lighterBlue;
 

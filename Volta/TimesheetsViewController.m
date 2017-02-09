@@ -487,8 +487,8 @@
     NSString *userName = [AppState sharedInstance].displayName;
     
     EPSignatureViewController *signatureVC = [[EPSignatureViewController alloc] initWithSignatureDelegate:self showsDate:YES showsSaveSignatureOption:NO];
-    signatureVC.subtitleText = @"I agree to the terms and conditions";
-    signatureVC.tintColor = [UIColor redKsquareColor];
+    signatureVC.subtitleText = @"This signature will be used to approve timesheets within Volta";
+    signatureVC.tintColor = [UIColor voltaBlue];
     signatureVC.title = userName;
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:signatureVC];
