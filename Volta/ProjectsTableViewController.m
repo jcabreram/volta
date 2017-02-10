@@ -60,6 +60,10 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     UINavigationController *navigationController = segue.destinationViewController;
+    
+    // Change the navigation bar color to gradient
+    [navigationController.navigationBar setBackgroundImage:[UIImage imageLayerForGradientBackgroundWithBounds:self.navigationController.navigationBar.bounds] forBarMetrics:UIBarMetricsDefault];
+    
     ProjectDetailTableViewController *projectDetailController = navigationController.childViewControllers[0];
     
     projectDetailController.delegate = self;

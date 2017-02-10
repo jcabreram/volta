@@ -68,6 +68,10 @@ typedef NS_ENUM(NSInteger, UserSection) {
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     UINavigationController *navigationController = segue.destinationViewController;
+    
+    // Change the navigation bar color to gradient
+    [navigationController.navigationBar setBackgroundImage:[UIImage imageLayerForGradientBackgroundWithBounds:self.navigationController.navigationBar.bounds] forBarMetrics:UIBarMetricsDefault];
+    
     UserDetailTableViewController *userDetailController = navigationController.childViewControllers[0];
     
     userDetailController.delegate = self;
