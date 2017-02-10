@@ -6,6 +6,12 @@
 //  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
 //
 
+typedef NS_ENUM(NSInteger, UserSection) {
+    UserSection_Employees,
+    UserSection_Managers,
+    UserSection_Admins
+};
+
 #import "UsersTableViewController.h"
 #import "UserDetailTableViewController.h"
 #import "Constants.h"
@@ -17,8 +23,13 @@
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
 @property (nonatomic, assign) FIRDatabaseHandle referenceHandle;
-@property (nonatomic, strong) NSMutableArray<FIRDataSnapshot *> *users;
+@property (nonatomic, strong) NSMutableArray<FIRDataSnapshot *> *employees;
+@property (nonatomic, strong) NSMutableArray<FIRDataSnapshot *> *managers;
+@property (nonatomic, strong) NSMutableArray<FIRDataSnapshot *> *admins;
 @property (nonatomic, strong) User *selectedUser;
+
+@property (nonatomic, assign) FIRDatabaseHandle availableCompaniesHandle;
+@property (nonatomic, strong) NSMutableDictionary *availableCompanies;
 
 @end
 
@@ -41,21 +52,17 @@
     // Change the navigation bar color to gradient
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageLayerForGradientBackgroundWithBounds:self.navigationController.navigationBar.bounds] forBarMetrics:UIBarMetricsDefault];
     
-    self.users = [[NSMutableArray alloc] init];
+    self.employees = [[NSMutableArray alloc] init];
+    self.managers = [[NSMutableArray alloc] init];
+    self.admins = [[NSMutableArray alloc] init];
+    
+    self.availableCompanies = [[NSMutableDictionary alloc] init];
     
     [self configureDatabase];
 }
 
 - (void)resetPresentingController {
     self.selectedUser = [[User alloc] init];
-    
-    // Clear the projects data and reload the table to empty it
-    [self.users removeAllObjects];
-    [self.tableView reloadData];
-    
-    // Load the project data back from the database
-    [[self.databaseRef child:@"users"] removeObserverWithHandle:self.referenceHandle];
-    [self configureDatabase];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -77,7 +84,24 @@
         self.selectedUser.type = UserType_Admin;
     } else if ([segue.identifier isEqualToString:SeguesShowUserDetail]) {
         NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
-        FIRDataSnapshot *userSnapshot = _users[indexPath.row];
+        
+        FIRDataSnapshot *userSnapshot;
+        
+        switch (indexPath.section) {
+            case UserSection_Employees:
+                userSnapshot = _employees[indexPath.row];
+                break;
+            case UserSection_Managers:
+                userSnapshot = _managers[indexPath.row];
+                break;
+            case UserSection_Admins:
+                userSnapshot = _admins[indexPath.row];
+                break;
+            default:
+                userSnapshot = _employees[indexPath.row];
+                break;
+        }
+        
         NSDictionary *user = userSnapshot.value;
         NSString *userKey = userSnapshot.key;
         
@@ -114,40 +138,119 @@
 
     self.databaseRef = [[FIRDatabase database] reference];
     self.referenceHandle = [[_databaseRef child:@"users"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-        if (loggedInUserType == UserType_Manager) {
-            if ([snapshot.value isKindOfClass:[NSDictionary class]]) {
-                NSDictionary *user = snapshot.value;
+        if ([snapshot.value isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *user = snapshot.value;
+            if (loggedInUserType == UserType_Manager) {
                 NSDictionary *managers = user[@"managers"];
                 if (managers[userID]) {
-                    [self.users addObject:snapshot];
-                    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.users.count-1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    [self.employees addObject:snapshot];
+                }
+            } else {
+                NSString *userType = user[@"type"];
+                if ([userType isEqualToString:@"admin"]) {
+                    [self.admins addObject:snapshot];
+                } else if ([userType isEqualToString:@"manager"]) {
+                    [self.managers addObject:snapshot];
+                } else if ([userType isEqualToString:@"employee"]) {
+                    [self.employees addObject:snapshot];
                 }
             }
-        } else {
-            [self.users addObject:snapshot];
-            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.users.count-1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self sortUserArrays];
+            [self.tableView reloadData];
+        }
+    }];
+    
+    self.availableCompaniesHandle = [[self.databaseRef child:@"companies"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        NSDictionary<NSString *, NSString *> *childDict = snapshot.value;
+        id expectedNameString = childDict[@"name"];
+        id expectedKeyString = snapshot.key;
+        if (expectedNameString != nil && [expectedNameString isKindOfClass:[NSString class]] && [expectedKeyString isKindOfClass:[NSString class]]) {
+            self.availableCompanies[(NSString *)expectedKeyString] = expectedNameString;
         }
     }];
 }
 
 - (void)dealloc {
     [[self.databaseRef child:@"users"] removeObserverWithHandle:self.referenceHandle];
+    [[self.databaseRef child:@"companies"] removeObserverWithHandle:self.availableCompaniesHandle];
+}
+
+- (void)sortUserArrays
+{
+    NSSortDescriptor *firstNameSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"value.first_name" ascending:YES selector:@selector(localizedStandardCompare:)];
+    self.employees = [[self.employees sortedArrayUsingDescriptors:@[firstNameSortDescriptor]] mutableCopy];
+    self.managers = [[self.managers sortedArrayUsingDescriptors:@[firstNameSortDescriptor]] mutableCopy];
+    self.admins = [[self.admins sortedArrayUsingDescriptors:@[firstNameSortDescriptor]] mutableCopy];
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    
+    AppState *state = [AppState sharedInstance];
+    UserType loggedInUserType = state.type;
+    
+    if (loggedInUserType == UserType_Admin) {
+        return 3;
+    } else {
+        return 1;
+    }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    AppState *state = [AppState sharedInstance];
+    UserType loggedInUserType = state.type;
+    
+    if (loggedInUserType == UserType_Admin) {
+        switch (section) {
+            case UserSection_Employees:
+                return @"Employees";
+            case UserSection_Managers:
+                return @"Managers";
+            case UserSection_Admins:
+                return @"Admins";
+            default:
+                return 0;
+        }
+    } else {
+        return @"";
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.users count];
+    
+    switch (section) {
+        case UserSection_Employees:
+            return [self.employees count];
+        case UserSection_Managers:
+            return [self.managers count];
+        case UserSection_Admins:
+            return [self.admins count];
+        default:
+            return 0;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UserCell" forIndexPath:indexPath];
     
-    FIRDataSnapshot *userSnapshot = self.users[indexPath.row];
+    FIRDataSnapshot *userSnapshot;
+    
+    switch (indexPath.section) {
+        case UserSection_Employees:
+            userSnapshot = _employees[indexPath.row];
+            break;
+        case UserSection_Managers:
+            userSnapshot = _managers[indexPath.row];
+            break;
+        case UserSection_Admins:
+            userSnapshot = _admins[indexPath.row];
+            break;
+        default:
+            userSnapshot = _employees[indexPath.row];
+            break;
+    }
     NSDictionary<NSString *, NSString *> *user = userSnapshot.value;
     
     NSString *firstName = user[@"first_name"];
@@ -155,8 +258,14 @@
     NSString *fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
     cell.textLabel.text = fullName;
     
-    NSString *rawType = user[@"type"];
-    cell.detailTextLabel.text = [rawType capitalizedString];
+    if (indexPath.section != UserSection_Admins) {
+        if (user[@"company"]) {
+            NSString *companyKey = user[@"company"];
+            cell.detailTextLabel.text = self.availableCompanies[companyKey];
+        }
+    } else {
+        cell.detailTextLabel.text = @"";
+    }
     
     return cell;
 }
