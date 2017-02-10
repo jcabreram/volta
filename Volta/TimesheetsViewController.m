@@ -206,6 +206,55 @@
     self.daysVC.delegate = self;
 }
 
+#pragma mark - Select Employee
+
+- (IBAction)selectEmployeeButtonPressed:(id)sender {
+    NSArray *employeeNames = [self.availableEmployeeNames allValues];
+    if (!employeeNames) {
+        employeeNames = [[NSArray alloc] init];
+    }
+    NSArray *orderedEmployeeNames = [employeeNames sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    
+    ActionSheetStringPicker *picker = [[ActionSheetStringPicker alloc] initWithTitle:@"Select an Employee"
+                                                                                rows:orderedEmployeeNames
+                                                                    initialSelection:0
+                                                                           doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue) {
+                                                                               
+                                                                               NSArray *employeeKeys = [self.availableEmployeeNames allKeysForObject:selectedValue];
+                                                                               
+                                                                               if ([employeeKeys count] > 0) {
+                                                                                   NSString *employeeKey = [employeeKeys firstObject];
+                                                                                   [self showTimesheetForUserWithID:employeeKey];
+                                                                                   
+                                                                                   self.selectEmployeeBarButtonItem.title = selectedValue;
+                                                                                   [self.darkOverlay removeFromSuperview];
+                                                                                   self.shareButton.enabled = YES;
+                                                                               }
+                                                                           }
+                                                                         cancelBlock:nil
+                                                                              origin:sender];
+    
+    [picker showActionSheetPicker];
+}
+
+- (void)showTimesheetForUserWithID:(NSString *)userID
+{
+    AppState *state = [AppState sharedInstance];
+    self.selectedEmployeeKey = userID;
+    
+    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    [[[self.databaseRef child:@"users"] child:userID] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        [self.hud hideAnimated:YES];
+        if (snapshot.exists) {
+            state.timesheetKey = snapshot.value[@"timesheet"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NotificationKeysTimesheetDidChange object:nil];
+        }
+    }];
+}
+
+#pragma mark - Approve / Export / Change Status
+
 - (IBAction)shareButtonPressed:(UIBarButtonItem *)sender {
     AppState *state = [AppState sharedInstance];
     
@@ -274,34 +323,51 @@
     }
 }
 
-- (IBAction)selectEmployeeButtonPressed:(id)sender {
-    NSArray *employeeNames = [self.availableEmployeeNames allValues];
-    if (!employeeNames) {
-        employeeNames = [[NSArray alloc] init];
+- (void)updateProjectsCurrentDuration
+{
+    NSArray *projectsArray = [self.week arrayWithProjects];
+    NSMutableDictionary *timeDifferences = [NSMutableDictionary new];
+    
+    for (NSDictionary *dayProjects in projectsArray) {
+        for (NSString *projectKey in dayProjects) {
+            if (timeDifferences[projectKey]) {
+                double previous = [timeDifferences[projectKey] doubleValue];
+                double new = [dayProjects[projectKey] doubleValue];
+                double total = new + previous;
+                timeDifferences[projectKey] = @(total);
+            } else {
+                timeDifferences[projectKey] = dayProjects[projectKey];
+            }
+        }
     }
-    NSArray *orderedEmployeeNames = [employeeNames sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     
-    ActionSheetStringPicker *picker = [[ActionSheetStringPicker alloc] initWithTitle:@"Select an Employee"
-                                                                                rows:orderedEmployeeNames
-                                                                    initialSelection:0
-                                                                           doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue) {
-                                                                               
-                                                                               NSArray *employeeKeys = [self.availableEmployeeNames allKeysForObject:selectedValue];
-                                                                               
-                                                                               if ([employeeKeys count] > 0) {
-                                                                                   NSString *employeeKey = [employeeKeys firstObject];
-                                                                                   [self showTimesheetForUserWithID:employeeKey];
-                                                                                   
-                                                                                   self.selectEmployeeBarButtonItem.title = selectedValue;
-                                                                                   [self.darkOverlay removeFromSuperview];
-                                                                                   self.shareButton.enabled = YES;
-                                                                               }
-                                                                           }
-                                                                         cancelBlock:nil
-                                                                              origin:sender];
+    NSArray *timeDifferencesKeys = [timeDifferences allKeys];
     
-    [picker showActionSheetPicker];
+    for (NSInteger i = 0; i < timeDifferences.count; i++) {
+        NSString *projectKey = timeDifferencesKeys[i];
+        
+        // Get the current_duration of the project to update it
+        [[[[self.databaseRef child:@"projects"] child:projectKey] child:@"current_duration"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+            
+            double currentDuration = 0.0;
+            
+            if (snapshot.exists) {
+                currentDuration = [snapshot.value doubleValue];
+            }
+            
+            double difference = [timeDifferences[projectKey] doubleValue];
+            NSNumber *updatedDuration = @(currentDuration + difference);
+            
+            // Update the list of projects for the week
+            [[[[self.databaseRef
+                child:@"projects"]
+               child:projectKey]
+              child:@"current_duration"] setValue:updatedDuration];
+        }];
+    }
 }
+
+#pragma mark - PDF exporting
 
 - (void)exportWeekToPDF
 {
@@ -441,21 +507,7 @@
     }
 }
 
-- (void)showTimesheetForUserWithID:(NSString *)userID
-{
-    AppState *state = [AppState sharedInstance];
-    self.selectedEmployeeKey = userID;
-    
-    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    [[[self.databaseRef child:@"users"] child:userID] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-        [self.hud hideAnimated:YES];
-        if (snapshot.exists) {
-            state.timesheetKey = snapshot.value[@"timesheet"];
-            [[NSNotificationCenter defaultCenter] postNotificationName:NotificationKeysTimesheetDidChange object:nil];
-        }
-    }];
-}
+#pragma mark - Signature
 
 - (void)verifySignatureInStorage
 {
@@ -539,6 +591,52 @@
              }];
 }
 
+#pragma mark - Timesheet Photo
+
+- (void)verifyPhotoInDatabase
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    UserType currentUserType = [AppState sharedInstance].type;
+    
+    NSString *timesheetID = [AppState sharedInstance].timesheetKey;
+    NSString *yearString = [@(self.week.year) stringValue];
+    NSString *weekNumberString = [@(self.week.weekNumber) stringValue];
+    NSString *signatureFilename = [NSString stringWithFormat:@"%@.jpg", weekNumberString];
+    
+    FIRStorageReference *storageRef = [[[[[[FIRStorage storage] reference] child:@"ts_photos"] child:timesheetID] child:yearString] child:signatureFilename];
+    
+    [storageRef metadataWithCompletion:^(FIRStorageMetadata * _Nullable metadata, NSError * _Nullable error) {
+        [hud hideAnimated:YES];
+        
+        if (!error) {
+            [self.photoButton setImage:[UIImage imageNamed:@"eye"] forState:UIControlStateNormal];
+            self.photoUploaded = YES;
+            self.photoButton.enabled = YES;
+        } else {
+            FIRStorageErrorCode errorCode = error.code;
+            
+            if (errorCode == FIRStorageErrorCodeObjectNotFound) {
+                self.photoUploaded = NO;
+                if (currentUserType == UserType_Employee) {
+                    [self.photoButton setImage:[UIImage imageNamed:@"camera"] forState:UIControlStateNormal];
+                    self.photoButton.enabled = YES;
+                } else {
+                    self.photoButton.enabled = NO;
+                }
+            }
+        }
+    }];
+}
+
+- (IBAction)tappedPhotoButton:(UIButton *)sender {
+    if (self.photoUploaded) {
+        [self showViewerWithTimesheetPhoto];
+    } else {
+        [self showCamera];
+    }
+}
+
 - (void)showCamera
 {
     if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
@@ -600,58 +698,6 @@
     [self presentViewController:self.imagePickerController animated:YES completion:^{
         //.. done presenting
     }];
-}
-
-- (void)updateProjectsCurrentDuration
-{
-    NSArray *projectsArray = [self.week arrayWithProjects];
-    NSMutableDictionary *timeDifferences = [NSMutableDictionary new];
-    
-    for (NSDictionary *dayProjects in projectsArray) {
-        for (NSString *projectKey in dayProjects) {
-            if (timeDifferences[projectKey]) {
-                double previous = [timeDifferences[projectKey] doubleValue];
-                double new = [dayProjects[projectKey] doubleValue];
-                double total = new + previous;
-                timeDifferences[projectKey] = @(total);
-            } else {
-                timeDifferences[projectKey] = dayProjects[projectKey];
-            }
-        }
-    }
-    
-    NSArray *timeDifferencesKeys = [timeDifferences allKeys];
-    
-    for (NSInteger i = 0; i < timeDifferences.count; i++) {
-        NSString *projectKey = timeDifferencesKeys[i];
-        
-        // Get the current_duration of the project to update it
-        [[[[self.databaseRef child:@"projects"] child:projectKey] child:@"current_duration"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-            
-            double currentDuration = 0.0;
-            
-            if (snapshot.exists) {
-                currentDuration = [snapshot.value doubleValue];
-            }
-            
-            double difference = [timeDifferences[projectKey] doubleValue];
-            NSNumber *updatedDuration = @(currentDuration + difference);
-            
-            // Update the list of projects for the week
-            [[[[self.databaseRef
-                child:@"projects"]
-               child:projectKey]
-              child:@"current_duration"] setValue:updatedDuration];
-        }];
-    }
-}
-
-- (IBAction)tappedPhotoButton:(UIButton *)sender {
-    if (self.photoUploaded) {
-        [self showViewerWithTimesheetPhoto];
-    } else {
-        [self showCamera];
-    }
 }
 
 - (void)showViewerWithTimesheetPhoto
@@ -716,42 +762,6 @@
     }];
     
     
-}
-
-- (void)verifyPhotoInDatabase
-{
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    UserType currentUserType = [AppState sharedInstance].type;
-    
-    NSString *timesheetID = [AppState sharedInstance].timesheetKey;
-    NSString *yearString = [@(self.week.year) stringValue];
-    NSString *weekNumberString = [@(self.week.weekNumber) stringValue];
-    NSString *signatureFilename = [NSString stringWithFormat:@"%@.jpg", weekNumberString];
-    
-    FIRStorageReference *storageRef = [[[[[[FIRStorage storage] reference] child:@"ts_photos"] child:timesheetID] child:yearString] child:signatureFilename];
-    
-    [storageRef metadataWithCompletion:^(FIRStorageMetadata * _Nullable metadata, NSError * _Nullable error) {
-        [hud hideAnimated:YES];
-        
-        if (!error) {
-            [self.photoButton setImage:[UIImage imageNamed:@"eye"] forState:UIControlStateNormal];
-            self.photoUploaded = YES;
-            self.photoButton.enabled = YES;
-        } else {
-            FIRStorageErrorCode errorCode = error.code;
-            
-            if (errorCode == FIRStorageErrorCodeObjectNotFound) {
-                self.photoUploaded = NO;
-                if (currentUserType == UserType_Employee) {
-                    [self.photoButton setImage:[UIImage imageNamed:@"camera"] forState:UIControlStateNormal];
-                    self.photoButton.enabled = YES;
-                } else {
-                    self.photoButton.enabled = NO;
-                }
-            }
-        }
-    }];
 }
 
 #pragma mark - Days table view delegate
