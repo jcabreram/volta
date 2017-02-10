@@ -53,6 +53,7 @@
 @property (nonatomic, strong) UIImagePickerController *imagePickerController;
 
 @property (nonatomic, assign) BOOL photoUploaded;
+@property (nonatomic, assign) BOOL hasSignature;
 
 @end
 
@@ -258,54 +259,71 @@
 - (IBAction)shareButtonPressed:(UIBarButtonItem *)sender {
     AppState *state = [AppState sharedInstance];
     
-    UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    
-    if (state.type == UserType_Employee) {
+    if (state.type == UserType_Manager && !self.hasSignature) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"No Signature On File"
+                                                                       message:@"Your signature is required to submit or deny timesheets."
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction * _Nonnull action) {
+                                                             [self showSignatureVC];
+                                                         }];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil];
+        [alert addAction:okAction];
+        [alert addAction:cancelAction];
+        [self presentViewController:alert animated:YES completion:nil];
+    } else {
+        UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         
-        if (self.week.status == Status_Submitted) {
-            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Edit Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [self changeWeekToStatus:Status_NotSubmitted];
+        if (state.type == UserType_Employee) {
+            
+            if (self.week.status == Status_Submitted) {
+                [actionSheet addAction:[UIAlertAction actionWithTitle:@"Edit Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    [self changeWeekToStatus:Status_NotSubmitted];
+                }]];
+            } else {
+                [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    [self changeWeekToStatus:Status_Submitted];
+                }]];
+            }
+            
+        } else if (state.type == UserType_Manager) {
+            
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Approve" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self changeWeekToStatus:Status_Approved];
+                [self updateProjectsCurrentDuration];
             }]];
-        } else {
-            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [self changeWeekToStatus:Status_Submitted];
+            
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Deny" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                [self changeWeekToStatus:Status_NotApproved];
             }]];
         }
         
-    } else if (state.type == UserType_Manager) {
+        if (state.type == UserType_Admin) {
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Change to Not Submitted" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self changeWeekToStatus:Status_NotSubmitted];
+            }]];
+            
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Change to Submitted" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self changeWeekToStatus:Status_Submitted];
+            }]];
+            
+            [actionSheet addAction:[UIAlertAction actionWithTitle:@"Export to PDF" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self exportWeekToPDF];
+            }]];
+        }
         
-        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Approve" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self changeWeekToStatus:Status_Approved];
-            [self updateProjectsCurrentDuration];
-        }]];
+        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+        [actionSheet setModalPresentationStyle:UIModalPresentationPopover];
         
-        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Deny" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-            [self changeWeekToStatus:Status_NotApproved];
-        }]];
+        UIPopoverPresentationController *popPresenter = [actionSheet popoverPresentationController];
+        popPresenter.barButtonItem = sender;
+        popPresenter.sourceView = self.view;
+        
+        [self presentViewController:actionSheet animated:YES completion:nil];
     }
-    
-    if (state.type == UserType_Admin) {
-        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Change to Not Submitted" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self changeWeekToStatus:Status_NotSubmitted];
-        }]];
-        
-        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Change to Submitted" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self changeWeekToStatus:Status_Submitted];
-        }]];
-        
-        [actionSheet addAction:[UIAlertAction actionWithTitle:@"Export to PDF" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self exportWeekToPDF];
-        }]];
-    }
-    
-    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
-    [actionSheet setModalPresentationStyle:UIModalPresentationPopover];
-    
-    UIPopoverPresentationController *popPresenter = [actionSheet popoverPresentationController];
-    popPresenter.barButtonItem = sender;
-    popPresenter.sourceView = self.view;
-    
-    [self presentViewController:actionSheet animated:YES completion:nil];
 }
 
 - (void)changeWeekToStatus:(Status)status
@@ -522,6 +540,7 @@
         [hud hideAnimated:YES];
         
         if (!error) {
+            self.hasSignature = YES;
             return;
         } else {
             FIRStorageErrorCode errorCode = error.code;
@@ -568,15 +587,21 @@
                      UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"Error While Saving Image"
                                                                                          message:error.localizedDescription
                                                                                   preferredStyle:UIAlertControllerStyleAlert];
+                     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                                            style:UIAlertActionStyleCancel
+                                                                          handler:nil];
                      UIAlertAction *tryAgainAction = [UIAlertAction actionWithTitle:@"Try again"
                                                                               style:UIAlertActionStyleDefault
                                                                             handler:^(UIAlertAction * _Nonnull action) {
                                                                                 [self showSignatureVC];
                                                                             }];
+                     [errorAlert addAction:cancelAction];
                      [errorAlert addAction:tryAgainAction];
                      [self presentViewController:errorAlert animated:YES completion:nil];
                  } else {
                      NSLog(@"Upload complete! Image metadata: %@", metadata);
+                     
+                     self.hasSignature = YES;
                      
                      UIAlertController *successAlert = [UIAlertController alertControllerWithTitle:@"Signature Saved"
                                                                                            message:@"Your signature will be used for approving timesheets"
