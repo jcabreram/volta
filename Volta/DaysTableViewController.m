@@ -24,7 +24,9 @@ typedef NS_ENUM (NSInteger, Field) {
     Field_Sunday
 };
 
-@interface DaysTableViewController ()
+@interface DaysTableViewController () {
+    UIToolbar *keyboardToolbar;
+}
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
 
@@ -35,7 +37,21 @@ typedef NS_ENUM (NSInteger, Field) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Add a toolbar with Done button above the keyboard
+    keyboardToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+    keyboardToolbar.barStyle = UIBarStyleDefault;
+    keyboardToolbar.items = @[
+                              [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
+                              [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(hideKeyboard)]
+                              ];
+    [keyboardToolbar sizeToFit];
+    
     [self configureDatabase];
+}
+
+- (void)hideKeyboard
+{
+    [self.view endEditing:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -279,9 +295,9 @@ typedef NS_ENUM (NSInteger, Field) {
 
 #pragma mark - UITextField delegate
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-    [textField resignFirstResponder];
+    textField.inputAccessoryView = keyboardToolbar;
     return YES;
 }
 

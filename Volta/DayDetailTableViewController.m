@@ -16,7 +16,9 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
     DayDetailFieldTag_Hours
 };
 
-@interface DayDetailTableViewController ()
+@interface DayDetailTableViewController () {
+    UIToolbar *keyboardToolbar;
+}
 
 @property (nonatomic, strong) FIRDatabaseReference *databaseRef;
 @property (nonatomic, assign) FIRDatabaseHandle availableProjectsHandle;
@@ -33,6 +35,15 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // Add a toolbar with Done button above the keyboard
+    keyboardToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+    keyboardToolbar.barStyle = UIBarStyleDefault;
+    keyboardToolbar.items = @[
+                              [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
+                              [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(hideKeyboard)]
+                              ];
+    [keyboardToolbar sizeToFit];
     
     UserType loggedUserType = [AppState sharedInstance].type;
     
@@ -63,6 +74,11 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
     }
     
     [self configureDatabase];
+}
+
+- (void)hideKeyboard
+{
+    [self.view endEditing:YES];
 }
 
 - (void)configureDatabase
@@ -287,9 +303,9 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
 
 #pragma mark - UITextField delegate
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-    [textField resignFirstResponder];
+    textField.inputAccessoryView = keyboardToolbar;
     return YES;
 }
 
