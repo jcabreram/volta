@@ -93,16 +93,16 @@ typedef NS_ENUM(NSInteger, UserSection) {
         
         switch (indexPath.section) {
             case UserSection_Employees:
-                userSnapshot = _employees[indexPath.row];
+                userSnapshot = self.employees[indexPath.row];
                 break;
             case UserSection_Managers:
-                userSnapshot = _managers[indexPath.row];
+                userSnapshot = self.managers[indexPath.row];
                 break;
             case UserSection_Admins:
-                userSnapshot = _admins[indexPath.row];
+                userSnapshot = self.admins[indexPath.row];
                 break;
             default:
-                userSnapshot = _employees[indexPath.row];
+                userSnapshot = self.employees[indexPath.row];
                 break;
         }
         

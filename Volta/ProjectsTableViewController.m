@@ -19,7 +19,7 @@
 @property (nonatomic, assign) FIRDatabaseHandle projectsHandle;
 @property (nonatomic, assign) FIRDatabaseHandle userProjectsHandle;
 
-@property (nonatomic, strong) NSMutableArray<NSDictionary *> *projects;
+@property (nonatomic, strong) NSMutableArray<FIRDataSnapshot *> *projects;
 @property (nonatomic, strong) Project *selectedProject;
 
 @end
@@ -34,7 +34,7 @@
     // Change the navigation bar color to gradient
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageLayerForGradientBackgroundWithBounds:self.navigationController.navigationBar.bounds] forBarMetrics:UIBarMetricsDefault];
     
-    // If the user is an employee, don't show him the create project toolbar
+    // If the user is an employee or admin, don't show the create project toolbar
     UserType currentUserType = [AppState sharedInstance].type;
     if (currentUserType == UserType_Employee || currentUserType == UserType_Admin) {
         self.navigationController.toolbarHidden = YES;
@@ -47,14 +47,6 @@
 
 - (void)resetPresentingController {
     self.selectedProject = [[Project alloc] init];
-    
-    // Clear the projects data and reload the table to empty it
-    [self.projects removeAllObjects];
-    [self.tableView reloadData];
-    
-    // Load the project data back from the database
-    [self removeObservers];
-    [self configureDatabase];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -74,18 +66,25 @@
     
     if ([segue.identifier isEqualToString:SeguesShowProjectDetail]) {
         NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
-        NSDictionary *project = _projects[indexPath.row];
-        NSDictionary *projectData = [[project allValues] firstObject];
-        NSString *projectKey = [[project allKeys] firstObject];
+        
+        FIRDataSnapshot *projectSnapshot = self.projects[indexPath.row];
+        NSDictionary *project = projectSnapshot.value;
+        NSString *projectKey = projectSnapshot.key;
         
         self.selectedProject = [[Project alloc] initWithKey:projectKey
-                                                       name:projectData[@"name"]
-                                               organization:projectData[@"organization"]
-                                                 companyKey:projectData[@"company"]
-                                              totalDuration:[projectData[@"total_duration"] integerValue]];
+                                                       name:project[@"name"]
+                                               organization:project[@"organization"]
+                                                 companyKey:project[@"company"]
+                                              totalDuration:[project[@"total_duration"] integerValue]];
     }
     
     projectDetailController.project = self.selectedProject;
+}
+
+- (void)sortProjectsArray
+{
+    NSSortDescriptor *projectNameSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"value.name" ascending:YES selector:@selector(localizedStandardCompare:)];
+    self.projects = [[self.projects sortedArrayUsingDescriptors:@[projectNameSortDescriptor]] mutableCopy];
 }
 
 #pragma mark - Database
@@ -101,8 +100,9 @@
             
             [[[self.databaseRef child:@"projects"] child:userProjectKey] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
                 if (snapshot.exists) {
-                    [self.projects addObject:@{snapshot.key : snapshot.value}];
-                    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.projects.count-1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    [self.projects addObject:snapshot];
+                    [self sortProjectsArray];
+                    [self.tableView reloadData];
                 }
             }];
             
@@ -114,8 +114,9 @@
                 if ([snapshot.value isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *project = snapshot.value;
                     if ([project[@"created_by"] isEqualToString:loggedUserKey]) {
-                        [self.projects addObject:@{snapshot.key : snapshot.value}];
-                        [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.projects.count-1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                        [self.projects addObject:snapshot];
+                        [self sortProjectsArray];
+                        [self.tableView reloadData];
                     }
                 }
             }
@@ -123,8 +124,9 @@
     } else {
         self.projectsHandle = [[_databaseRef child:@"projects"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
             if (snapshot.exists) {
-                [self.projects addObject:@{snapshot.key : snapshot.value}];
-                [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.projects.count-1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                [self.projects addObject:snapshot];
+                [self sortProjectsArray];
+                [self.tableView reloadData];
             }
         }];
     }
@@ -155,13 +157,13 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ProjectCell" forIndexPath:indexPath];
     
-    NSDictionary *project = self.projects[indexPath.row];
-    NSDictionary *projectData = [[project allValues] firstObject];
+    FIRDataSnapshot *project = self.projects[indexPath.row];
+    NSDictionary *projectDict = project.value;
     
-    NSString *projectName = projectData[@"name"];
+    NSString *projectName = projectDict[@"name"];
     cell.textLabel.text = projectName;
     
-    NSString *companyKey = projectData[@"company"];
+    NSString *companyKey = projectDict[@"company"];
     
     [[[[self.databaseRef child:@"companies"] child:companyKey] child:@"name"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         if (snapshot) {
