@@ -16,6 +16,8 @@
 #import "MBProgressHUD.h"
 #import "UIColor+VOLcolors.h"
 #import "UIImage+VOLImage.h"
+#import <NYTPhotoViewer/NYTPhotosViewController.h>
+#import "TimesheetPhoto.h"
 
 @import EPSignature;
 @import AVFoundation;
@@ -29,6 +31,7 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *selectEmployeeBarButtonItem;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *shareButton;
 @property (weak, nonatomic) IBOutlet UIView *darkOverlay;
+@property (weak, nonatomic) IBOutlet UIButton *photoButton;
 
 @property (nonatomic) UIDocumentInteractionController *interactionController;
 
@@ -48,6 +51,8 @@
 @property (nonatomic, strong) MBProgressHUD *hud;
 
 @property (nonatomic, strong) UIImagePickerController *imagePickerController;
+
+@property (nonatomic, assign) BOOL photoUploaded;
 
 @end
 
@@ -489,7 +494,7 @@
     [self presentViewController:nav animated:YES completion:nil];
 }
 
-- (void)uploadImageToFirebaseStorage:(NSData *)data
+- (void)uploadSignatureToFirebaseStorage:(NSData *)data
 {
     NSString *userID = [AppState sharedInstance].userID;
     NSString *signatureFilename = [NSString stringWithFormat:@"%@.png", userID];
@@ -642,7 +647,111 @@
 }
 
 - (IBAction)tappedPhotoButton:(UIButton *)sender {
-    [self showCamera];
+    if (self.photoUploaded) {
+        [self showViewerWithTimesheetPhoto];
+    } else {
+        [self showCamera];
+    }
+}
+
+- (void)showViewerWithTimesheetPhoto
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    NSString *timesheetID = [AppState sharedInstance].timesheetKey;
+    NSString *yearString = [@(self.week.year) stringValue];
+    NSString *weekNumberString = [@(self.week.weekNumber) stringValue];
+    NSString *signatureFilename = [NSString stringWithFormat:@"%@.jpg", weekNumberString];
+    
+    FIRStorageReference *storageRef = [[[[[[FIRStorage storage] reference] child:@"ts_photos"] child:timesheetID] child:yearString] child:signatureFilename];
+    
+    NSString *directory = @"TimesheetPhotos";
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error;
+    NSString *tempDir = NSTemporaryDirectory();
+    NSString *tempPhotoDir = [tempDir stringByAppendingPathComponent:directory];
+    NSString *yearDir = [tempPhotoDir stringByAppendingPathComponent:directory];
+    NSString *tempPhotoPath = [yearDir stringByAppendingPathComponent:signatureFilename];
+    NSURL *localURL = [NSURL fileURLWithPath:tempPhotoPath];
+    [fileManager removeItemAtPath:tempPhotoPath error:&error];
+    
+    [storageRef writeToFile:localURL completion:^(NSURL * _Nullable URL, NSError * _Nullable error) {
+        [hud hideAnimated:YES];
+        if (error) {
+            NSLog(@"Error while downloading photo");
+            
+            UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"No Photo in Cloud Storage"
+                                                                                message:@"Please, try uploading the photo for this timesheet one more time."
+                                                                         preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                               style:UIAlertActionStyleDefault
+                                                             handler:nil];
+            [errorAlert addAction:okAction];
+            [self presentViewController:errorAlert animated:YES completion:nil];
+            
+            [self.hud hideAnimated:YES];
+        } else {
+            NSString *employeeName = self.availableEmployeeNames[self.selectedEmployeeKey];
+            NSString *uploadedBy = [NSString stringWithFormat:@"Uploaded by: %@", employeeName];
+            NSString *weekRange = [self.week stringWithDateRange];
+            NSString *photoTitle = [NSString stringWithFormat:@"Timesheet Week: %@", weekRange];
+            TimesheetPhoto *photo = [[TimesheetPhoto alloc] init];
+            photo.image = [UIImage imageWithContentsOfFile:tempPhotoPath];
+            
+            photo.attributedCaptionTitle = [[NSAttributedString alloc] initWithString:photoTitle
+                                                                           attributes:@{
+                                                                                        NSForegroundColorAttributeName: [UIColor whiteColor],
+                                                                                        NSFontAttributeName: [UIFont preferredFontForTextStyle:UIFontTextStyleBody]
+                                                                                        }];
+            photo.attributedCaptionCredit = [[NSAttributedString alloc] initWithString:uploadedBy
+                                                                           attributes:@{
+                                                                                        NSForegroundColorAttributeName: [UIColor grayColor],
+                                                                                        NSFontAttributeName: [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1]}];
+            
+            if (photo.image) {
+                NYTPhotosViewController *photosViewController = [[NYTPhotosViewController alloc] initWithPhotos:@[photo]];
+                [self presentViewController:photosViewController animated:YES completion:nil];
+            }
+        }
+    }];
+    
+    
+}
+
+- (void)verifyPhotoInDatabase
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    UserType currentUserType = [AppState sharedInstance].type;
+    
+    NSString *timesheetID = [AppState sharedInstance].timesheetKey;
+    NSString *yearString = [@(self.week.year) stringValue];
+    NSString *weekNumberString = [@(self.week.weekNumber) stringValue];
+    NSString *signatureFilename = [NSString stringWithFormat:@"%@.jpg", weekNumberString];
+    
+    FIRStorageReference *storageRef = [[[[[[FIRStorage storage] reference] child:@"ts_photos"] child:timesheetID] child:yearString] child:signatureFilename];
+    
+    [storageRef metadataWithCompletion:^(FIRStorageMetadata * _Nullable metadata, NSError * _Nullable error) {
+        [hud hideAnimated:YES];
+        
+        if (!error) {
+            [self.photoButton setImage:[UIImage imageNamed:@"eye"] forState:UIControlStateNormal];
+            self.photoUploaded = YES;
+            self.photoButton.enabled = YES;
+        } else {
+            FIRStorageErrorCode errorCode = error.code;
+            
+            if (errorCode == FIRStorageErrorCodeObjectNotFound) {
+                self.photoUploaded = NO;
+                if (currentUserType == UserType_Employee) {
+                    [self.photoButton setImage:[UIImage imageNamed:@"camera"] forState:UIControlStateNormal];
+                    self.photoButton.enabled = YES;
+                } else {
+                    self.photoButton.enabled = NO;
+                }
+            }
+        }
+    }];
 }
 
 #pragma mark - Days table view delegate
@@ -680,6 +789,8 @@
             self.shareButton.enabled = YES;
             break;
     }
+    
+    [self verifyPhotoInDatabase];
 }
 
 - (void)weekStatusChangedTo:(Status)status
@@ -752,7 +863,7 @@
     CGImageRelease(bottomImgRef);
     
     NSData *imageData = UIImagePNGRepresentation(bottomImage);
-    [self uploadImageToFirebaseStorage:imageData];
+    [self uploadSignatureToFirebaseStorage:imageData];
 }
 
 
@@ -801,6 +912,9 @@
                          [self presentViewController:errorAlert animated:YES completion:nil];
                      } else {
                          NSLog(@"Upload complete! Image metadata: %@", metadata);
+                         
+                         self.photoButton.imageView.image = [UIImage imageNamed:@"eye"];
+                         self.photoUploaded = YES;
                          
                          UIAlertController *successAlert = [UIAlertController alertControllerWithTitle:@"Photo Uploaded!"
                                                                                                message:@"This photo will be attached to your timesheet once you submit it."

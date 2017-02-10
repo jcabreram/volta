@@ -17,5 +17,6 @@ pod 'LGSideMenuController', '~> 1.0.0'
 pod 'ActionSheetPicker-3.0'
 pod 'iOS-htmltopdf', '~> 1.0'
 pod 'MBProgressHUD', '~> 1.0.0'
+pod 'NYTPhotoViewer'
 
 end

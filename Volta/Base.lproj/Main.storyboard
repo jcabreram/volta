@@ -235,6 +235,7 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cyR-se-qfQ">
                                         <rect key="frame" x="20" y="10" width="44" height="44"/>
                                         <state key="normal" image="camera"/>
+                                        <state key="disabled" image="eye-no"/>
                                         <connections>
                                             <action selector="tappedPhotoButton:" destination="8my-8y-xgV" eventType="touchUpInside" id="ria-b4-7Ga"/>
                                         </connections>
@@ -265,8 +266,8 @@
                                     <segue destination="wkX-nX-NKi" kind="embed" identifier="PresentWeeks" id="QSG-83-BVw"/>
                                 </connections>
                             </containerView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kdw-Yx-jHo">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="559"/>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kdw-Yx-jHo">
+                                <rect key="frame" x="40" y="0.0" width="375" height="559"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.69777397260273977" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                         </subviews>
@@ -313,6 +314,7 @@
                     <connections>
                         <outlet property="allocatedHoursLabel" destination="jzV-MN-lLX" id="Zo8-E6-DDY"/>
                         <outlet property="darkOverlay" destination="kdw-Yx-jHo" id="4Yc-bc-7P0"/>
+                        <outlet property="photoButton" destination="cyR-se-qfQ" id="GpC-qd-u51"/>
                         <outlet property="selectEmployeeBarButtonItem" destination="Zw5-u1-nFI" id="bZw-5Z-w8Y"/>
                         <outlet property="shareButton" destination="sUM-FV-2i8" id="i1j-Pt-P9J"/>
                     </connections>
@@ -1271,6 +1273,7 @@
     </scenes>
     <resources>
         <image name="camera" width="44" height="44"/>
+        <image name="eye-no" width="44" height="44"/>
         <image name="ic_circle_check" width="22" height="22"/>
         <image name="ic_menu_2" width="22" height="22"/>
         <image name="login-ksquare" width="98" height="22"/>

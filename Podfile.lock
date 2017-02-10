@@ -50,6 +50,7 @@ PODS:
   - FirebaseStorage (1.0.5):
     - FirebaseAnalytics (~> 3.5)
     - GTMSessionFetcher/Core (~> 1.1)
+  - FLAnimatedImage (1.0.12)
   - GoogleInterchangeUtilities (1.2.2):
     - GoogleSymbolUtilities (~> 1.1)
   - GoogleSymbolUtilities (1.1.2)
@@ -69,6 +70,13 @@ PODS:
   - iOS-htmltopdf (1.0.3)
   - LGSideMenuController (1.0.10)
   - MBProgressHUD (1.0.0)
+  - NYTPhotoViewer (1.2.0):
+    - NYTPhotoViewer/AnimatedGifSupport (= 1.2.0)
+    - NYTPhotoViewer/Core (= 1.2.0)
+  - NYTPhotoViewer/AnimatedGifSupport (1.2.0):
+    - FLAnimatedImage (~> 1.0.12)
+    - NYTPhotoViewer/Core
+  - NYTPhotoViewer/Core (1.2.0)
 
 DEPENDENCIES:
   - ActionSheetPicker-3.0
@@ -81,6 +89,7 @@ DEPENDENCIES:
   - iOS-htmltopdf (~> 1.0)
   - LGSideMenuController (~> 1.0.0)
   - MBProgressHUD (~> 1.0.0)
+  - NYTPhotoViewer
 
 SPEC CHECKSUMS:
   ActionSheetPicker-3.0: d11a4c12c6aaf704b8a3f56d179198c99f3e41e6
@@ -93,6 +102,7 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: ba1e640935235e5fac39dfa816fe7660e72e1a8a
   FirebaseMessaging: acf66347e43c5637c697060c3001d25c809a4131
   FirebaseStorage: 5738284835edb57f0e81d4ae5832bb17c1e4b5fa
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   GoogleInterchangeUtilities: d5bc4d88d5b661ab72f9d70c58d02ca8c27ad1f7
   GoogleSymbolUtilities: 631ee17048aa5e9ab133470d768ea997a5ef9b96
   GoogleToolboxForMac: 2b2596cbb7186865e98cadf2b1e262d851c2b168
@@ -100,7 +110,8 @@ SPEC CHECKSUMS:
   iOS-htmltopdf: 1bd88a781cb4b20e4b8f921bd7374447a1876faf
   LGSideMenuController: 8682bdbd0008c1acfbce95eaf96cc3657bca5f95
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
+  NYTPhotoViewer: 323217e4590a1586eb3c9674b3fefb0fb8b57896
 
-PODFILE CHECKSUM: 1a059fe20b33b5397aa14dc3927690ae6e9a5b2c
+PODFILE CHECKSUM: 7e285d325c406e342ed968dc59d8e722e7658457
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.2.0
