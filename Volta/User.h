@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TimesheetWeek.h"
 
 @interface User : NSObject
 
@@ -29,6 +30,7 @@ typedef NS_ENUM (NSInteger, UserType) {
 @property (nonatomic, copy) NSString *timesheet;
 @property (nonatomic, copy) NSMutableDictionary<NSString *, NSNumber *> *projects;
 @property (nonatomic, assign) BOOL requiresPhoto;
+@property (nonatomic, assign) Status lastWeekStatus;
 
 - (instancetype)init;
 - (instancetype)initWithKey:(NSString *)key

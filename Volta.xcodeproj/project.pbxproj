@@ -29,6 +29,7 @@
 		9469E7321DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9469E7311DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m */; };
 		9469E7351DD4E903007EB4E6 /* TimesheetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9469E7341DD4E903007EB4E6 /* TimesheetsViewController.m */; };
 		946ABC8A1E4E19510051E11D /* TimesheetPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 946ABC891E4E19510051E11D /* TimesheetPhoto.m */; };
+		946ABC901E4E84B40051E11D /* UserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 946ABC8F1E4E84B40051E11D /* UserCell.m */; };
 		94730FA71E43DB9400163ECC /* TimesheetReport in Resources */ = {isa = PBXBuildFile; fileRef = 94730FA61E43DB9400163ECC /* TimesheetReport */; };
 		9473D99B1E3A872B000B95D5 /* EPSignature.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9473D99A1E3A872B000B95D5 /* EPSignature.framework */; };
 		9477AD481DEE2DC7006FBF28 /* UsersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9477AD471DEE2DC7006FBF28 /* UsersTableViewController.m */; };
@@ -97,6 +98,8 @@
 		9469E7341DD4E903007EB4E6 /* TimesheetsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimesheetsViewController.m; sourceTree = "<group>"; };
 		946ABC881E4E19510051E11D /* TimesheetPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimesheetPhoto.h; sourceTree = "<group>"; };
 		946ABC891E4E19510051E11D /* TimesheetPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimesheetPhoto.m; sourceTree = "<group>"; };
+		946ABC8E1E4E84B40051E11D /* UserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCell.h; sourceTree = "<group>"; };
+		946ABC8F1E4E84B40051E11D /* UserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCell.m; sourceTree = "<group>"; };
 		94730FA61E43DB9400163ECC /* TimesheetReport */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TimesheetReport; sourceTree = "<group>"; };
 		9473D99A1E3A872B000B95D5 /* EPSignature.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EPSignature.framework; path = Carthage/Build/iOS/EPSignature.framework; sourceTree = "<group>"; };
 		9477AD461DEE2DC7006FBF28 /* UsersTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UsersTableViewController.h; path = Volta/UsersTableViewController.h; sourceTree = "<group>"; };
@@ -280,6 +283,8 @@
 			children = (
 				9477AD461DEE2DC7006FBF28 /* UsersTableViewController.h */,
 				9477AD471DEE2DC7006FBF28 /* UsersTableViewController.m */,
+				946ABC8E1E4E84B40051E11D /* UserCell.h */,
+				946ABC8F1E4E84B40051E11D /* UserCell.m */,
 				9477AD491DEE2DD6006FBF28 /* UserDetailTableViewController.h */,
 				9477AD4A1DEE2DD6006FBF28 /* UserDetailTableViewController.m */,
 				9477AD571DF2083D006FBF28 /* UserDetailCell.h */,
@@ -521,6 +526,7 @@
 				9415B68A1DD2385C00C2020D /* main.m in Sources */,
 				94ADACD21DDBAA6300C01279 /* WeeksCollectionViewController.m in Sources */,
 				9415B6A71DD28E8100C2020D /* LoginViewController.m in Sources */,
+				946ABC901E4E84B40051E11D /* UserCell.m in Sources */,
 				94375F1D1E454475009536D0 /* UIImage+VOLImage.m in Sources */,
 				9477AD5F1DF75F44006FBF28 /* ProjectDetailTableViewController.m in Sources */,
 				9469E7321DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m in Sources */,

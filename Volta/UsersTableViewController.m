@@ -18,6 +18,8 @@ typedef NS_ENUM(NSInteger, UserSection) {
 #import "User.h"
 #import "AppState.h"
 #import "UIImage+VOLImage.h"
+#import "UserCell.h"
+#import "UIColor+VOLcolors.h"
 
 @interface UsersTableViewController ()
 
@@ -30,6 +32,10 @@ typedef NS_ENUM(NSInteger, UserSection) {
 
 @property (nonatomic, assign) FIRDatabaseHandle availableCompaniesHandle;
 @property (nonatomic, strong) NSMutableDictionary *availableCompanies;
+
+@property (nonatomic, strong) NSMutableDictionary *employeesStatus;
+@property (nonatomic, strong) NSString *currentYearString;
+@property (nonatomic, strong) NSString *pastWeekString;
 
 @end
 
@@ -57,6 +63,20 @@ typedef NS_ENUM(NSInteger, UserSection) {
     self.admins = [[NSMutableArray alloc] init];
     
     self.availableCompanies = [[NSMutableDictionary alloc] init];
+    
+    self.employeesStatus = [[NSMutableDictionary alloc] init];
+    
+    // Current week of the year
+    NSDate *today = [NSDate date];
+    NSCalendar *cal = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    cal.firstWeekday = 2; // Monday
+    
+    NSDateComponents *currentDateComponents = [cal components:(NSCalendarUnitWeekOfYear | NSCalendarUnitYearForWeekOfYear) fromDate:today];
+    NSInteger currentYear = [currentDateComponents yearForWeekOfYear];
+    self.currentYearString = [@(currentYear) stringValue];
+    NSInteger currentWeek = [currentDateComponents weekOfYear];
+    NSInteger pastWeek = currentWeek - 2;
+    self.pastWeekString = [@(pastWeek) stringValue];
     
     [self configureDatabase];
 }
@@ -148,6 +168,7 @@ typedef NS_ENUM(NSInteger, UserSection) {
                 NSDictionary *managers = user[@"managers"];
                 if (managers[userID]) {
                     [self.employees addObject:snapshot];
+                    [self addStatusForUserWithID:snapshot.key andTimesheet:user[@"timesheet"]];
                 }
             } else {
                 NSString *userType = user[@"type"];
@@ -157,6 +178,7 @@ typedef NS_ENUM(NSInteger, UserSection) {
                     [self.managers addObject:snapshot];
                 } else if ([userType isEqualToString:@"employee"]) {
                     [self.employees addObject:snapshot];
+                    [self addStatusForUserWithID:snapshot.key andTimesheet:user[@"timesheet"]];
                 }
             }
             [self sortUserArrays];
@@ -170,6 +192,16 @@ typedef NS_ENUM(NSInteger, UserSection) {
         id expectedKeyString = snapshot.key;
         if (expectedNameString != nil && [expectedNameString isKindOfClass:[NSString class]] && [expectedKeyString isKindOfClass:[NSString class]]) {
             self.availableCompanies[(NSString *)expectedKeyString] = expectedNameString;
+        }
+    }];
+}
+
+- (void)addStatusForUserWithID:(NSString *)userID andTimesheet:(NSString *)timesheetKey
+{
+    [[[[[self.databaseRef child:@"timesheets"] child:timesheetKey] child:self.currentYearString] child:self.pastWeekString] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        if (snapshot.exists) {
+            self.employeesStatus[userID] = snapshot.value;
+            [self.tableView reloadData];
         }
     }];
 }
@@ -237,7 +269,7 @@ typedef NS_ENUM(NSInteger, UserSection) {
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UserCell" forIndexPath:indexPath];
+    UserCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UserCell" forIndexPath:indexPath];
     
     FIRDataSnapshot *userSnapshot;
     
@@ -256,19 +288,48 @@ typedef NS_ENUM(NSInteger, UserSection) {
             break;
     }
     NSDictionary<NSString *, NSString *> *user = userSnapshot.value;
+    NSString *userKey = userSnapshot.key;
     
     NSString *firstName = user[@"first_name"];
     NSString *lastName = user[@"last_name"];
     NSString *fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-    cell.textLabel.text = fullName;
+    cell.nameLabel.text = fullName;
     
     if (indexPath.section != UserSection_Admins) {
         if (user[@"company"]) {
             NSString *companyKey = user[@"company"];
-            cell.detailTextLabel.text = self.availableCompanies[companyKey];
+            cell.companyLabel.text = self.availableCompanies[companyKey];
         }
     } else {
-        cell.detailTextLabel.text = @"";
+        cell.companyLabel.text = @"";
+    }
+    
+    if (indexPath.section != UserSection_Employees) {
+        cell.dotIndicatorLabel.text = @"";
+        cell.dotIndicatorLabelConstraint.constant = 0.0;
+    } else {
+        cell.dotIndicatorLabel.text = @"●";
+        cell.dotIndicatorLabelConstraint.constant = 16.0;
+        
+        Status userStatus = [self.employeesStatus[userKey] integerValue];
+        
+        switch (userStatus) {
+            case Status_NotSubmitted:
+                cell.dotIndicatorLabel.textColor = [UIColor notSubmittedPastStatusColor];
+                break;
+            case Status_Submitted:
+                cell.dotIndicatorLabel.textColor = [UIColor submittedStatusColor];
+                break;
+            case Status_Approved:
+                cell.dotIndicatorLabel.textColor = [UIColor approvedStatusColor];
+                break;
+            case Status_NotApproved:
+                cell.dotIndicatorLabel.textColor = [UIColor notApprovedStatusColor];
+                break;
+            default:
+                cell.dotIndicatorLabel.textColor = [UIColor notSubmittedPastStatusColor];
+                break;
+        }
     }
     
     return cell;
