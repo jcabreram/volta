@@ -727,6 +727,8 @@
 
 - (void)showViewerWithTimesheetPhoto
 {
+    UserType currentUserType = [AppState sharedInstance].type;
+
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     NSString *timesheetID = [AppState sharedInstance].timesheetKey;
@@ -774,10 +776,13 @@
                                                                                         NSForegroundColorAttributeName: [UIColor whiteColor],
                                                                                         NSFontAttributeName: [UIFont preferredFontForTextStyle:UIFontTextStyleBody]
                                                                                         }];
-            photo.attributedCaptionCredit = [[NSAttributedString alloc] initWithString:uploadedBy
-                                                                           attributes:@{
-                                                                                        NSForegroundColorAttributeName: [UIColor grayColor],
-                                                                                        NSFontAttributeName: [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1]}];
+            
+            if (currentUserType != UserType_Employee) {
+                photo.attributedCaptionCredit = [[NSAttributedString alloc] initWithString:uploadedBy
+                                                                                attributes:@{
+                                                                                             NSForegroundColorAttributeName: [UIColor grayColor],
+                                                                                             NSFontAttributeName: [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1]}];
+            }
             
             if (photo.image) {
                 NYTPhotosViewController *photosViewController = [[NYTPhotosViewController alloc] initWithPhotos:@[photo]];
