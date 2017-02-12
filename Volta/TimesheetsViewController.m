@@ -806,6 +806,15 @@
 - (void)chosenWeekChangedToWeek:(TimesheetWeek *)week
 {
     self.week = week;
+    [self weekStatusChangedTo:week.status];
+    
+    [self verifyPhotoInDatabase];
+}
+
+- (void)weekStatusChangedTo:(Status)status
+{
+    self.week.status = status;
+    
     UserType currentUserType = [AppState sharedInstance].type;
     
     switch (currentUserType) {
@@ -829,13 +838,6 @@
             self.shareButton.enabled = YES;
             break;
     }
-    
-    [self verifyPhotoInDatabase];
-}
-
-- (void)weekStatusChangedTo:(Status)status
-{
-    self.week.status = status;
 }
 
 #pragma mark - NDHTMLtoPDFDelegate
