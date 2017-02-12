@@ -305,7 +305,9 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-    textField.inputAccessoryView = keyboardToolbar;
+    if (textField.tag == DayDetailFieldTag_Hours) {
+        textField.inputAccessoryView = keyboardToolbar;
+    }
     return YES;
 }
 
