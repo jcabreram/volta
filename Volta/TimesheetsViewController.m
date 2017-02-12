@@ -835,7 +835,11 @@
             break;
             
         case UserType_Admin:
-            self.shareButton.enabled = YES;
+            if (!self.selectedEmployeeKey) {
+                self.shareButton.enabled = NO;
+            } else {
+                self.shareButton.enabled = YES;
+            }
             break;
     }
 }
