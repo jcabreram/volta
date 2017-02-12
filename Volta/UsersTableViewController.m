@@ -33,6 +33,7 @@ typedef NS_ENUM(NSInteger, UserSection) {
 @property (nonatomic, assign) FIRDatabaseHandle availableCompaniesHandle;
 @property (nonatomic, strong) NSMutableDictionary *availableCompanies;
 
+@property (nonatomic, assign) FIRDatabaseHandle employeesStatusHandle;
 @property (nonatomic, strong) NSMutableDictionary *employeesStatus;
 @property (nonatomic, strong) NSString *currentYearString;
 @property (nonatomic, strong) NSString *pastWeekString;
@@ -198,7 +199,7 @@ typedef NS_ENUM(NSInteger, UserSection) {
 
 - (void)addStatusForUserWithID:(NSString *)userID andTimesheet:(NSString *)timesheetKey
 {
-    [[[[[self.databaseRef child:@"timesheets"] child:timesheetKey] child:self.currentYearString] child:self.pastWeekString] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+    self.employeesStatusHandle = [[[[[self.databaseRef child:@"timesheets"] child:timesheetKey] child:self.currentYearString] child:self.pastWeekString] observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
         if (snapshot.exists) {
             self.employeesStatus[userID] = snapshot.value;
             [self.tableView reloadData];
@@ -209,6 +210,7 @@ typedef NS_ENUM(NSInteger, UserSection) {
 - (void)dealloc {
     [[self.databaseRef child:@"users"] removeObserverWithHandle:self.referenceHandle];
     [[self.databaseRef child:@"companies"] removeObserverWithHandle:self.availableCompaniesHandle];
+    [[self.databaseRef child:@"timesheets"] removeObserverWithHandle:self.employeesStatusHandle];
 }
 
 - (void)sortUserArrays
