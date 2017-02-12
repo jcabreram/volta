@@ -643,7 +643,7 @@
             
             if (errorCode == FIRStorageErrorCodeObjectNotFound) {
                 self.photoUploaded = NO;
-                if (currentUserType == UserType_Employee) {
+                if (currentUserType == UserType_Employee && self.week.status == Status_NotSubmitted) {
                     [self.photoButton setImage:[UIImage imageNamed:@"camera"] forState:UIControlStateNormal];
                     self.photoButton.enabled = YES;
                 } else {
@@ -842,6 +842,8 @@
             }
             break;
     }
+    
+    [self verifyPhotoInDatabase];
 }
 
 #pragma mark - NDHTMLtoPDFDelegate
@@ -959,7 +961,7 @@
                      } else {
                          NSLog(@"Upload complete! Image metadata: %@", metadata);
                          
-                         self.photoButton.imageView.image = [UIImage imageNamed:@"eye"];
+                         [self.photoButton setImage:[UIImage imageNamed:@"eye"] forState:UIControlStateNormal];
                          self.photoUploaded = YES;
                          
                          UIAlertController *successAlert = [UIAlertController alertControllerWithTitle:@"Photo Uploaded!"
