@@ -261,7 +261,7 @@
     
     if (state.type == UserType_Manager && !self.hasSignature) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"No Signature On File"
-                                                                       message:@"Your signature is required to submit or deny timesheets."
+                                                                       message:@"Your signature is required to approve or deny timesheets."
                                                                 preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
                                                            style:UIAlertActionStyleDefault
@@ -273,6 +273,15 @@
                                                          handler:nil];
         [alert addAction:okAction];
         [alert addAction:cancelAction];
+        [self presentViewController:alert animated:YES completion:nil];
+    } else if (state.type == UserType_Employee && state.requiresPhoto && !self.photoUploaded) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Timesheet Photo Required"
+                                                                       message:@"A photo of the client's timesheet is required to submit. Tap on the camera icon to upload it."
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:nil];
+        [alert addAction:okAction];
         [self presentViewController:alert animated:YES completion:nil];
     } else {
         UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
