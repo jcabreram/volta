@@ -54,7 +54,13 @@
         _managers = managers;
         _companyKey = companyKey;
         _timesheet = timesheet;
-        _projects = projects;
+        
+        if (projects) {
+            _projects = projects;
+        } else {
+            _projects = [[NSMutableDictionary alloc] init];
+        }
+        
         _requiresPhoto = NO;
     }
     
