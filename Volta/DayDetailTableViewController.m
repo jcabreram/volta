@@ -126,32 +126,37 @@ typedef NS_ENUM(NSInteger, DayDetailFieldTag) {
 {
     [super viewWillDisappear:animated];
     
-    [self updateProjects];
+    UserType loggedUserType = [AppState sharedInstance].type;
     
-    NSString *timesheetKey = [AppState sharedInstance].timesheetKey;
-    
-    if ([self.dayProjects count] == 0) {
-        self.dayProjects = nil;
-    }
-    
-    // Update the list of projects for the week
-    [[[[[[[self.databaseRef
-           child:@"timesheet_details"]
-          child:timesheetKey]
-         child:[@(self.week.year) stringValue]]
-        child:[@(self.week.weekNumber) stringValue]]
-       child:[self stringWithNameOfDay:self.weekDay]]
-      child:@"projects"] setValue:self.dayProjects];
-    
-    if ([self.sumOfProjectHours doubleValue] != 0.0) {
-        // Update the total hours for the week
+    if ((self.week.status == Status_NotSubmitted || self.week.status == Status_NotApproved) && loggedUserType == UserType_Employee) {
+        
+        [self updateProjects];
+        
+        NSString *timesheetKey = [AppState sharedInstance].timesheetKey;
+        
+        if ([self.dayProjects count] == 0) {
+            self.dayProjects = nil;
+        }
+        
+        // Update the list of projects for the week
         [[[[[[[self.databaseRef
                child:@"timesheet_details"]
               child:timesheetKey]
              child:[@(self.week.year) stringValue]]
             child:[@(self.week.weekNumber) stringValue]]
            child:[self stringWithNameOfDay:self.weekDay]]
-          child:@"time"] setValue:[self sumOfProjectHours]];
+          child:@"projects"] setValue:self.dayProjects];
+        
+        if ([self.sumOfProjectHours doubleValue] != 0.0) {
+            // Update the total hours for the week
+            [[[[[[[self.databaseRef
+                   child:@"timesheet_details"]
+                  child:timesheetKey]
+                 child:[@(self.week.year) stringValue]]
+                child:[@(self.week.weekNumber) stringValue]]
+               child:[self stringWithNameOfDay:self.weekDay]]
+              child:@"time"] setValue:[self sumOfProjectHours]];
+        }
     }
 }
 
