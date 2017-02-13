@@ -110,7 +110,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSLog(@"%@", userInfo);
     
     // Change this to your preferred presentation option
-    completionHandler(UNNotificationPresentationOptionNone);
+    completionHandler(UNNotificationPresentationOptionAlert);
 }
 
 // Handle notification messages after display notification is tapped by the user.
