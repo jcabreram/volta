@@ -155,6 +155,8 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UserType currentUserType = [AppState sharedInstance].type;
+    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ProjectCell" forIndexPath:indexPath];
     
     FIRDataSnapshot *project = self.projects[indexPath.row];
@@ -163,15 +165,50 @@
     NSString *projectName = projectDict[@"name"];
     cell.textLabel.text = projectName;
     
+    NSNumber *totalDuration = projectDict[@"total_duration"];
+    NSNumber *currentDuration = projectDict[@"current_duration"];
+    
+    if (!currentDuration) {
+        currentDuration = @(0);
+    }
+    
+    if (!totalDuration) {
+        totalDuration = @(0);
+    }
+    
+    UIColor *durationColor;
+    if ([currentDuration doubleValue] > [totalDuration doubleValue]) {
+        durationColor = [UIColor redColor];
+    } else {
+        durationColor = [UIColor blackColor];
+    }
+    
+    NSString *durationString = [NSString stringWithFormat:@"%@ / %@ hrs", currentDuration, totalDuration];
+    NSAttributedString *attributedDuration = [[NSAttributedString alloc] initWithString:durationString
+                                                                             attributes:@{
+                                                                                          NSForegroundColorAttributeName : durationColor
+                                                                                          }];
+    
     NSString *companyKey = projectDict[@"company"];
     
-    [[[[self.databaseRef child:@"companies"] child:companyKey] child:@"name"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-        if (snapshot) {
-            if ([snapshot.value isKindOfClass:[NSString class]]) {
-                cell.detailTextLabel.text = snapshot.value;
+    if (currentUserType == UserType_Admin) {
+        [[[[self.databaseRef child:@"companies"] child:companyKey] child:@"name"] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+            if (snapshot.exists) {
+                if ([snapshot.value isKindOfClass:[NSString class]]) {
+                    NSString *company = snapshot.value;
+                    NSMutableAttributedString *attributedDetail = [[NSMutableAttributedString alloc] initWithString:company];
+                    [attributedDetail beginEditing];
+                    NSAttributedString *attributedSeparator = [[NSAttributedString alloc] initWithString:@" - "];
+                    [attributedDetail appendAttributedString:attributedSeparator];
+                    [attributedDetail appendAttributedString:attributedDuration];
+                    [attributedDetail endEditing];
+                    cell.detailTextLabel.attributedText = attributedDetail;
+                }
             }
-        }
-    }];
+        }];
+    } else {
+        cell.detailTextLabel.attributedText = attributedDuration;
+    }
     
     return cell;
 }
