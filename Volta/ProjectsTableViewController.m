@@ -47,6 +47,15 @@
 
 - (void)resetPresentingController {
     self.selectedProject = [[Project alloc] init];
+    
+    // Clear the projects data and reload the table to empty it
+    [self.projects removeAllObjects];
+    
+    // Load the users data back from the database
+    [[self.databaseRef child:@"projects"] removeObserverWithHandle:self.projectsHandle];
+    [self configureDatabase];
+    
+    [self.tableView reloadData];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

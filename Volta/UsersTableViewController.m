@@ -84,6 +84,17 @@ typedef NS_ENUM(NSInteger, UserSection) {
 
 - (void)resetPresentingController {
     self.selectedUser = [[User alloc] init];
+    
+    // Clear the users data and reload the table to empty it
+    [self.employees removeAllObjects];
+    [self.managers removeAllObjects];
+    [self.admins removeAllObjects];
+    
+    // Load the users data back from the database
+    [[self.databaseRef child:@"projects"] removeObserverWithHandle:self.referenceHandle];
+    [self configureDatabase];
+    
+    [self.tableView reloadData];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
