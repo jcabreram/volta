@@ -754,12 +754,14 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Hide the password row for existing users
-    if (indexPath.row == FieldTag_Password && ![self.user.key vol_isStringEmpty]) {
-        return 0.0f;
-    } else {
-        return UITableViewAutomaticDimension;
+    if (indexPath.section == SectionNumber_One) {
+        // Hide the password row for existing users
+        if (indexPath.row == FieldTag_Password && ![self.user.key vol_isStringEmpty]) {
+            return 0.0f;
+        }
     }
+    
+    return UITableViewAutomaticDimension;
 }
 
 #pragma mark - UITextField delegate
