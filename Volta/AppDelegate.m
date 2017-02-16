@@ -53,6 +53,21 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     
     [FIRApp configure];
     
+    // Sign out in the first run of the app
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:@"FirstRun"]) {
+        
+        // Sign out
+        FIRAuth *firebaseAuth = [FIRAuth auth];
+        NSError *signOutError;
+        BOOL status = [firebaseAuth signOut:&signOutError];
+        if (!status) {
+            NSLog(@"Error signing out: %@", signOutError);
+        }
+        
+        [[NSUserDefaults standardUserDefaults] setValue:@"1strun" forKey:@"FirstRun"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
     // Add observer for InstanceID token refresh callback.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tokenRefreshNotification:)
                                                  name:kFIRInstanceIDTokenRefreshNotification object:nil];
