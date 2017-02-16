@@ -437,11 +437,11 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
                                            [secondaryAppAuth signOut:nil];
                                            
                                            if (error) {
+                                               [self.hud hideAnimated:YES];
                                                [self presentValidationErrorAlertWithTitle:@"Error"
                                                                                   message:error.localizedDescription];
                                                NSLog(@"%@", error.localizedDescription);
                                            } else {
-                                               
                                                [self updateDatabaseWithUserUID:user.uid];
                                            }
                                        }];
