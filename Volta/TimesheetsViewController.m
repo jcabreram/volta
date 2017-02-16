@@ -294,7 +294,11 @@
                 }]];
             } else {
                 [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    [self changeWeekToStatus:Status_Submitted];
+                    if (state.requiresPhoto && self.photoUploaded) {
+                        [self changeWeekToStatus:Status_Approved];
+                    } else {
+                        [self changeWeekToStatus:Status_Submitted];
+                    }
                 }]];
             }
             
