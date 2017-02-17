@@ -1,1 +1,1 @@
-../../../../FirebaseMessaging/Frameworks/frameworks/FirebaseMessaging.framework/Headers/FirebaseMessaging.h
+../../../../FirebaseMessaging/Frameworks/FirebaseMessaging.framework/Headers/FirebaseMessaging.h

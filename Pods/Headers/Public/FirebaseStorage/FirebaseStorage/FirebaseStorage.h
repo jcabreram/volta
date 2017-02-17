@@ -1,1 +1,1 @@
-../../../../FirebaseStorage/Frameworks/frameworks/FirebaseStorage.framework/Headers/FirebaseStorage.h
+../../../../FirebaseStorage/Frameworks/FirebaseStorage.framework/Headers/FirebaseStorage.h

@@ -1,1 +1,1 @@
-../../../../FirebaseCrash/Frameworks/frameworks/FirebaseCrash.framework/Headers/FirebaseCrash.h
+../../../../FirebaseCrash/Frameworks/FirebaseCrash.framework/Headers/FirebaseCrash.h

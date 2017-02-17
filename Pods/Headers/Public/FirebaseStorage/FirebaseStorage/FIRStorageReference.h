@@ -1,1 +1,1 @@
-../../../../FirebaseStorage/Frameworks/frameworks/FirebaseStorage.framework/Headers/FIRStorageReference.h
+../../../../FirebaseStorage/Frameworks/FirebaseStorage.framework/Headers/FIRStorageReference.h
