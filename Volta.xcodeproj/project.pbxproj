@@ -15,6 +15,7 @@
 		9415B6981DD2385C00C2020D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9415B6961DD2385C00C2020D /* LaunchScreen.storyboard */; };
 		9415B6A01DD23B5A00C2020D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9415B69F1DD23B5A00C2020D /* GoogleService-Info.plist */; };
 		9415B6A71DD28E8100C2020D /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9415B6A61DD28E8100C2020D /* LoginViewController.m */; };
+		941720021E57B84D00F19428 /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 941720011E57B84D00F19428 /* GoogleService-Info-dev.plist */; };
 		94375F1D1E454475009536D0 /* UIImage+VOLImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 94375F1C1E454475009536D0 /* UIImage+VOLImage.m */; };
 		945353D01E0C505D0023C40A /* NSDate+VOLDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 945353CF1E0C505D0023C40A /* NSDate+VOLDate.m */; };
 		945EB0BC1E087F240035F3C6 /* TimesheetWeek.m in Sources */ = {isa = PBXBuildFile; fileRef = 945EB0BB1E087F240035F3C6 /* TimesheetWeek.m */; };
@@ -66,6 +67,7 @@
 		9415B69F1DD23B5A00C2020D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9415B6A51DD28E8100C2020D /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = Volta/LoginViewController.h; sourceTree = "<group>"; };
 		9415B6A61DD28E8100C2020D /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = Volta/LoginViewController.m; sourceTree = "<group>"; };
+		941720011E57B84D00F19428 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
 		942AEE8C1DDE11DA004C3FF8 /* Volta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Volta.entitlements; sourceTree = "<group>"; };
 		94375F1B1E454475009536D0 /* UIImage+VOLImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+VOLImage.h"; sourceTree = "<group>"; };
 		94375F1C1E454475009536D0 /* UIImage+VOLImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+VOLImage.m"; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 				9469E7201DD3CFCD007EB4E6 /* AppState.h */,
 				9469E7211DD3CFCD007EB4E6 /* AppState.m */,
 				9415B69F1DD23B5A00C2020D /* GoogleService-Info.plist */,
+				941720011E57B84D00F19428 /* GoogleService-Info-dev.plist */,
 			);
 			name = Firebase;
 			sourceTree = "<group>";
@@ -435,6 +438,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9415B6981DD2385C00C2020D /* LaunchScreen.storyboard in Resources */,
+				941720021E57B84D00F19428 /* GoogleService-Info-dev.plist in Resources */,
 				9415B6A01DD23B5A00C2020D /* GoogleService-Info.plist in Resources */,
 				9415B6951DD2385C00C2020D /* Assets.xcassets in Resources */,
 				94A0779A1E31505B00A3D18D /* Welcome email.html in Resources */,

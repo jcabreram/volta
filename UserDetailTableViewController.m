@@ -425,8 +425,15 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
             // Creating the user on another app instance so that the current user isn't logged out
             // Source: http://stackoverflow.com/questions/37517208/firebase-kicks-out-current-user/37614090#37614090
             
-            NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info" ofType:@"plist"];
-            FIROptions *secondaryAppOptions = [[FIROptions alloc] initWithContentsOfFile:plistPath];
+            NSString *firebasePlistPath;
+            if (![[[[NSBundle mainBundle] appStoreReceiptURL] lastPathComponent] isEqualToString:@"sandboxReceipt"]) {
+                firebasePlistPath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info" ofType:@"plist"];
+            } else {
+                firebasePlistPath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info-dev" ofType:@"plist"];
+            }
+            
+            FIROptions *secondaryAppOptions = [[FIROptions alloc] initWithContentsOfFile:firebasePlistPath];
+            
             [FIRApp configureWithName:secondaryAppString options:secondaryAppOptions];
             FIRApp *secondaryApp = [FIRApp appNamed:secondaryAppString];
             FIRAuth *secondaryAppAuth = [FIRAuth authWithApp:secondaryApp];

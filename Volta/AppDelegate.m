@@ -51,7 +51,20 @@ NSString *const kGCMMessageIDKey = @"gcm.message_id";
     
     [[UIApplication sharedApplication] registerForRemoteNotifications];
     
-    [FIRApp configure];
+    NSString *firebasePlistPath;
+    if (![[[[NSBundle mainBundle] appStoreReceiptURL] lastPathComponent] isEqualToString:@"sandboxReceipt"]) {
+        firebasePlistPath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info" ofType:@"plist"];
+    } else {
+        firebasePlistPath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info-dev" ofType:@"plist"];
+    }
+    
+    FIROptions *options = [[FIROptions alloc] initWithContentsOfFile:firebasePlistPath];
+    
+    if (options) {
+        [FIRApp configureWithOptions:options];
+    } else {
+        NSLog(@"Invalid Firebase configuration file.");
+    }
     
     // Sign out in the first run of the app
     if (![[NSUserDefaults standardUserDefaults] objectForKey:@"FirstRun"]) {
