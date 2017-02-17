@@ -64,10 +64,19 @@
     [super viewDidLoad];
     
     UserType currentUserType = [AppState sharedInstance].type;
+    BOOL requiresPhoto = [AppState sharedInstance].requiresPhoto;
+    
     if (currentUserType == UserType_Employee) {
         self.navigationController.toolbarHidden = YES;
         [self.darkOverlay removeFromSuperview];
-        self.shareButton.enabled = YES;
+        
+        if (requiresPhoto) {
+            self.photoButton.enabled = YES;
+        } else {
+            [self.photoButton setEnabled:NO];
+            [self.photoButton setImage:nil forState:UIControlStateDisabled];
+            [self.photoButton setImage:nil forState:UIControlStateNormal];
+        }
     } else {
         self.shareButton.enabled = NO;
     }
@@ -821,7 +830,12 @@
     self.week = week;
     [self weekStatusChangedTo:week.status];
     
-    [self verifyPhotoInDatabase];
+    UserType currentUserType = [AppState sharedInstance].type;
+    BOOL requiresPhoto = [AppState sharedInstance].requiresPhoto;
+
+    if (currentUserType != UserType_Employee || requiresPhoto) {
+        [self verifyPhotoInDatabase];
+    }
 }
 
 - (void)weekStatusChangedTo:(Status)status
@@ -856,7 +870,11 @@
             break;
     }
     
-    [self verifyPhotoInDatabase];
+    BOOL requiresPhoto = [AppState sharedInstance].requiresPhoto;
+    
+    if (currentUserType != UserType_Employee || requiresPhoto) {
+        [self verifyPhotoInDatabase];
+    }
 }
 
 #pragma mark - NDHTMLtoPDFDelegate
