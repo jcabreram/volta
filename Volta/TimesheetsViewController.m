@@ -292,6 +292,18 @@
                                                          handler:nil];
         [alert addAction:okAction];
         [self presentViewController:alert animated:YES completion:nil];
+    } else if (self.week.status == Status_NotSubmitted && state.type == UserType_Manager) {
+        NSString *employeeName = self.availableEmployeeNames[self.selectedEmployeeKey];
+        NSString *alertTitle = [NSString stringWithFormat:@"%@ Hasn't Submitted This Week", employeeName];
+        
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:alertTitle
+                                                                       message:@"As soon as he submits this week you'll be able to approve or deny this timesheet."
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:nil];
+        [alert addAction:okAction];
+        [self presentViewController:alert animated:YES completion:nil];
     } else {
         UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         
