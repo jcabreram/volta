@@ -166,7 +166,7 @@ typedef NS_ENUM (NSInteger, Field) {
         }
         
         // If the week is approved, we disable interaction
-        if (self.week.status == Status_Approved || self.week.status == Status_Submitted || loggedUserType == UserType_Manager || loggedUserType == UserType_Admin) {
+        if (self.week.status == Status_Approved || self.week.status == Status_Submitted || loggedUserType == UserType_Manager) {
             cell.hoursTextField.enabled = NO;
         } else {
             cell.hoursTextField.enabled = YES;
@@ -282,7 +282,7 @@ typedef NS_ENUM (NSInteger, Field) {
     
     UserType loggedUserType = [AppState sharedInstance].type;
     
-    if (self.week.status == Status_Approved || self.week.status == Status_Submitted || loggedUserType == UserType_Manager || loggedUserType == UserType_Admin) {
+    if (self.week.status == Status_Approved || self.week.status == Status_Submitted || loggedUserType == UserType_Manager) {
         for (DayTableViewCell *cell in visibleCells) {
             cell.hoursTextField.enabled = NO;
         }
