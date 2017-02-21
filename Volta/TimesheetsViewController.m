@@ -305,6 +305,7 @@
                 [actionSheet addAction:[UIAlertAction actionWithTitle:@"Submit Week" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                     if (state.requiresPhoto && self.photoUploaded) {
                         [self changeWeekToStatus:Status_Approved];
+                        [self updateProjectsCurrentDuration];
                     } else {
                         [self changeWeekToStatus:Status_Submitted];
                     }
