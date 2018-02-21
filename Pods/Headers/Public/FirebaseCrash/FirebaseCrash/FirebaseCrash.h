@@ -1,1 +1,1 @@
-../../../../FirebaseCrash/Frameworks/FirebaseCrash.framework/Headers/FirebaseCrash.h
+#import "FIRCrashLog.h"

@@ -1,1 +1,11 @@
-../../../../FirebaseAuth/Frameworks/FirebaseAuth.framework/Headers/FirebaseAuth.h
+#import "FIREmailPasswordAuthProvider.h"
+#import "FIRFacebookAuthProvider.h"
+#import "FIRGitHubAuthProvider.h"
+#import "FIRGoogleAuthProvider.h"
+#import "FIRTwitterAuthProvider.h"
+#import "FIRAuth.h"
+#import "FIRAuthCredential.h"
+#import "FIRAuthErrors.h"
+#import "FIRUser.h"
+#import "FIRUserInfo.h"
+#import "FirebaseAuthVersion.h"
