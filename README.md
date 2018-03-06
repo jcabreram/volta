@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="Resources/volta_logo.png">
+  <img width="150" height="150" src="Resources/volta_logo.png">
 </p>
 
 # Volta [![GitHub license](https://img.shields.io/badge/license-Apache-lightgrey.svg)](LICENSE.md)
@@ -47,7 +47,11 @@ To have your own Volta, you will need:
 
 ## Screenshots
 
-![](Resources/Screenshots/iPhone_47_01.png)![](Resources/Screenshots/iPhone_47_02.png)![](Resources/Screenshots/iPhone_47_03.png)
+<img src="Resources/Screenshots/iPhone_47_01.png" width="300">
+<img src="Resources/Screenshots/iPhone_47_02.png" width="300">
+<img src="Resources/Screenshots/iPhone_47_03.png" width="300">
+<img src="Resources/Screenshots/iPhone_47_04.png" width="300">
+<img src="Resources/Screenshots/iPhone_47_05.png" width="300">
 
 ## Built with
 - [Firebase][1] - Realtime database, authentication, storage and notifications.
