@@ -65,8 +65,8 @@
 		9415B6971DD2385C00C2020D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9415B6991DD2385C00C2020D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9415B69F1DD23B5A00C2020D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		9415B6A51DD28E8100C2020D /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = Volta/LoginViewController.h; sourceTree = "<group>"; };
-		9415B6A61DD28E8100C2020D /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = Volta/LoginViewController.m; sourceTree = "<group>"; };
+		9415B6A51DD28E8100C2020D /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		9415B6A61DD28E8100C2020D /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		941720011E57B84D00F19428 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
 		942AEE8C1DDE11DA004C3FF8 /* Volta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Volta.entitlements; sourceTree = "<group>"; };
 		94375F1B1E454475009536D0 /* UIImage+VOLImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+VOLImage.h"; sourceTree = "<group>"; };
@@ -104,8 +104,8 @@
 		946ABC8F1E4E84B40051E11D /* UserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCell.m; sourceTree = "<group>"; };
 		94730FA61E43DB9400163ECC /* TimesheetReport */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TimesheetReport; sourceTree = "<group>"; };
 		9473D99A1E3A872B000B95D5 /* EPSignature.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EPSignature.framework; path = Carthage/Build/iOS/EPSignature.framework; sourceTree = "<group>"; };
-		9477AD461DEE2DC7006FBF28 /* UsersTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UsersTableViewController.h; path = Volta/UsersTableViewController.h; sourceTree = "<group>"; };
-		9477AD471DEE2DC7006FBF28 /* UsersTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UsersTableViewController.m; path = Volta/UsersTableViewController.m; sourceTree = "<group>"; };
+		9477AD461DEE2DC7006FBF28 /* UsersTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsersTableViewController.h; sourceTree = "<group>"; };
+		9477AD471DEE2DC7006FBF28 /* UsersTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UsersTableViewController.m; sourceTree = "<group>"; };
 		9477AD491DEE2DD6006FBF28 /* UserDetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDetailTableViewController.h; sourceTree = "<group>"; };
 		9477AD4A1DEE2DD6006FBF28 /* UserDetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDetailTableViewController.m; sourceTree = "<group>"; };
 		9477AD4D1DEF9534006FBF28 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
@@ -129,8 +129,8 @@
 		94ADACDA1DDBC69800C01279 /* WeekCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeekCollectionViewCell.m; sourceTree = "<group>"; };
 		94EE725E1E0B251F00DA2689 /* UIColor+VOLcolors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+VOLcolors.h"; sourceTree = "<group>"; };
 		94EE725F1E0B251F00DA2689 /* UIColor+VOLcolors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+VOLcolors.m"; sourceTree = "<group>"; };
-		94FC738C1DE4FA9F0064F4B0 /* ProjectsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProjectsTableViewController.h; path = Volta/ProjectsTableViewController.h; sourceTree = "<group>"; };
-		94FC738D1DE4FA9F0064F4B0 /* ProjectsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProjectsTableViewController.m; path = Volta/ProjectsTableViewController.m; sourceTree = "<group>"; };
+		94FC738C1DE4FA9F0064F4B0 /* ProjectsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectsTableViewController.h; sourceTree = "<group>"; };
+		94FC738D1DE4FA9F0064F4B0 /* ProjectsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectsTableViewController.m; sourceTree = "<group>"; };
 		94FC73921DE4FFDC0064F4B0 /* DayDetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayDetailTableViewController.h; sourceTree = "<group>"; };
 		94FC73931DE4FFDC0064F4B0 /* DayDetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DayDetailTableViewController.m; sourceTree = "<group>"; };
 		94FC73951DE5010A0064F4B0 /* DayDetailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DayDetailTableViewCell.h; sourceTree = "<group>"; };
@@ -183,22 +183,157 @@
 		9415B6871DD2385C00C2020D /* Volta */ = {
 			isa = PBXGroup;
 			children = (
-				9551C9091DE39F300066ED96 /* General */,
+				9450F13E204F0250009DAE88 /* General */,
 				9415B68B1DD2385C00C2020D /* AppDelegate.h */,
 				9415B68C1DD2385C00C2020D /* AppDelegate.m */,
-				9433FF021DDA1F00000DD571 /* Firebase */,
-				9469E7291DD3EC3C007EB4E6 /* Side Menu Controllers */,
-				9433FF051DDA2031000DD571 /* View Controllers */,
-				9477AD4C1DEF950E006FBF28 /* Models */,
+				9450F13F204F026C009DAE88 /* Firebase */,
+				9450F141204F02AE009DAE88 /* Side Menu Controllers */,
+				9450F143204F0321009DAE88 /* View Controllers */,
+				9450F146204F03D0009DAE88 /* Models */,
 				9415B6911DD2385C00C2020D /* Main.storyboard */,
 				9415B6941DD2385C00C2020D /* Assets.xcassets */,
-				946816601DFA21C50027174A /* Frameworks */,
-				9415B6881DD2385C00C2020D /* Supporting Files */,
+				9450F147204F0402009DAE88 /* Frameworks */,
+				9450F14A204F0441009DAE88 /* Supporting Files */,
 			);
 			path = Volta;
 			sourceTree = "<group>";
 		};
-		9415B6881DD2385C00C2020D /* Supporting Files */ = {
+		9450F13E204F0250009DAE88 /* General */ = {
+			isa = PBXGroup;
+			children = (
+				9469E7231DD3D08D007EB4E6 /* Constants.h */,
+				9469E7241DD3D08D007EB4E6 /* Constants.m */,
+				9551C90A1DE39F650066ED96 /* GlobalVars.h */,
+				9551C90B1DE39F650066ED96 /* GlobalVars.m */,
+			);
+			path = General;
+			sourceTree = "<group>";
+		};
+		9450F13F204F026C009DAE88 /* Firebase */ = {
+			isa = PBXGroup;
+			children = (
+				9469E7201DD3CFCD007EB4E6 /* AppState.h */,
+				9469E7211DD3CFCD007EB4E6 /* AppState.m */,
+				9415B69F1DD23B5A00C2020D /* GoogleService-Info.plist */,
+				941720011E57B84D00F19428 /* GoogleService-Info-dev.plist */,
+			);
+			path = Firebase;
+			sourceTree = "<group>";
+		};
+		9450F141204F02AE009DAE88 /* Side Menu Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				9469E7301DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.h */,
+				9469E7311DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m */,
+				9469E72A1DD3EC66007EB4E6 /* SideMenuViewController.h */,
+				9469E72B1DD3EC66007EB4E6 /* SideMenuViewController.m */,
+				9469E72D1DD3ECAC007EB4E6 /* SideMenuViewCell.h */,
+				9469E72E1DD3ECAC007EB4E6 /* SideMenuViewCell.m */,
+				9469E7261DD3EBEE007EB4E6 /* MainViewController.h */,
+				9469E7271DD3EBEE007EB4E6 /* MainViewController.m */,
+			);
+			path = "Side Menu Controllers";
+			sourceTree = "<group>";
+		};
+		9450F142204F02D8009DAE88 /* Users */ = {
+			isa = PBXGroup;
+			children = (
+				9477AD461DEE2DC7006FBF28 /* UsersTableViewController.h */,
+				9477AD471DEE2DC7006FBF28 /* UsersTableViewController.m */,
+				946ABC8E1E4E84B40051E11D /* UserCell.h */,
+				946ABC8F1E4E84B40051E11D /* UserCell.m */,
+				9477AD491DEE2DD6006FBF28 /* UserDetailTableViewController.h */,
+				9477AD4A1DEE2DD6006FBF28 /* UserDetailTableViewController.m */,
+				9477AD571DF2083D006FBF28 /* UserDetailCell.h */,
+				9477AD581DF2083D006FBF28 /* UserDetailCell.m */,
+			);
+			path = Users;
+			sourceTree = "<group>";
+		};
+		9450F143204F0321009DAE88 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				9415B6A51DD28E8100C2020D /* LoginViewController.h */,
+				9415B6A61DD28E8100C2020D /* LoginViewController.m */,
+				9450F142204F02D8009DAE88 /* Users */,
+				9450F144204F034F009DAE88 /* Timesheets */,
+				9450F145204F039E009DAE88 /* Projects */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		9450F144204F034F009DAE88 /* Timesheets */ = {
+			isa = PBXGroup;
+			children = (
+				9469E7331DD4E903007EB4E6 /* TimesheetsViewController.h */,
+				9469E7341DD4E903007EB4E6 /* TimesheetsViewController.m */,
+				94ADACD01DDBAA6300C01279 /* WeeksCollectionViewController.h */,
+				94ADACD11DDBAA6300C01279 /* WeeksCollectionViewController.m */,
+				94ADACD91DDBC69800C01279 /* WeekCollectionViewCell.h */,
+				94ADACDA1DDBC69800C01279 /* WeekCollectionViewCell.m */,
+				94ADACD31DDBAA9400C01279 /* DaysTableViewController.h */,
+				94ADACD41DDBAA9400C01279 /* DaysTableViewController.m */,
+				94ADACD61DDBAADA00C01279 /* DayTableViewCell.h */,
+				94ADACD71DDBAADA00C01279 /* DayTableViewCell.m */,
+				94FC73921DE4FFDC0064F4B0 /* DayDetailTableViewController.h */,
+				94FC73931DE4FFDC0064F4B0 /* DayDetailTableViewController.m */,
+				94FC73951DE5010A0064F4B0 /* DayDetailTableViewCell.h */,
+				94FC73961DE5010A0064F4B0 /* DayDetailTableViewCell.m */,
+			);
+			path = Timesheets;
+			sourceTree = "<group>";
+		};
+		9450F145204F039E009DAE88 /* Projects */ = {
+			isa = PBXGroup;
+			children = (
+				94FC738C1DE4FA9F0064F4B0 /* ProjectsTableViewController.h */,
+				94FC738D1DE4FA9F0064F4B0 /* ProjectsTableViewController.m */,
+				9477AD5D1DF75F44006FBF28 /* ProjectDetailTableViewController.h */,
+				9477AD5E1DF75F44006FBF28 /* ProjectDetailTableViewController.m */,
+				9477AD5A1DF75ED3006FBF28 /* ProjectDetailCell.h */,
+				9477AD5B1DF75ED3006FBF28 /* ProjectDetailCell.m */,
+			);
+			path = Projects;
+			sourceTree = "<group>";
+		};
+		9450F146204F03D0009DAE88 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9477AD4D1DEF9534006FBF28 /* User.h */,
+				9477AD4E1DEF9534006FBF28 /* User.m */,
+				9468165A1DF8871A0027174A /* Project.h */,
+				9468165B1DF8871A0027174A /* Project.m */,
+				945EB0BA1E087F240035F3C6 /* TimesheetWeek.h */,
+				945EB0BB1E087F240035F3C6 /* TimesheetWeek.m */,
+				946ABC881E4E19510051E11D /* TimesheetPhoto.h */,
+				946ABC891E4E19510051E11D /* TimesheetPhoto.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		9450F147204F0402009DAE88 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9450F148204F041F009DAE88 /* MLPAutoCompleteTextField */,
+			);
+			path = Frameworks;
+			sourceTree = "<group>";
+		};
+		9450F148204F041F009DAE88 /* MLPAutoCompleteTextField */ = {
+			isa = PBXGroup;
+			children = (
+				9468166B1DFA28D10027174A /* MLPAutoCompleteTextField.h */,
+				9468166C1DFA28D10027174A /* MLPAutoCompleteTextField.m */,
+				9468166D1DFA28D10027174A /* MLPAutoCompleteTextFieldDataSource.h */,
+				9468166E1DFA28D10027174A /* MLPAutoCompleteTextFieldDelegate.h */,
+				9468166F1DFA28D10027174A /* MLPAutoCompletionObject.h */,
+				946816701DFA28D10027174A /* NSString+Levenshtein.h */,
+				946816711DFA28D10027174A /* NSString+Levenshtein.m */,
+			);
+			path = MLPAutoCompleteTextField;
+			sourceTree = "<group>";
+		};
+		9450F14A204F0441009DAE88 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
 				94730FA61E43DB9400163ECC /* TimesheetReport */,
@@ -217,144 +352,7 @@
 				94375F1B1E454475009536D0 /* UIImage+VOLImage.h */,
 				94375F1C1E454475009536D0 /* UIImage+VOLImage.m */,
 			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		9433FF021DDA1F00000DD571 /* Firebase */ = {
-			isa = PBXGroup;
-			children = (
-				9469E7201DD3CFCD007EB4E6 /* AppState.h */,
-				9469E7211DD3CFCD007EB4E6 /* AppState.m */,
-				9415B69F1DD23B5A00C2020D /* GoogleService-Info.plist */,
-				941720011E57B84D00F19428 /* GoogleService-Info-dev.plist */,
-			);
-			name = Firebase;
-			sourceTree = "<group>";
-		};
-		9433FF051DDA2031000DD571 /* View Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				9415B6A51DD28E8100C2020D /* LoginViewController.h */,
-				9415B6A61DD28E8100C2020D /* LoginViewController.m */,
-				9477AD451DEDF592006FBF28 /* Users */,
-				94ADACCF1DDBAA3300C01279 /* Timesheets */,
-				94FC73881DE4F9C70064F4B0 /* Projects */,
-			);
-			name = "View Controllers";
-			path = ..;
-			sourceTree = "<group>";
-		};
-		946816601DFA21C50027174A /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				946816611DFA21EE0027174A /* MLPAutoCompleteTextField */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		946816611DFA21EE0027174A /* MLPAutoCompleteTextField */ = {
-			isa = PBXGroup;
-			children = (
-				9468166B1DFA28D10027174A /* MLPAutoCompleteTextField.h */,
-				9468166C1DFA28D10027174A /* MLPAutoCompleteTextField.m */,
-				9468166D1DFA28D10027174A /* MLPAutoCompleteTextFieldDataSource.h */,
-				9468166E1DFA28D10027174A /* MLPAutoCompleteTextFieldDelegate.h */,
-				9468166F1DFA28D10027174A /* MLPAutoCompletionObject.h */,
-				946816701DFA28D10027174A /* NSString+Levenshtein.h */,
-				946816711DFA28D10027174A /* NSString+Levenshtein.m */,
-			);
-			name = MLPAutoCompleteTextField;
-			sourceTree = "<group>";
-		};
-		9469E7291DD3EC3C007EB4E6 /* Side Menu Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				9469E7301DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.h */,
-				9469E7311DD4DE9E007EB4E6 /* UIViewController+LGSideMenuController.m */,
-				9469E72A1DD3EC66007EB4E6 /* SideMenuViewController.h */,
-				9469E72B1DD3EC66007EB4E6 /* SideMenuViewController.m */,
-				9469E72D1DD3ECAC007EB4E6 /* SideMenuViewCell.h */,
-				9469E72E1DD3ECAC007EB4E6 /* SideMenuViewCell.m */,
-				9469E7261DD3EBEE007EB4E6 /* MainViewController.h */,
-				9469E7271DD3EBEE007EB4E6 /* MainViewController.m */,
-			);
-			name = "Side Menu Controllers";
-			sourceTree = "<group>";
-		};
-		9477AD451DEDF592006FBF28 /* Users */ = {
-			isa = PBXGroup;
-			children = (
-				9477AD461DEE2DC7006FBF28 /* UsersTableViewController.h */,
-				9477AD471DEE2DC7006FBF28 /* UsersTableViewController.m */,
-				946ABC8E1E4E84B40051E11D /* UserCell.h */,
-				946ABC8F1E4E84B40051E11D /* UserCell.m */,
-				9477AD491DEE2DD6006FBF28 /* UserDetailTableViewController.h */,
-				9477AD4A1DEE2DD6006FBF28 /* UserDetailTableViewController.m */,
-				9477AD571DF2083D006FBF28 /* UserDetailCell.h */,
-				9477AD581DF2083D006FBF28 /* UserDetailCell.m */,
-			);
-			name = Users;
-			sourceTree = "<group>";
-		};
-		9477AD4C1DEF950E006FBF28 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				9477AD4D1DEF9534006FBF28 /* User.h */,
-				9477AD4E1DEF9534006FBF28 /* User.m */,
-				9468165A1DF8871A0027174A /* Project.h */,
-				9468165B1DF8871A0027174A /* Project.m */,
-				945EB0BA1E087F240035F3C6 /* TimesheetWeek.h */,
-				945EB0BB1E087F240035F3C6 /* TimesheetWeek.m */,
-				946ABC881E4E19510051E11D /* TimesheetPhoto.h */,
-				946ABC891E4E19510051E11D /* TimesheetPhoto.m */,
-			);
-			name = Models;
-			sourceTree = "<group>";
-		};
-		94ADACCF1DDBAA3300C01279 /* Timesheets */ = {
-			isa = PBXGroup;
-			children = (
-				9469E7331DD4E903007EB4E6 /* TimesheetsViewController.h */,
-				9469E7341DD4E903007EB4E6 /* TimesheetsViewController.m */,
-				94ADACD01DDBAA6300C01279 /* WeeksCollectionViewController.h */,
-				94ADACD11DDBAA6300C01279 /* WeeksCollectionViewController.m */,
-				94ADACD91DDBC69800C01279 /* WeekCollectionViewCell.h */,
-				94ADACDA1DDBC69800C01279 /* WeekCollectionViewCell.m */,
-				94ADACD31DDBAA9400C01279 /* DaysTableViewController.h */,
-				94ADACD41DDBAA9400C01279 /* DaysTableViewController.m */,
-				94ADACD61DDBAADA00C01279 /* DayTableViewCell.h */,
-				94ADACD71DDBAADA00C01279 /* DayTableViewCell.m */,
-				94FC73921DE4FFDC0064F4B0 /* DayDetailTableViewController.h */,
-				94FC73931DE4FFDC0064F4B0 /* DayDetailTableViewController.m */,
-				94FC73951DE5010A0064F4B0 /* DayDetailTableViewCell.h */,
-				94FC73961DE5010A0064F4B0 /* DayDetailTableViewCell.m */,
-			);
-			name = Timesheets;
-			path = Volta;
-			sourceTree = "<group>";
-		};
-		94FC73881DE4F9C70064F4B0 /* Projects */ = {
-			isa = PBXGroup;
-			children = (
-				94FC738C1DE4FA9F0064F4B0 /* ProjectsTableViewController.h */,
-				94FC738D1DE4FA9F0064F4B0 /* ProjectsTableViewController.m */,
-				9477AD5D1DF75F44006FBF28 /* ProjectDetailTableViewController.h */,
-				9477AD5E1DF75F44006FBF28 /* ProjectDetailTableViewController.m */,
-				9477AD5A1DF75ED3006FBF28 /* ProjectDetailCell.h */,
-				9477AD5B1DF75ED3006FBF28 /* ProjectDetailCell.m */,
-			);
-			name = Projects;
-			sourceTree = "<group>";
-		};
-		9551C9091DE39F300066ED96 /* General */ = {
-			isa = PBXGroup;
-			children = (
-				9469E7231DD3D08D007EB4E6 /* Constants.h */,
-				9469E7241DD3D08D007EB4E6 /* Constants.m */,
-				9551C90A1DE39F650066ED96 /* GlobalVars.h */,
-				9551C90B1DE39F650066ED96 /* GlobalVars.m */,
-			);
-			name = General;
+			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		F50D891C59A3888D2428FFBA /* Frameworks */ = {
@@ -671,20 +669,21 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Volta/Volta.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = L5772TL8C3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Volta/Volta-Prefix.pch";
-				INFOPLIST_FILE = Volta/Info.plist;
+				GCC_PREFIX_HEADER = "Volta/Supporting Files/Volta-Prefix.pch";
+				INFOPLIST_FILE = "Volta/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jcabreram.volta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -695,20 +694,21 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Volta/Volta.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = L5772TL8C3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Volta/Volta-Prefix.pch";
-				INFOPLIST_FILE = Volta/Info.plist;
+				GCC_PREFIX_HEADER = "Volta/Supporting Files/Volta-Prefix.pch";
+				INFOPLIST_FILE = "Volta/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jcabreram.volta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

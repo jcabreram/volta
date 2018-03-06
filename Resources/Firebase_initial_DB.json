@@ -1,0 +1,43 @@
+{
+    "users": {
+        "TqCUTiAGCaSu3dghrkSsCqSkl2I3": {
+            "company": "-KaEqnZCN6uazhSacXMW",
+            "email": "jcabrera.moreno@gmail.com",
+            "first_name": "Jonathan",
+            "last_name": "Cabrera",
+            "created_at": 1.484670678678972E9,
+            "created_by": "TqCUTiAGCaSu3dghrkSsCqSkl2I3",
+            "type": "admin",
+            "timesheet": "-KahGHZnp9EF1aGdkmWu"
+        }
+    },
+    "admins": {
+        "group_name": "Administrators",
+        "no_of_users": 1,
+        "members": {
+            "TqCUTiAGCaSu3dghrkSsCqSkl2I3": true
+        }
+    },
+    "managers": {
+        "group_name": "Managers",
+        "no_of_users": 0,
+        "members": {}
+    },
+    "employees": {
+        "group_name": "Employees",
+        "no_of_users": 0,
+        "members": {}
+    },
+    "timesheets": {
+        "-KahGHZnp9EF1aGdkmWu": {}
+    }, 
+    "timesheet_details": {
+        "-KahGHZnp9EF1aGdkmWu": {}
+    },
+    "projects": {},
+    "companies": {
+        "-KaEqnZCN6uazhSacXMW": {
+            "name": "Monsters, Inc."
+        }
+    }
+}
