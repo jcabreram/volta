@@ -1,4 +1,6 @@
-# Volta
+![](Resources/volta_logo.png)
+
+# Volta [![GitHub license](https://img.shields.io/badge/license-Apache-lightgrey.svg)](LICENSE.md)
 
 Volta is an iOS app for timesheet management. With it, employees can submit their work times for the week and managers can approve or deny their timesheets. Also, admin users can have an eagle-eye view of the organization and see the status of the timesheets of the employees.
 
@@ -6,7 +8,7 @@ All of this in real time as it leverages Firebase's realtime database.
 
 You can easily implement it in your company (and for free!) by changing the Firebase instance it's pointing to.
 
-##Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -19,8 +21,8 @@ To have your own Volta, you will need:
 
 1. After creating a Firebase account and setting up the app in the Firebase console, create a user from there.
 2. Copy the generated User UID.
-3. Replace "TqCUTiAGCaSu3dghrkSsCqSkl2I3" in the "Firebase initial DB" JSON for your generated User ID.
-4. Import the "Firebase initial DB" JSON into the Database section of the Firebase console.
+3. Replace "TqCUTiAGCaSu3dghrkSsCqSkl2I3" in [Firebase\_initial\_DB.json](Resources/Firebase_initial_DB.json) for your generated User ID.
+4. Import the Firebase\_initial\_DB.json into the Database section of the Firebase console.
 5. Run the app and login with your user to create managers and employees.
 
 ## Features
@@ -41,6 +43,10 @@ To have your own Volta, you will need:
 - See an overview of the approval status of the timesheets. 
 - Receive notifications for timesheet submission (Manager), submission reminders (Employee) and project overtime (Admin). (Requires Apple Push Notification Service certificates)
 
+## Screenshots
+
+![](Resources/Screenshots/iPhone_47_01.png)![](Resources/Screenshots/iPhone_47_02.png)![](Resources/Screenshots/iPhone_47_03.png)
+
 ## Built with
 - [Firebase][1] - Realtime database, authentication, storage and notifications.
 - [LGSideMenuController][2] - Side menu.
@@ -60,8 +66,8 @@ To have your own Volta, you will need:
 
 ## Known issues
 - Incorrect appearance of the navigation bar in iPhone X.
-- For admin users, progress indicator not disappearing if there are no employees on the database. Create at least one employee to avoid this.
-- At startup, the selected week is the week before and not the current one.
+- For admin users, progress indicator is not disappearing if there are no employees on the database. Create at least one employee to avoid this.
+- At startup, the selected week is the week before the current one and not the current one.
 
 ## Author
 
