@@ -7,34 +7,34 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>52644490540-8fvrgtu2v6gq195up9lcfrqt40c9oost.apps.googleusercontent.com</string>
+	<string>526357008982-05o7thvv5rkj1at326eagv3qtuve6dkp.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.52644490540-8fvrgtu2v6gq195up9lcfrqt40c9oost</string>
+	<string>com.googleusercontent.apps.526357008982-05o7thvv5rkj1at326eagv3qtuve6dkp</string>
 	<key>API_KEY</key>
-	<string>AIzaSyD8tKa3WP3tTHqz3CLeYqTvW3aXeG2JrdQ</string>
+	<string>AIzaSyBbaO9p5pl9q6rU4tsxp75kD-_pNBwEkrY</string>
 	<key>GCM_SENDER_ID</key>
-	<string>52644490540</string>
+	<string>526357008982</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.ksquare.volta</string>
+	<string>com.jcabreram.volta</string>
 	<key>PROJECT_ID</key>
-	<string>ksquare-eee35</string>
+	<string>volta-1d452</string>
 	<key>STORAGE_BUCKET</key>
-	<string>ksquare-eee35.appspot.com</string>
+	<string>volta-1d452.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_GCM_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:52644490540:ios:c43ad2b2982475e3</string>
+	<string>1:526357008982:ios:dc1a0a52d891484a</string>
 	<key>DATABASE_URL</key>
-	<string>https://ksquare-eee35.firebaseio.com</string>
+	<string>https://volta-1d452.firebaseio.com</string>
 </dict>
 </plist>

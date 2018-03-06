@@ -3,7 +3,7 @@
 //  Volta
 //
 //  Created by Jonathan Cabrera on 11/29/16.
-//  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
+//  Copyright © 2016 Jonathan Cabrera. All rights reserved.
 //
 
 #import "UserDetailTableViewController.h"
@@ -384,7 +384,7 @@ typedef NS_ENUM (NSInteger, SectionNumber) {
     }
     
     if (user.type != UserType_Admin) {
-        [html replaceOccurrencesOfString:@"<p>As an <strong>admin</strong> in Volta, you&#39;ll be able to create users, assign them to projects, see Ksquare employees&#39; timesheets and download their weekly report.</p>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [html length])];
+        [html replaceOccurrencesOfString:@"<p>As an <strong>admin</strong> in Volta, you&#39;ll be able to create users, assign them to projects, see employees&#39; timesheets and download their weekly report.</p>" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [html length])];
     }
     
     [html replaceOccurrencesOfString:@"%newUserName%" withString:user.firstName options:NSCaseInsensitiveSearch range:NSMakeRange(0, [html length])];

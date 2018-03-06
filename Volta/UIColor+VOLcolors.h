@@ -3,7 +3,7 @@
 //  Volta
 //
 //  Created by Jonathan Cabrera on 12/21/16.
-//  Copyright © 2016 Ksquare Solutions, Inc. All rights reserved.
+//  Copyright © 2016 Jonathan Cabrera. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
