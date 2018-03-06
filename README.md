@@ -47,11 +47,7 @@ To have your own Volta, you will need:
 
 ## Screenshots
 
-<img src="Resources/Screenshots/iPhone_47_01.png" width="300">
-<img src="Resources/Screenshots/iPhone_47_02.png" width="300">
-<img src="Resources/Screenshots/iPhone_47_03.png" width="300">
-<img src="Resources/Screenshots/iPhone_47_04.png" width="300">
-<img src="Resources/Screenshots/iPhone_47_05.png" width="300">
+<img src="Resources/Screenshots/iPhone_47_01.png" width="300"><img src="Resources/Screenshots/iPhone_47_02.png" width="300"><img src="Resources/Screenshots/iPhone_47_03.png" width="300"><img src="Resources/Screenshots/iPhone_47_04.png" width="300"><img src="Resources/Screenshots/iPhone_47_05.png" width="300">
 
 ## Built with
 - [Firebase][1] - Realtime database, authentication, storage and notifications.
