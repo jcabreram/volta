@@ -1,4 +1,6 @@
-![](Resources/volta_logo.png)
+<p align="center">
+  <img src="Resources/volta_logo.png">
+</p>
 
 # Volta [![GitHub license](https://img.shields.io/badge/license-Apache-lightgrey.svg)](LICENSE.md)
 
