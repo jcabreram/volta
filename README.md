@@ -2,7 +2,7 @@
   <img width="150" height="150" src="Resources/volta_logo.png">
 </p>
 
-# Volta [![GitHub license](https://img.shields.io/badge/license-Apache-lightgrey.svg)](LICENSE.md)
+# Volta [![GitHub license](https://img.shields.io/badge/license-Apache-lightgrey.svg)](LICENSE)
 
 Volta is an iOS app for timesheet management. With it, employees can submit their work times for the week and managers can approve or deny their timesheets. Also, admin users can have an eagle-eye view of the organization and see the status of the timesheets of the employees.
 
@@ -21,11 +21,13 @@ To have your own Volta, you will need:
 
 ### Setup
 
-1. After creating a Firebase account and setting up the app in the Firebase console, create a user from there.
-2. Copy the generated User UID.
-3. Replace "TqCUTiAGCaSu3dghrkSsCqSkl2I3" in [Firebase\_initial\_DB.json](Resources/Firebase_initial_DB.json) for your generated User ID.
-4. Import the Firebase\_initial\_DB.json into the Database section of the Firebase console.
-5. Run the app and login with your user to create managers and employees.
+1. Create your Firebase account and set up your app in the Firebase console.
+2. Replace the [GoogleService-Info.plist](Volta/Firebase/GoogleService-Info.plist) and [GoogleService-Info-dev.plist](Volta/Firebase/GoogleService-Info-dev.plist) files for the one provided for your app by Google. ([They can be different if you want a different Firebase instance for dev](https://gist.github.com/cohenadair/3a2aff5084603bfa65824f09cf74206e)).
+3. Create your first admin user from the Firebase console.
+4. Copy the generated User UID.
+5. Replace the first user in the _users_ node in [Firebase\_initial\_DB.json](Resources/Firebase_initial_DB.json) with your first admin user data, including the generated User UID.
+6. Import your modified Firebase\_initial\_DB.json into the Database section of the Firebase console.
+7. Run the app and login with your admin user to start creating managers and employees.
 
 ## Features
 
@@ -77,4 +79,4 @@ To have your own Volta, you will need:
             
 ## License
 
-This project is licensed under the Apache License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the Apache License - see the [LICENSE](LICENSE) file for details
